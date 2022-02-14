@@ -1,0 +1,73 @@
+<div class="container">
+  <h1>Devalore Pets</h1>
+  <div class="row">
+    <div class="col-12"></div>
+  </div>
+
+  <a href="#" routerLink="/create" class="btn btn-success">Create New Pet</a>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>age</th>
+        <th>Type</th>
+        <th>Name</th>
+        <th width="250px">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pet of pets">
+        <td>{{ pet.id }}</td>
+        <td>{{ pet.age }}</td>
+        <td>{{ pet.type }}</td>
+        <td>{{ pet.name }}</td>
+        <td>
+          <a
+            type="button"
+            class="btn btn-info"
+            [routerLink]="['/view/', pet._id]"
+            >View</a
+          >
+          <a
+            type="button"
+            class="btn btn-primary"
+            [routerLink]="['/edit/', pet._id]"
+            >Edit</a
+          >
+          <a
+            type="button"
+            class="btn btn-danger"
+            (click)="deletePet(pet._id.toString())"
+            >Delete</a
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <label><b>Total Age:</b> {{ ageTotal }}</label>
+
+  <h1>Pets under age 3</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>age</th>
+        <th>Type</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pet of pets3">
+        <td>{{ pet.id }}</td>
+        <td>{{ pet.age }}</td>
+        <td>{{ pet.type }}</td>
+        <td>{{ pet.name }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+</div>

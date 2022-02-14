@@ -1,0 +1,39 @@
+<div class="container">
+  <h1>
+    View Pet <strong>{{ pet.name }}</strong>
+  </h1>
+
+  <a href="#" routerLink="/home" class="btn btn-primary">Back</a>
+
+  <p>
+    <strong>Email:</strong>
+    <input
+      id="type"
+      type="type"
+      [(ngModel)]="pet.type"
+      disabled
+      class="form-control"
+    />
+  </p>
+  <p>
+    <strong>First Name:</strong>
+    <input
+      id="name"
+      type="name"
+      [(ngModel)]="pet.name"
+      disabled
+      class="form-control"
+    />
+  </p>
+
+  <p>
+    <strong>Age:</strong>
+    <input
+      id="age"
+      type="age"
+      [(ngModel)]="pet.age"
+      disabled
+      class="form-control"
+    />
+  </p>
+</div>
