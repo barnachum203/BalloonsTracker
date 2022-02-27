@@ -4,6 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY, of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
+import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
 import * as AuthActions from './auth.actions';
 
 @Injectable()
@@ -24,8 +25,10 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
-        map((action) => action),
-        tap(() => this.router.navigate(['/home']))
+        tap(() => this.router.navigate(['/home'])),
+        tap(() => {
+          this.popupService.openSuccessLogin();
+        })
       ),
     { dispatch: false }
   );
@@ -34,11 +37,11 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginFailure),
-        map((action) => action),
-        tap((error) => {
-        //   console.log("error");
-        
+        tap(() => {
           this.router.navigate([`/login`]);
+        }),
+        tap(() => {
+          this.popupService.openFailureLogin();
         })
       ),
     { dispatch: false }
@@ -57,6 +60,7 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private popupService: PopupMessagesService
   ) {}
 }

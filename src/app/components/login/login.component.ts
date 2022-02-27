@@ -24,8 +24,7 @@ export class LoginComponent implements OnInit {
   public submitted = false;
   isLoadingLogin$ = this.store.select(authSelectors.selectIsLoadingLogin);
   isLoginFailed$ = this.store.select(authSelectors.selectLoginError);
-  hasLoginError$ = this.store.select(authSelectors.selectLoginError)
-  isLoggedin$ = this.store.select(authSelectors.selectIsLoggedIn)
+  hasLoginError$ = this.store.select(authSelectors.selectLoginError);
   public user: AuthUser = {
     email: '',
     password: '',
@@ -34,9 +33,9 @@ export class LoginComponent implements OnInit {
   };
   message: string = '';
   errorMessage: string = 'Wrong username or password.';
-  
+
   errorMessage$ = this.store.select(authSelectors.selectAuthErrorMessage);
-  
+
   pwdPattern = '^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?!.*s).{8,12}$';
 
   constructor(
@@ -57,7 +56,9 @@ export class LoginComponent implements OnInit {
           Validators.required,
           Validators.minLength(8),
           Validators.maxLength(12),
-          Validators.pattern('((?=.*[a-z])(?=.*[$@!%*?&;`#^()~_=+~{}[|":;,.<>])(?=.*[0-9]).{8,12})'),
+          Validators.pattern(
+            '((?=.*[a-z])(?=.*[$@!%*?&;`#^()~_=+~{}[|":;,.<>])(?=.*[0-9]).{8,12})'
+          ),
         ],
       ],
     });
@@ -68,32 +69,6 @@ export class LoginComponent implements OnInit {
   }
   get f() {
     return this.loginForm.controls;
-  }
-
-  openSnackBar() {
-    // if(this.hasLoginError$){
-    //   this.snackBar.openFromComponent(SnackBarComponent, {
-    //     data: 'Wrong credentials.',
-    //     duration: 3500,
-    //   });
-    // }else{
-    //   this.snackBar.openFromComponent(SnackBarComponent, {
-    //     data: 'Login Success!',
-    //     duration: 3500,
-    //     panelClass: ['red-snackbar','login-snackbar'],
-    //   });
-    // }
-
-    if(!this.hasLoginError$){
-      this.snackBar.openFromComponent(SnackBarComponent, {
-        data: 'Login Success!',
-        duration: 3500,
-        panelClass: ['red-snackbar','login-snackbar'],
-      });
-    
-    }
-    
-
   }
 
   onReset(): void {
@@ -110,10 +85,10 @@ export class LoginComponent implements OnInit {
 
     this.user.email = email;
     this.user.password = password;
-    await this.store.dispatch(authLogin.loginRequest({ email: email, password: password }));
-    
-    this.openSnackBar()
-    
+    await this.store.dispatch(
+      authLogin.loginRequest({ email: email, password: password })
+    );
+
     // this.store.dispatch(AuthActions.loginRequest({ username, password }));
 
     // this.authService.login(email, password).subscribe(
