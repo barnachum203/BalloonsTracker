@@ -8,5 +8,10 @@ if (environment.production) {
   enableProdMode();
 }
 
+// window['CESIUM_BASE_URL'] = '/assets/cesium/';
+
+(window as any).CESIUM_BASE_URL = window.location.href
+
+
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

@@ -1,0 +1,33 @@
+.login-form {
+  /* text-align: center; */
+  margin-top: 4%;
+  padding: 60px;
+  /* width: 50%; */
+  display: flex;
+  /* max-width: 350px; */
+  justify-content: center;
+}
+
+h1 {
+  justify-content: center;
+  display: flex;
+  font-size: 36px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+label {
+  font-size: 16px;
+}
+button {
+  margin-left: 5px;
+}
+
+.alert {
+  margin-top: 10px;
+}
+.card {
+  padding: 20px;
+  border: 1px solid #104e61;
+  max-width: 450px;
+  /* width: 50%; */
+  /* align-items: center; */
+}

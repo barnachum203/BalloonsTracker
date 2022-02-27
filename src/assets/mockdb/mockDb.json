@@ -1,0 +1,17 @@
+
+{
+    "login":{
+        "status": 200,
+        "message": "Login success",
+        "email": "bar@user.com",
+        "username": "bar",
+        "token" : "fdsajgoq4utb37ftf$F#fweeesg",
+        "password": "pass123!@#",
+        "data": {
+            "email": "user1",
+            "password": "password1"
+        },
+        "error": {"message": "Login Failed"}
+
+    }
+}

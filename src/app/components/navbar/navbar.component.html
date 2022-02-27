@@ -1,0 +1,48 @@
+<div id="app">
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="/home" class="navbar-brand">
+      <img
+        src="../../../assets/logo/devalore.png"
+        width="120"
+        class="d-inline-block align-top"
+        alt=""
+      />
+    </a>
+
+    <ul class="navbar-nav mr-auto" routerLinkActive="active">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="home">Home </a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto" *ngIf="!(isLoggedIn$ | async)!">
+      <!-- <li class="nav-item">
+        <a class="nav-link" routerLink="register">Sign Up</a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="login">
+          <button class="btn btn-primary">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>Login
+          </button>
+        </a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto" *ngIf="user$ | async as user ">
+      <li class="nav-item">
+        <a class="nav-link disabled" tabindex="-1" aria-disabled="true"
+          >Logged as,</a
+        >
+
+        <div class="user-title">
+          {{ (user.username)! }}
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">
+          <button class="btn btn-danger" (click)="logout()">Logout</button>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

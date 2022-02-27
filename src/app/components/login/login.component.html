@@ -1,0 +1,99 @@
+<div class="login-form">
+  <div class="card">
+    <h1 class="head py-2">Login</h1>
+    <form class="user-login" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="row">
+        <div class="form-group">
+          <label>Username</label>
+          <input
+            type="email"
+            class="form-control"
+            id="inputEmail"
+            formControlName="email"
+            maxlength="20"
+            placeholder="Enter Email"
+            [ngClass]="{ 'is-invalid': f.email.touched && f.email.errors || submitted }"
+          />
+          <!-- <small id="emailHelp" class="form-text text-muted ml-2">We'll never share your email with anyone else.</small> -->
+          <div *ngIf="f.email.errors && f.email.touched" class="text-danger">
+            <div *ngIf="f.email.errors.email">Email must be valid.</div>
+            <div *ngIf="f.email.errors.required">Email is required.</div>
+          </div>
+        </div>
+        <div class="col-md-12 mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            class="form-control mb-2"
+            id="inputPassword"
+            maxlength="12"
+            formControlName="password"
+            placeholder="Enter Password"
+            [ngClass]="{
+              'is-invalid': f.password.touched && f.password.errors || submitted
+            }"
+          />
+          <div
+            *ngIf="
+              f.password.errors && (f.password.dirty || f.password.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="f.password.errors.required">Password is required.</div>
+            <div *ngIf="f.password.errors.minlength">
+              Password length must be greater than 8 characters.
+            </div>
+            <div *ngIf="f.password.errors.maxlength">
+              Password length must be lower than 12 characters.
+            </div>
+            <small *ngIf="f.password.errors.pattern">
+              <!-- <h3>Password must contain the following:</h3> -->
+              <ul>
+                <!-- <li>Password should be alphanumeric</li> -->
+                <li>One letter of the password should be digit</li>
+                <li>
+                  Password must contain a special character (@, $, !, &, etc)
+                </li>
+              </ul>
+            </small>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="buttons text-center">
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!loginForm.valid"
+        >
+          <span *ngIf="!(isLoadingLogin$ | async)!">Login</span>
+
+          <div *ngIf="(isLoadingLogin$ | async)!">
+            <span
+              class="spinner-border spinner-border-sm"
+              aria-hidden="true"
+            ></span>
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </button>
+        <button
+          type="button"
+          (click)="onReset()"
+          class="btn btn-warning "
+        >
+          Reset
+        </button>
+        <div *ngIf="message" class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+        <div
+          class="alert alert-danger"
+          role="alert"
+          *ngIf="(hasLoginError$ | async)!"
+        >
+          {{ errorMessage$ | async }}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

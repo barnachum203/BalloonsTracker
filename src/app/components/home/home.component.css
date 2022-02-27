@@ -1,0 +1,12 @@
+.map {
+  border: 1px solid #000000;
+  border-top-left-radius: 20px 20px;
+}
+.menu {
+  border: 1px solid #000000;
+  border-top-right-radius: 20px 20px;
+}
+
+.row {
+  margin-top: 10px;
+}
