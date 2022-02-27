@@ -3,30 +3,23 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarComponent } from '../components/login/snack-bar/snack-bar.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PopupMessagesService {
-
-  constructor(public snackBar: MatSnackBar) { }
+  constructor(public snackBar: MatSnackBar) {}
 
   openSuccessLogin(): void {
-    
-      this.snackBar.openFromComponent(SnackBarComponent, {
-        data: 'Login Success!',
-        duration: 3500,
-        panelClass: ['green-snackbar', 'login-snackbar'],
-      });
-    
+    this.snackBar.openFromComponent(SnackBarComponent, {
+      data: 'Login Success!! :)',
+      duration: 2500,
+      panelClass: ['green-snackbar', 'login-snackbar'],
+    });
   }
   openFailureLogin() {
-    
     this.snackBar.openFromComponent(SnackBarComponent, {
       data: 'Wrong username or password :(',
-      duration: 3500,
+      duration: 2500,
       panelClass: ['red-snackbar', 'login-snackbar'],
     });
-  
-}
-
-
+  }
 }
