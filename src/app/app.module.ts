@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import { HeaderInterceptor } from './interceptors/header.interceptor';
 import { MenuComponent } from './components/menu/menu.component';
@@ -26,14 +27,16 @@ import { loginReducer } from './components/login/store/auth.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './components/login/store/auth.effects';
 
+// import { AngularCesiumModule } from 'angular-cesium';
 
 // import { AngularCesiumModule } from 'angular-cesium';
-import{ MapLayerProviderOptions } from 'angular-cesium';
+// import{ MapLayerProviderOptions } from 'angular-cesium';
 import { CesiumDirective } from './components/map/cesium.directive';
-import { SnackBarComponent } from './components/login/snack-bar/snack-bar.component'
+import { SnackBarComponent } from './components/login/snack-bar/snack-bar.component';
+import { BallonDialogComponent } from './components/menu/ballon-dialog/ballon-dialog.component'
 
 //Should be in seperate module.
-const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule];
+const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
 
 @NgModule({
   declarations: [
@@ -45,6 +48,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     MapComponent,
     CesiumDirective,
     SnackBarComponent,
+    BallonDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -10,7 +10,9 @@ if (environment.production) {
 
 // window['CESIUM_BASE_URL'] = '/assets/cesium/';
 
-(window as any).CESIUM_BASE_URL = window.location.href
+// (window as any).CESIUM_BASE_URL = window.location.href
+(window as any)['CESIUM_BASE_URL'] = '/assets/cesium/';
+
 
 
 platformBrowserDynamic().bootstrapModule(AppModule)

@@ -27,11 +27,11 @@
     "@ngrx/store": "^13.0.2",
     "@ngrx/store-devtools": "^13.0.2",
     "@popperjs/core": "^2.11.2",
-    "angular-cesium": "0.0.67",
     "bootstrap": "^4.6.1",
     "cesium": "^1.90.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
+    "util": "^0.12.4",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
