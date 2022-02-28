@@ -20,3 +20,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: white !important;
     border: none;
 }
+
+.info-snackbar {
+    background: #5bc0de;
+    color: white;
+}
+.info-snackbar button {
+    background-color: #5bc0de;
+    color: white !important;
+    border: none;
+}

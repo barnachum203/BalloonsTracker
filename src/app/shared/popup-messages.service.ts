@@ -13,6 +13,7 @@ export class PopupMessagesService {
       data: 'Login Success!! :)',
       duration: 2500,
       panelClass: ['green-snackbar', 'login-snackbar'],
+      // verticalPosition: 'top',
     });
   }
   openFailureLogin() {
@@ -20,6 +21,8 @@ export class PopupMessagesService {
       data: 'Wrong username or password :(',
       duration: 2500,
       panelClass: ['red-snackbar', 'login-snackbar'],
+      // verticalPosition: 'top',
+      // horizontalPosition:'right'
     });
   }
 }
