@@ -33,7 +33,11 @@ import { AuthEffects } from './components/login/store/auth.effects';
 // import{ MapLayerProviderOptions } from 'angular-cesium';
 import { CesiumDirective } from './components/map/cesium.directive';
 import { SnackBarComponent } from './components/login/snack-bar/snack-bar.component';
-import { BallonDialogComponent } from './components/menu/ballon-dialog/ballon-dialog.component'
+import { BallonDialogComponent } from './components/menu/ballon-dialog/ballon-dialog.component';
+import { DynamicFormComponent } from './components/shared/forms/dynamic-form/dynamic-form.component';
+import { DynamicFormQuestionComponent } from './components/shared/forms/dynamic-form-question/dynamic-form-question.component';
+import { BallonDetailsComponent } from './components/menu/ballon-details/ballon-details.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 //Should be in seperate module.
 const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
@@ -49,6 +53,9 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     CesiumDirective,
     SnackBarComponent,
     BallonDialogComponent,
+    DynamicFormComponent,
+    DynamicFormQuestionComponent,
+    BallonDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +73,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
       logOnly: environment.production, // Restrict extension to log-only mode
       autoPause: true, // Pauses recording actions and state changes when the extension window is not open
     }),
+    FontAwesomeModule,
 
   ],
   providers: [
