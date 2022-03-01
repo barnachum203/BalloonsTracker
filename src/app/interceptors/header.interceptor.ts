@@ -26,46 +26,47 @@ export class HeaderInterceptor implements HttpInterceptor {
     if (environment.IS_MOCK) {
       const path: string[] = request.url.split('/');
       const route: string = path[path.length - 1]; //get the last route
+      console.log(route);
+      
       const req = request.clone();
 
       const userData: AuthUser = mockDb[route] as AuthUser;
       const reqUserData: any = req.body;
+      switch (route) {
+        case 'login':
+          if (
+            reqUserData.email === userData.email &&
+            reqUserData.password === userData.password
+          ) {
+            return of(new HttpResponse({ status: 200, body: mockDb[route] }));
+          } else {
+            return next.handle(req).pipe((s) => this.handleError(s));
+          }
+          case 'ballon':
+            return of(new HttpResponse({ status: 200, body: mockDb[route]["ballons"] }));
+      
+        default:
+          return next.handle(req).pipe((s) => this.handleError(s));
 
-      if (
-        reqUserData.email === userData.email &&
-        reqUserData.password === userData.password
-      ) {
-        return of(new HttpResponse({ status: 200, body: mockDb[route] }));
-      } else {
-        return next.handle(req).pipe((s) => this.error(s));
       }
+      
     }
 
     return next.handle(request);
   }
 
-  private error(
+  private handleError(
     source: Observable<HttpEvent<unknown>>
   ): Observable<HttpEvent<unknown>> {
     return source.pipe(
       catchError(() => {
-        const err = new HttpErrorResponse({ status: 400 , statusText: "wrong username and password"});
+        const err = new HttpErrorResponse({
+          status: 400,
+          statusText: 'wrong username and password',
+        });
         console.log(err);
         return throwError(err);
       })
     );
   }
-  // private throw400BadRequest(): ResponseOptions {
-  //   const { headers, url } = this.reqInfo;
-  //   return {
-  //     status: 400,
-  //     headers,
-  //     url,
-  //     body: {
-  //       status: 400,
-  //       code: 'invalid_grant',
-  //       message: 'Invalid grant: user credentials are invalid',
-  //     },
-  //   };
-  // }
 }
