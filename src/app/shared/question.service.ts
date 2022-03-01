@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { QuestionBase } from '../components/shared/forms/question-base';
 import { DropdownQuestion } from '../components/shared/forms/question-dropdown';
+import { TextareaQuestion } from '../components/shared/forms/question-textarea';
 import { TextboxQuestion } from '../components/shared/forms/question-textbox';
 import { Ballon, Color, Type } from '../Model/Ballon';
 @Injectable()
@@ -50,13 +51,11 @@ export class QuestionService {
         required: true,
         order: 1,
       }),
-
-      new TextboxQuestion({
+      new TextareaQuestion({
         key: 'description',
         label: 'description',
-        type: 'text',
+        type: 'textarea',
         required: true,
-        value: 'test value',
         order: 2,
       }),
       new TextboxQuestion({
@@ -113,24 +112,26 @@ export class QuestionService {
         key: 'name',
         label: 'Ballon name',
         value: ballon.name,
+        maxLength: 25,
         type: 'text',
         required: true,
         order: 1,
       }),
 
-      new TextboxQuestion({
+      new TextareaQuestion({
         key: 'description',
         label: 'description',
-        type: 'text',
+        type: 'textarea',
         required: true,
         value: ballon.description,
+        maxLength: 150,
         order: 2,
       }),
       new TextboxQuestion({
         key: 'latitude',
         label: 'latitude',
         type: 'number',
-        // value: ballon.position.latitude.toString() || '1.00',
+        value: ballon.position.latitude.toString(),
         required: false,
         order: 3,
       }),
@@ -138,7 +139,7 @@ export class QuestionService {
         key: 'longitude',
         label: 'longitude',
         type: 'number',
-        // value: ballon.position.longitude.toString() || '1.00',
+        value: ballon.position.longitude.toString(),
         required: false,
         order: 3,
       }),
@@ -146,7 +147,7 @@ export class QuestionService {
         key: 'attitude',
         label: 'attitude',
         type: 'number',
-        // value: ballon.position.attitude.toString() || '1.00',
+        value: ballon.position.attitude.toString(),
         required: false,
         order: 3,
       }),
@@ -154,6 +155,8 @@ export class QuestionService {
       new DropdownQuestion({
         key: 'color',
         label: 'Color',
+        required: true,
+        value: ballon.color,
         options: [
           { key: Color.red, value: Color.red },
           { key: Color.blue, value: Color.blue },
@@ -165,6 +168,8 @@ export class QuestionService {
       new DropdownQuestion({
         key: 'type',
         label: 'Type',
+        value: ballon.type,
+        required: true,
         options: [
           { key: Type.small, value: Type.small },
           { key: Type.medium, value: Type.medium },

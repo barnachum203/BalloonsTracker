@@ -12,9 +12,14 @@ export class QuestionControlService {
     const group: any = {};
 
     questions.forEach((question) => {
-      group[question.key] = question.required
-        ? new FormControl(question.value || '', Validators.required)
-        : new FormControl(question.value || '');
+      group[question.key] = new FormControl(question.value || '', [
+        question.required 
+        ? Validators.required 
+        : Validators.nullValidator,
+        question.maxLength > 0
+          ? Validators.maxLength(question.maxLength)
+          : Validators.nullValidator,
+      ]);
     });
     return new FormGroup(group);
   }

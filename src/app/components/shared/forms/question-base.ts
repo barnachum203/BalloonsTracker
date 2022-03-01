@@ -5,6 +5,7 @@ export class QuestionBase<T> {
   required: boolean;
   order: number;
   controlType: string;
+  maxLength:  number;
   type: string;
   options: { key: string; value: string }[];
 
@@ -16,9 +17,10 @@ export class QuestionBase<T> {
       required?: boolean;
       order?: number;
       controlType?: string;
+      maxLength?:  number;
       type?: string;
       options?: { key: string; value: string }[];
-    } = {}
+    }
   ) {
     this.value = options.value;
     this.key = options.key || '';
@@ -26,6 +28,8 @@ export class QuestionBase<T> {
     this.required = !!options.required;
     this.order = options.order === undefined ? 1 : options.order;
     this.controlType = options.controlType || '';
+    this.maxLength = options.maxLength || 0;
+
     this.type = options.type || '';
     this.options = options.options || [];
   }
