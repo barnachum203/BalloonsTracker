@@ -1,34 +1,28 @@
 <ng-container [ngSwitch]="mode">
-<!-- <ng-container *ngFor=" let formItem of form">
 
-</ng-container> -->
-
+  <div class="container">
     <div mat-dialog-title class="title text-center">
-        <h1>{{ title }}</h1>
-      </div>
-      <div mat-dialog-content >
-          stam content
-      
-      </div>
-      
-      <div *ngSwitchCase="'EDIT'">
-          EDDITITITITI
-          <div>
-            <h2>Job Application for Heroes</h2>
-            <app-dynamic-form [questions]="questions$ | async"></app-dynamic-form>
-          </div>
-      </div>
-      <div *ngSwitchCase="'NEW'">
-          
-          NEWEWEW
-          <div>
-            <h2>Job Application for Heroes</h2>
-            <app-dynamic-form [questions]="questions$ | async"></app-dynamic-form>
-          </div>
-      </div>
-      <div mat-dialog-actions>
-        <button mat-button>ביטול</button>
-        <button mat-button>שמור שינוי</button>
-      </div>
-</ng-container>
+      <h1>{{ title }}</h1>
+    </div>
 
+    <div *ngSwitchCase="'EDIT'">
+      <small> mode: EDIT </small>
+      <div>
+        <app-dynamic-form [questions]="questions$ | async"></app-dynamic-form>
+      </div>
+    </div>
+    <div *ngSwitchCase="'NEW'">
+      <small> mode: NEW </small>
+      <div>
+        <app-dynamic-form [questions]="questions$ | async"></app-dynamic-form>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+      <button class="btn btn-danger">ביטול</button>
+      <button *ngIf="mode == 'EDIT'" class="btn btn-primary">שמור שינוי</button>
+      <button *ngIf="mode == 'NEW'" class="btn btn-primary">
+        הוסף בלון חדש
+      </button>
+    </div>
+  </div>
+</ng-container>

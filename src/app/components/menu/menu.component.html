@@ -2,17 +2,25 @@
   <h1 class="text-center">Action menu</h1>
 </div>
 
-<button class="btn btn-primary" (click)="openCreationDialog()">Add Ballon</button>
-<button class="btn btn-primary" (click)="openEditDialog($event)">Edit Ballon</button>
+<button class="btn btn-primary" (click)="openCreationDialog()">
+  Add Ballon
+</button>
 
 <div class="list-group" *ngFor="let ballon of ballons">
-  <button type="button" (click)="onBallonClicked(ballon)" class="list-group-item list-group-item-action ">{{ballon.name}}</button>
-  <!-- <button type="button" class="list-group-item list-group-item-action">Second Action</button>
-  <button type="button" class="list-group-item list-group-item-action">Third button Action</button>
-  <button type="button" class="list-group-item list-group-item-action">Fourth button Action</button>
-  <button type="button" class="list-group-item list-group-item-action" >Fifth button Action</button>
-  <button type="button" class="list-group-item list-group-item-action" >Sixth button Action</button>
-  <button type="button" class="list-group-item list-group-item-action" >Seventh button Action</button>
-  <button type="button" class="list-group-item list-group-item-action" >Eighth button Action</button> -->
+  <div class="row">
+    <div class="col-6">
+      <button
+        type="button"
+        (click)="onBallonClicked(ballon)"
+        class="btn btn-outline-info btn-block"
+      >
+        {{ ballon.name }}
+      </button>
+    </div>
+    <div class="col-2">
+      <button class="btn btn-link" (click)="openEditDialog(ballon)">
+        edit
+      </button>
+    </div>
+  </div>
 </div>
-

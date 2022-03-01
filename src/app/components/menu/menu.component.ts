@@ -32,24 +32,20 @@ export class MenuComponent implements OnInit {
 
   openCreationDialog() {
     const dialogRef = this.dialog.open(BallonDialogComponent, {
-      width: '640px',
+      width: '440px',
       disableClose: false,
       data: { dialogType: IDialog.ADD_NEW },
     });
   }
 
   openEditDialog(ballon: any) {
-    console.log(ballon);
-
     const dialogRef = this.dialog.open(BallonDialogComponent, {
-      width: '640px',
+      width: '440px',
       disableClose: false,
       data: { dialogType: IDialog.EDIT, ballon: ballon },
     });
   }
   onBallonClicked(ballon: Ballon) {
-    // console.log(ballon);
-
     this.route.navigate([`home/${ballon.id}`]);
   }
 }
