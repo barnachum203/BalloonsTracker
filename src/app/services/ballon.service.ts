@@ -5,22 +5,22 @@ import { environment } from 'src/environments/environment';
 import { Ballon } from '../Model/Ballon';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BallonService {
-  updateBallon(ballon: Ballon):Observable<Ballon> {
-    return this.http.put<Ballon>(this.apiUrl + '/ballon', {ballon});
-  }
-
   apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAllBallons(): Observable<Ballon[]>{
+  getAllBallons(): Observable<Ballon[]> {
     return this.http.get<Ballon[]>(this.apiUrl + '/ballon');
   }
 
   getBallonById(id: any): Ballon {
     throw new Error('Method not implemented.');
+  }
+
+  updateBallon(ballon: Ballon): Observable<Ballon> {
+    return this.http.put<Ballon>(this.apiUrl + '/ballon', { ballon });
   }
 }
