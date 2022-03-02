@@ -25,6 +25,13 @@ export const UPDATE_REQUEST: string = '[Map] Update Request';
 export const UPDATE_SUCCESS: string = '[Map] Update Success';
 export const UPDATE_FAILURE: string = '[Map] Update Failure';
 
+
+export const CREATE_REQUEST: string = '[Map] Create Request';
+export const CREATE_REQUEST_SUCCESS: string = '[Map] Create Request Success';
+export const CREATE_REQUEST_FAILURE: string = '[Map] Create Request Failure' ;
+
+
+
 export const GET_BALLONS: string = '[Map] Get Ballons';
 export const GET_BALLONS_SUCCESS: string = '[Map] Get Ballons Success';
 export const GET_BALLONS_FAILURE: string = '[Map] Get Ballons Failure';
@@ -34,7 +41,17 @@ export const SHOW_BALLON: string = '[Map] Show Ballon';
 let action: IAction;
 // createAction function returns a function, that when called returns an object in the shape of the Action interface.
 // The props method is used to define any additional metadata needed for the handling of the action.
-
+//Create Actions
+export const createBallonRequest = createAction(
+  CREATE_REQUEST,
+  props<{ ballon: Ballon }>()
+);
+export const createBallonSuccess = createAction(
+  CREATE_REQUEST_SUCCESS
+);
+export const createBallonFailure = createAction(
+  CREATE_REQUEST_FAILURE
+);
 // Update Actions
 export const updateRequest = createAction(
   UPDATE_REQUEST,

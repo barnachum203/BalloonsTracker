@@ -43,4 +43,23 @@ export class PopupMessagesService {
       horizontalPosition: 'right',
     });
   }
+
+  openSuccessCreate() {
+    this.snackBar.openFromComponent(SnackBarComponent, {
+      data: 'Created :)',
+      duration: 2500,
+      panelClass: ['red-snackbar', 'login-snackbar'],
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+    });
+  }
+  openFailureCreate() {
+    this.snackBar.openFromComponent(SnackBarComponent, {
+      data: 'Fail to create new Air Ballon.',
+      duration: 2500,
+      panelClass: ['red-snackbar', 'login-snackbar'],
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+    });
+  }
 }

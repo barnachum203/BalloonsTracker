@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
@@ -40,7 +39,6 @@ export class MapEffects {
     () =>
       this.actions$.pipe(
         ofType(MapActions.updateSuccess),
-        // tap(() => this.router.navigate(['/home'])),
         tap(() => {
           this.popupService.openSuccessUpdate();
         })
@@ -59,10 +57,43 @@ export class MapEffects {
     { dispatch: false }
   );
 
+  createBallonRequest$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MapActions.createBallonRequest),
+      exhaustMap((action) =>
+        this.ballonService.createBallon(action.ballon).pipe(
+          map(() => MapActions.createBallonSuccess()),
+          catchError(() => of(MapActions.createBallonFailure()))
+        )
+      )
+    )
+  );
+
+  createBallonSuccess$ = createEffect(
+    () => () =>
+      this.actions$.pipe(
+        ofType(MapActions.createBallonSuccess),
+        tap(() => {
+          this.popupService.openSuccessCreate();
+        })
+      ),
+    { dispatch: false }
+  );
+
+  createBallonFailure$ = createEffect(
+    () => () =>
+      this.actions$.pipe(
+        ofType(MapActions.createBallonFailure),
+        tap(() => {
+          this.popupService.openFailureCreate();
+        })
+      ),
+    { dispatch: false }
+  );
+
   constructor(
     private actions$: Actions,
     private ballonService: BallonService,
-    private router: Router,
     private popupService: PopupMessagesService
   ) {}
 }

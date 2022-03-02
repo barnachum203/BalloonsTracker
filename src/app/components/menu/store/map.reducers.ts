@@ -16,13 +16,9 @@ import { MapState } from './map.models';
 export const mapFeatureKey = 'map';
 
 // define a shape for the piece of state.
-export interface State {
-  // email: string;
-  // password: string;
-  // username: string | undefined;
-  isLoggedIn: boolean;
-  isLoading: boolean;
-}
+// export interface State {
+
+// }
 
 // Setting the initial state
 //  The initial state gives the state an initial value, or provides a value if the current state is undefined.
@@ -38,6 +34,32 @@ export const initialState: MapState = {
 //  The reducer function's responsibility is to handle the state transitions in an immutable way.
 export const mapReducer = createReducer(
   initialState,
+
+  //Create
+  on(
+    MapActions.createBallonRequest,
+    (state): MapState => ({
+      ...state,
+      isLoading: true,
+      hasError: false,
+    })
+  ),
+  on(
+    MapActions.createBallonSuccess,
+    (state): MapState => ({
+      ...state,
+      isLoading: false,
+      hasError: false,
+    })
+  ),
+  on(
+    MapActions.createBallonFailure,
+    (state): MapState => ({
+      ...state,
+      isLoading: false,
+      hasError: true,
+    })
+  ),
   // update
   on(
     MapActions.updateRequest,

@@ -8,6 +8,7 @@ import { Ballon } from '../Model/Ballon';
   providedIn: 'root',
 })
 export class BallonService {
+
   apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
@@ -22,5 +23,9 @@ export class BallonService {
 
   updateBallon(ballon: Ballon): Observable<Ballon> {
     return this.http.put<Ballon>(this.apiUrl + '/ballon', { ballon });
+  }
+  
+  createBallon(ballon: Ballon): Observable<Ballon> {
+    return this.http.post<Ballon>(this.apiUrl + '/ballon', { ballon });
   }
 }
