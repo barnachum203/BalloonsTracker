@@ -8,6 +8,9 @@ import { Ballon } from '../Model/Ballon';
   providedIn: 'root'
 })
 export class BallonService {
+  updateBallon(ballon: Ballon):Observable<Ballon> {
+    return this.http.put<Ballon>(this.apiUrl + '/ballon', {ballon});
+  }
 
   apiUrl = environment.apiUrl;
 

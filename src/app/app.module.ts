@@ -38,6 +38,8 @@ import { DynamicFormComponent } from './components/shared/forms/dynamic-form/dyn
 import { DynamicFormQuestionComponent } from './components/shared/forms/dynamic-form-question/dynamic-form-question.component';
 import { BallonDetailsComponent } from './components/menu/ballon-details/ballon-details.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { mapReducer } from './components/menu/store/map.reducers';
+import { MapEffects } from './components/menu/store/map.effects';
 
 //Should be in seperate module.
 const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
@@ -65,8 +67,8 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     NgbModule,
     BrowserAnimationsModule,
     materials,
-    StoreModule.forRoot({'auth': loginReducer}, {}),
-    EffectsModule.forRoot([AuthEffects]),
+    StoreModule.forRoot({'auth': loginReducer, 'map': mapReducer}, {}),
+    EffectsModule.forRoot([AuthEffects , MapEffects]),
     // AngularCesiumModule.forRoot({fixEntitiesShadows: false, customPipes: []}) ,
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

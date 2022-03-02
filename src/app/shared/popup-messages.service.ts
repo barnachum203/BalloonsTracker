@@ -25,4 +25,22 @@ export class PopupMessagesService {
       // horizontalPosition:'right'
     });
   }
+  openFailureUpdate() {
+    this.snackBar.openFromComponent(SnackBarComponent, {
+      data: 'Failed update a ballon :(',
+      duration: 2500,
+      panelClass: ['red-snackbar', 'login-snackbar'],
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+    });
+  }
+  openSuccessUpdate() {
+    this.snackBar.openFromComponent(SnackBarComponent, {
+      data: 'Updated :)',
+      duration: 2500,
+      panelClass: ['red-snackbar', 'login-snackbar'],
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+    });
+  }
 }
