@@ -1,10 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Ballon } from 'src/app/Model/Ballon';
 import { BallonService } from 'src/app/services/ballon.service';
 import { BallonDialogComponent } from './ballon-dialog/ballon-dialog.component';
 import * as IDialog from './ballon-dialog/dialog.types';
+import * as MapActions from './store/map.actions';
+import { MapState } from './store/map.models';
+import * as MapSelectors from './store/map.selectors';
 
 @Component({
   selector: 'app-menu',
@@ -15,19 +19,28 @@ export class MenuComponent implements OnInit {
   // @Input() currentBallon!: Ballon;
 
   ballons!: Ballon[];
+  ballons$ = this.store.select(MapSelectors.selectMapBallons)
   constructor(
     public dialog: MatDialog,
     private route: Router,
-    ballonService: BallonService
+    // ballonService: BallonService,
+    private store: Store
   ) {
-    ballonService.getAllBallons().subscribe((data) => {
-      this.ballons = data;
-      console.log(this.ballons);
-    });
+    this.getBallons()
+    // ballonService.getAllBallons().subscribe((data) => {
+    //   this.ballons = data;
+    //   console.log(this.ballons);
+    // });
   }
 
   ngOnInit(): void {
     console.log();
+
+  }
+
+  getBallons(){
+    //TODO: get ballons once
+      this.store.dispatch(MapActions.getBallons())
   }
 
   openCreationDialog() {

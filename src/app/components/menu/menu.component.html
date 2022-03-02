@@ -24,3 +24,25 @@
     </div>
   </div>
 </div>
+
+<h3>
+  ballons from store
+</h3>
+<div class="list-group" *ngFor="let ballon of (ballons$ | async)!">
+  <div class="row">
+    <div class="col-6">
+      <button
+        type="button"
+        (click)="onBallonClicked(ballon)"
+        class="btn btn-outline-info btn-block"
+      >
+        {{ ballon.name }}
+      </button>
+    </div>
+    <div class="col-2">
+      <button class="btn btn-link" (click)="openEditDialog(ballon)">
+        edit
+      </button>
+    </div>
+  </div>
+</div>
