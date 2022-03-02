@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Ballon, Position } from 'src/app/Model/Ballon';
+import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 import { BallonService } from 'src/app/services/ballon.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class BallonDetailsComponent implements OnInit {
 
   ballons!: Ballon[];
   ballon: Ballon | undefined;
-  position: Position | undefined;
+  position: BallonPosition | undefined;
   id!: number;
   constructor(private route: Router, private activatedRoute: ActivatedRoute,
    private ballonService: BallonService) {
@@ -28,7 +28,7 @@ export class BallonDetailsComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params.id;
       //TODO: get ballon by id live form server / NgRx
-      this.ballon = this.ballons.find(element => element.id.toString() == this.id.toString()) 
+      this.ballon = this.ballons.find(element => element.id?.toString() == this.id.toString()) 
       this.position = this.ballon?.position;
       console.log(this.ballon);
       
