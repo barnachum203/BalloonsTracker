@@ -4,8 +4,8 @@ export class Ballon {
     public type: Type,
     public description: string,
     public color: Color,
-    public position: Position,
-    public id: string
+    public position: BallonPosition,
+    public id?: string
   ) {}
 }
 export enum Type {
@@ -22,7 +22,7 @@ export enum Color {
   white = 'white',
 }
 
-export interface Position{
+export interface BallonPosition{
     latitude: number,
     longitude: number,
     attitude: number
