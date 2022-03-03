@@ -46,16 +46,19 @@ export const mapReducer = createReducer(
   ),
   on(
     MapActions.createBallonSuccess,
-    (state): MapState => ({
+    (state, action): MapState => ({
       ...state,
       isLoading: false,
       hasError: false,
+      ballons: [...state.ballons!, action.ballon],
     })
   ),
   on(
     MapActions.createBallonFailure,
-    (state): MapState => ({
+    (state, action): MapState => ({
       ...state,
+      error: action.error,
+      errorMessage: action.error.message,
       isLoading: false,
       hasError: true,
     })
@@ -76,6 +79,7 @@ export const mapReducer = createReducer(
       //TODO: update ballon state
       isLoading: false,
       hasError: false,
+      // ballons: [action.updatedBallon],
     })
   ),
   on(
@@ -84,7 +88,7 @@ export const mapReducer = createReducer(
       ...state,
       isLoading: false,
       hasError: true,
-      errorMessage: action.error.statusText,
+      errorMessage: action.error.message,
       error: action.error,
     })
   ),

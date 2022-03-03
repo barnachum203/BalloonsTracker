@@ -30,8 +30,6 @@ export const CREATE_REQUEST: string = '[Map] Create Request';
 export const CREATE_REQUEST_SUCCESS: string = '[Map] Create Request Success';
 export const CREATE_REQUEST_FAILURE: string = '[Map] Create Request Failure' ;
 
-
-
 export const GET_BALLONS: string = '[Map] Get Ballons';
 export const GET_BALLONS_SUCCESS: string = '[Map] Get Ballons Success';
 export const GET_BALLONS_FAILURE: string = '[Map] Get Ballons Failure';
@@ -47,10 +45,12 @@ export const createBallonRequest = createAction(
   props<{ ballon: Ballon }>()
 );
 export const createBallonSuccess = createAction(
-  CREATE_REQUEST_SUCCESS
+  CREATE_REQUEST_SUCCESS,
+  props<{ ballon: Ballon }>()
 );
 export const createBallonFailure = createAction(
-  CREATE_REQUEST_FAILURE
+  CREATE_REQUEST_FAILURE,
+  props<{ error: HttpErrorResponse }>()
 );
 // Update Actions
 export const updateRequest = createAction(
