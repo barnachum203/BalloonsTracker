@@ -5,7 +5,7 @@ import { QuestionBase } from '../question-base';
 import * as IDialog from '../../../menu/ballon-dialog/dialog.types';
 import { Store } from '@ngrx/store';
 import * as MapActions from '../../../menu/store/map.actions';
-import { Ballon } from 'src/app/Model/Ballon';
+import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -20,6 +20,7 @@ export class DynamicFormComponent implements OnInit {
 
   form!: FormGroup;
   payLoad!: Ballon;
+  positionPayload!:BallonPosition;
 
   constructor(private qcs: QuestionControlService, private store: Store) {}
 
@@ -29,15 +30,21 @@ export class DynamicFormComponent implements OnInit {
 
   onSubmit() {
     this.payLoad = this.form.getRawValue();
+    this.positionPayload = this.form.getRawValue();
 
     if (this.mode == IDialog.EDIT) {
+      let position: BallonPosition ={
+        longitude: this.positionPayload.attitude,
+        attitude: this.positionPayload.attitude,
+        latitude: this.positionPayload.latitude
+      };
 
       const ballon: Ballon = new Ballon(
         this.payLoad.name,
         this.payLoad.type,
         this.payLoad.description,
         this.payLoad.color,
-        this.payLoad.position,
+        position,
         this.payLoad.id
       );
       console.log(ballon);
