@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -7,26 +7,20 @@ import {
   HttpResponse,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, of, Subscriber, throwError } from 'rxjs';
-import mockDb from '../../assets/mockdb/mockDb.json';
-import { environment } from '../../environments/environment';
-import { catchError, map } from 'rxjs/operators';
-import { AuthUser } from '../components/login/store/auth.models';
-import { Store } from '@ngrx/store';
-import * as MapActions from '../components/menu/store/map.actions';
+import { Observable, of, throwError } from 'rxjs';
 import { Ballon } from '../Model/Ballon';
-import * as MapSelectors from '../components/menu/store/map.selectors';
+import mockDb from '../../assets/mockdb/mockDb.json';
+import { environment } from 'src/environments/environment';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
-export class HeaderInterceptor implements HttpInterceptor {
-  constructor(private store: Store) {}
+export class MockInterceptor implements HttpInterceptor {
+  constructor() {}
 
   intercept(
-    request: HttpRequest<any>,
+    request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    console.log('intercept');
-
     if (environment.IS_MOCK) {
       const path: string[] = request.url.split('/');
       const route: string = path[path.length - 1]; //get the last route
@@ -34,73 +28,28 @@ export class HeaderInterceptor implements HttpInterceptor {
 
       const req = request.clone();
 
-      const userData: AuthUser = mockDb[route] as AuthUser;
-      const reqUserData: any = req.body;
       switch (route) {
-        case 'login':
-          if (
-            reqUserData.email === userData.email &&
-            reqUserData.password === userData.password
-          ) {
-            return of(new HttpResponse({ status: 200, body: mockDb[route] }));
-          } else {
-            return next.handle(req).pipe((s) => this.handleError(s));
-          }
+        
         case 'ballon':
           // console.log(req.method);
 
           switch (req.method) {
             case 'POST':
-              // if(req.body)
-
-              const ballon: Ballon = req.body['ballon'];
-
-              return of(new HttpResponse({ status: 200, body: ballon }));
+              console.log("POST");
+              
+              return of(new HttpResponse({ status: 200, body: {} }));
               break;
             case 'GET':
               console.log('GET');
 
-              // let ballons$ = this.store.select(MapSelectors.selectMapBallons);
-              // ballons$.subscribe(
-              //   (val) => {
-              //     console.log(val);
-              //     const baloones = val;
-              //   },
-              //   (err) => {},
-              //   () => {
-              //     return of(
-              //       new HttpResponse({ status: 200, body: baloones })
-              //     );
-              //   }
-              // );
-
               break;
             case 'PUT':
               console.log('PUT');
-              // console.log(req.body['ballon']);
-              const updatedBallon: Ballon = req.body.ballon;
-
-              let mockData = [...mockDb[route]['ballons']];
-              const result = mockData.findIndex(
-                (e) => e.id == updatedBallon.id
-              );
-              // mockData.forEach(element => {
-              //   if(element.id == updatedBallon.id){
-              //     element = updatedBallon
-              //     console.log("Done update");
-
-              //   }
-              // });
-              // console.log(result);
-              console.log(mockData[result]);
-
-              mockData[result] = updatedBallon;
-              console.log(mockData);
 
               return of(
                 new HttpResponse({
                   status: 200,
-                  body: mockData,
+                  body: {},
                 })
               );
               break;
@@ -111,15 +60,13 @@ export class HeaderInterceptor implements HttpInterceptor {
           return of(
             new HttpResponse({ status: 200, body: mockDb[route]['ballons'] })
           );
-
-        default:
-          return next.handle(req).pipe((s) => this.handleError(s));
       }
     }
 
     return next.handle(request);
   }
 
+  
   private handleError(
     source: Observable<HttpEvent<unknown>>
   ): Observable<HttpEvent<unknown>> {
@@ -127,7 +74,7 @@ export class HeaderInterceptor implements HttpInterceptor {
       catchError(() => {
         const err = new HttpErrorResponse({
           status: 400,
-          statusText: 'wrong username and password - BAD REQUEST',
+          statusText: 'BAD REQUEST',
         });
         console.log(err);
         return throwError(err);
