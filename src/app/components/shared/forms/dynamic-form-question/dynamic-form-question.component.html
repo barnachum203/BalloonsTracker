@@ -3,7 +3,7 @@
   
     <div [ngSwitch]="question.controlType">
   
-      <input class="form-control" *ngSwitchCase="'textbox'" [formControlName]="question.key"
+      <input class="form-control"  *ngSwitchCase="'textbox'" [formControlName]="question.key"
               [id]="question.key" [type]="question.type">
   
       <select class="form-select" [id]="question.key" *ngSwitchCase="'dropdown'" [formControlName]="question.key">
@@ -13,6 +13,8 @@
       <textarea class="form-control" *ngSwitchCase="'textarea'" 
         [formControlName]="question.key" [id]="question.key" ></textarea>
               
+        <app-show-errors [ctrl]="form.controls[question.key]"></app-show-errors>
+
     </div>
   
     <div class="errorMessage" *ngIf="!isValid">{{question.label}} is required</div>
