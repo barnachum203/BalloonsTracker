@@ -19,8 +19,8 @@
     </div>
     <div mat-dialog-actions>
       <button class="btn btn-danger">ביטול</button>
-      <button *ngIf="mode == 'EDIT'" (click)="onSave()" class="btn btn-primary">שמור שינוי</button>
-      <button *ngIf="mode == 'NEW'" (click)="onCreate()" class="btn btn-primary">
+      <button *ngIf="mode === 'EDIT'" (click)="onSave()" class="btn btn-primary">שמור שינוי</button>
+      <button *ngIf="mode === 'NEW'" (click)="onCreate()" class="btn btn-primary">
         הוסף בלון חדש
       </button>
     </div>
