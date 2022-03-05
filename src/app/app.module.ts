@@ -9,8 +9,6 @@ import { environment } from '../environments/environment'; // Angular CLI enviro
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,8 +19,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 
 import { HeaderInterceptor } from './interceptors/header.interceptor';
-import { MenuComponent } from './components/menu/menu.component';
-import { MapComponent } from './components/map/map.component';
 import { loginReducer } from './components/login/store/auth.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './components/login/store/auth.effects';
@@ -40,14 +36,20 @@ import { BallonDetailsComponent } from './components/menu/ballon-details/ballon-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { mapReducer } from './components/menu/store/map.reducers';
 import { MapEffects } from './components/menu/store/map.effects';
+import { ShowErrorsComponent } from './components/shared/forms/show-errors/show-errors.component';
 
+import { LoginModule } from "./components/login/login.module";
+import { HomeModule } from './components/home/home.module';
+import { MenuModule } from './components/menu/menu.module';
+import { MapComponent } from './components/map/map.component';
+import { HomeComponent } from './components/home/home.component';
+import { MenuComponent } from './components/menu/menu.component';
 //Should be in seperate module.
 const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     HomeComponent,
     NavbarComponent,
     MenuComponent,
@@ -58,6 +60,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     DynamicFormComponent,
     DynamicFormQuestionComponent,
     BallonDetailsComponent,
+    ShowErrorsComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +69,9 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     HttpClientModule,
     NgbModule,
     BrowserAnimationsModule,
+    LoginModule,
+    // HomeModule,
+    // MenuModule,
     materials,
     StoreModule.forRoot({'auth': loginReducer, 'map': mapReducer}, {}),
     EffectsModule.forRoot([AuthEffects , MapEffects]),
