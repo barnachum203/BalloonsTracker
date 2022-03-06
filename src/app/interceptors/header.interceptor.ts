@@ -51,29 +51,25 @@ export class HeaderInterceptor implements HttpInterceptor {
 
           switch (req.method) {
             case 'POST':
-              // if(req.body)
+              console.log('POST');
 
-              const ballon: Ballon = req.body['ballon'];
+              const id = (((1 + Math.random()) * 0x10000) | 0)
+                .toString(16)
+                .substring(1);
+              const newBallon: Ballon = { ...req.body['ballon'] };
+              newBallon.id = id;
 
-              return of(new HttpResponse({ status: 200, body: ballon }));
+              return of(new HttpResponse({ status: 200, body: newBallon }));
               break;
+
             case 'GET':
               console.log('GET');
-
-              // let ballons$ = this.store.select(MapSelectors.selectMapBallons);
-              // ballons$.subscribe(
-              //   (val) => {
-              //     console.log(val);
-              //     const baloones = val;
-              //   },
-              //   (err) => {},
-              //   () => {
-              //     return of(
-              //       new HttpResponse({ status: 200, body: baloones })
-              //     );
-              //   }
-              // );
-
+              return of(
+                new HttpResponse({
+                  status: 200,
+                  body: mockDb[route]['ballons'],
+                })
+              );
               break;
             case 'PUT':
               console.log('PUT');
@@ -91,9 +87,7 @@ export class HeaderInterceptor implements HttpInterceptor {
             default:
               break;
           }
-          return of(
-            new HttpResponse({ status: 200, body: mockDb[route]['ballons'] })
-          );
+          break;
 
         default:
           return next.handle(req).pipe((s) => this.handleError(s));
