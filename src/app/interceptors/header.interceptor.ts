@@ -77,30 +77,13 @@ export class HeaderInterceptor implements HttpInterceptor {
               break;
             case 'PUT':
               console.log('PUT');
-              // console.log(req.body['ballon']);
-              const updatedBallon: Ballon = req.body.ballon;
-
-              let mockData = [...mockDb[route]['ballons']];
-              const result = mockData.findIndex(
-                (e) => e.id == updatedBallon.id
-              );
-              // mockData.forEach(element => {
-              //   if(element.id == updatedBallon.id){
-              //     element = updatedBallon
-              //     console.log("Done update");
-
-              //   }
-              // });
-              // console.log(result);
-              console.log(mockData[result]);
-
-              mockData[result] = updatedBallon;
-              console.log(mockData);
+              // console.log({ ...req.body['ballon'] });
+              const updatedBallon: Ballon = { ...req.body['ballon'] };
 
               return of(
                 new HttpResponse({
                   status: 200,
-                  body: mockData,
+                  body: updatedBallon,
                 })
               );
               break;
