@@ -46,8 +46,8 @@ export class QuestionService {
       new TextboxQuestion({
         key: 'name',
         label: 'Ballon name',
-        value: 'test name',
         type: 'text',
+        maxLength: 25,
         required: true,
         order: 1,
       }),
@@ -55,6 +55,7 @@ export class QuestionService {
         key: 'description',
         label: 'description',
         type: 'textarea',
+        maxLength: 25,
         required: true,
         order: 2,
       }),

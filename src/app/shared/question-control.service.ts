@@ -19,8 +19,11 @@ export class QuestionControlService {
         question.maxLength > 0
           ? Validators.maxLength(question.maxLength)
           : Validators.nullValidator,
-      ]);
-    });
+          question.minLength > 0
+          ? Validators.minLength(question.minLength)
+          : Validators.nullValidator,
+      ]);      
+    });    
     return new FormGroup(group);
   }
 }
