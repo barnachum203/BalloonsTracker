@@ -1,10 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { AbstractControl, FormControl } from '@angular/forms';
 
-export enum ValidatorsErr{
-  required = 'required',
-  maxlength = 'maxlength',
-}
 
 @Component({
   selector: 'app-show-errors',
@@ -12,11 +8,12 @@ export enum ValidatorsErr{
   styleUrls: ['./show-errors.component.css'],
 })
 export class ShowErrorsComponent {
-  @Input() ctrl!: FormControl | AbstractControl ;
+  @Input() ctrl!: FormControl | AbstractControl;
 
-  ERROR_MESSAGE = {
+  private ERROR_MESSAGE: any = {
     required: () => `This field is required`,
-    maxlength: (par: any) => `Max ${par.requiredLength} chars is required`,
+    maxlength: (par: any) => `Max ${par['requiredLength']} chars is required`,
+    minlength: (par: any) => `Min ${par['requiredLength']} chars is required`,
   };
   constructor() {}
 
@@ -25,13 +22,14 @@ export class ShowErrorsComponent {
   }
 
   listOfErrors(): string[] {
-    return (
-      Object.keys(this.ctrl!.errors!).map((err) =>
-        this.ERROR_MESSAGE['maxlength'](this.ctrl?.getError(err))
-      ) 
+      // Object.keys(this.ctrl.errors!).map((err) =>
+      //   console.log(
+      //     err
+      //   )  
+      // )
+
+    return Object.keys(this.ctrl.errors!).map((err) =>
+      this.ERROR_MESSAGE[err](this.ctrl?.getError(err))
     );
   }
-
-  
 }
- 

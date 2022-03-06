@@ -13,7 +13,7 @@
       <textarea class="form-control" *ngSwitchCase="'textarea'" 
         [formControlName]="question.key" [id]="question.key" ></textarea>
               
-        <app-show-errors [ctrl]="form.controls[question.key]"></app-show-errors>
+        <app-show-errors *ngIf="form.controls[question.key].errors" [ctrl]="form.controls[question.key]"></app-show-errors>
 
     </div>
   
