@@ -79,7 +79,9 @@ export const mapReducer = createReducer(
       //TODO: update ballon state
       isLoading: false,
       hasError: false,
-      // ballons: [action.updatedBallon],
+      ballons: state.ballons?.map((e) => {
+        return e.id == action.updatedBallon.id ? action.updatedBallon : e;
+      }),
     })
   ),
   on(
