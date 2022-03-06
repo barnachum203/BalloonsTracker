@@ -34,6 +34,7 @@ export class BallonDetailsComponent implements OnInit, OnDestroy {
     });
     this.subscribtion = this.ballons$.subscribe((data) => {
       this.ballon = data?.find((e) => e.id == this.id);
+      this.position = this.ballon?.position    
     });
   }
 
