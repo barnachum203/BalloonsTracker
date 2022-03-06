@@ -20,7 +20,7 @@ export class DynamicFormComponent implements OnInit {
 
   form!: FormGroup;
   payLoad!: Ballon;
-  positionPayload!:BallonPosition;
+  positionPayload!: BallonPosition;
 
   constructor(private qcs: QuestionControlService, private store: Store) {}
 
@@ -32,13 +32,13 @@ export class DynamicFormComponent implements OnInit {
     this.payLoad = this.form.getRawValue();
     this.positionPayload = this.form.getRawValue();
 
-    if (this.mode == IDialog.EDIT) {
-      let position: BallonPosition ={
-        longitude: this.positionPayload.attitude,
-        attitude: this.positionPayload.attitude,
-        latitude: this.positionPayload.latitude
-      };
+    const position: BallonPosition = {
+      longitude: this.positionPayload.attitude,
+      attitude: this.positionPayload.attitude,
+      latitude: this.positionPayload.latitude,
+    };
 
+    if (this.mode == IDialog.EDIT) {
       const ballon: Ballon = new Ballon(
         this.payLoad.name,
         this.payLoad.type,
@@ -52,13 +52,12 @@ export class DynamicFormComponent implements OnInit {
       this.store.dispatch(MapActions.updateRequest({ ballon }));
     }
     if (this.mode == IDialog.ADD_NEW) {
-
       const ballon: Ballon = new Ballon(
         this.payLoad.name,
         this.payLoad.type,
         this.payLoad.description,
         this.payLoad.color,
-        this.payLoad.position,
+        position
       );
       console.log(ballon);
 
