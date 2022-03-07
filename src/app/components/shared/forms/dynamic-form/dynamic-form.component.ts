@@ -33,9 +33,9 @@ export class DynamicFormComponent implements OnInit {
     this.positionPayload = this.form.getRawValue();
 
     const position: BallonPosition = {
-      longitude: this.positionPayload.attitude,
-      attitude: this.positionPayload.attitude,
-      latitude: this.positionPayload.latitude,
+      longitude: Number(this.positionPayload.longitude),
+      attitude: Number(this.positionPayload.attitude),
+      latitude: Number(this.positionPayload.latitude),
     };
 
     if (this.mode == IDialog.EDIT) {
