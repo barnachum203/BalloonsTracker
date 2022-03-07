@@ -28,6 +28,7 @@ export const initialState: MapState = {
   error: undefined,
   errorMessage: undefined,
   ballons: undefined,
+  activeBallon: undefined,
 };
 
 // Creating the reducer function
@@ -130,5 +131,20 @@ export const mapReducer = createReducer(
       hasError: true,
       isLoading: false,
     })
-  )
+  ),
+  //Map
+  on(
+    MapActions.activeBallon,
+    (state, action): MapState => ({
+      ...state,
+      activeBallon: action.ballon
+    })
+  ),
+  on(
+    MapActions.unactiveBallon,
+    (state): MapState => ({
+      ...state,
+      activeBallon: undefined
+    })
+  ),
 );

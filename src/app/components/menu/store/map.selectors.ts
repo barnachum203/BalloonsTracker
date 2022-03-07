@@ -35,3 +35,9 @@ export const selectError = createSelector(
   selectMap,
   (state) => state.error
 );
+
+// Map selectors
+export const selectActiveBallon = createSelector(
+  selectMap,
+  (state) => state.activeBallon
+);

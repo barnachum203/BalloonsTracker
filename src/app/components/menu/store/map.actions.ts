@@ -34,7 +34,8 @@ export const GET_BALLONS: string = '[Map] Get Ballons';
 export const GET_BALLONS_SUCCESS: string = '[Map] Get Ballons Success';
 export const GET_BALLONS_FAILURE: string = '[Map] Get Ballons Failure';
 
-export const SHOW_BALLON: string = '[Map] Show Ballon';
+export const ACTIVE_BALLON: string = '[Map] Active Ballon';
+export const UNACTIVE_BALLON: string = '[Map] De-Activate Ballon';
 
 let action: IAction;
 // createAction function returns a function, that when called returns an object in the shape of the Action interface.
@@ -79,9 +80,12 @@ export const getBallonsFailure = createAction(
   props<{ error: HttpErrorResponse }>()
 );
 
-// ????
-export const showBallon = createAction(
-  SHOW_BALLON,
-  props<{ error: HttpErrorResponse }>()
+// Map
+export const activeBallon = createAction(
+  ACTIVE_BALLON,
+  props<{ ballon: Ballon }>()
+);
+export const unactiveBallon = createAction(
+  UNACTIVE_BALLON
 );
 
