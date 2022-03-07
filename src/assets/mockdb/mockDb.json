@@ -23,8 +23,8 @@
             "type": "small",
             "description": "this ballon fllying around the globe and search for dolphines",
             "position": {
-              "longitude": 11.1525162,
-              "latitude": 16.632523,
+              "longitude": 35.425418,
+              "latitude": 32.752357,
               "attitude": 14.2242
             },
             "color": "red"
@@ -35,8 +35,8 @@
             "type": "medium",
             "description": "this ballon fllying around the globe and search for UFO's",
             "position": {
-              "longitude": 25.7744,
-              "latitude": 26.16716,
+              "longitude": 34.938080,
+              "latitude": 31.032022,
               "attitude": 25.2242
 
             },
@@ -48,8 +48,8 @@
             "type": "small",
             "description": "this ballon fllying around the globe and search for party's",
             "position": {
-              "longitude": 33.5512,
-              "latitude": 33.727272,
+              "longitude": 33.607445,
+              "latitude": 32.534314,
               "attitude": 32.2242
 
             },
