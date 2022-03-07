@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 import * as MapSelectors from '../store/map.selectors';
+import * as MapActions from '../store/map.actions';
 
 @Component({
   selector: 'app-ballon-details',
@@ -40,6 +41,7 @@ export class BallonDetailsComponent implements OnInit, OnDestroy {
 
   getBallonById() {}
   backToMenu() {
+    this.store.dispatch(MapActions.unactiveBallon())
     this.route.navigate(['home']);
   }
 
