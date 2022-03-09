@@ -25,7 +25,7 @@
             "position": {
               "longitude": 35.425418,
               "latitude": 32.752357,
-              "attitude": 14.2242
+              "attitude": 25000
             },
             "color": "red"
           },
@@ -37,7 +37,7 @@
             "position": {
               "longitude": 34.938080,
               "latitude": 31.032022,
-              "attitude": 25.2242
+              "attitude": 15000
 
             },
             "color": "blue"
@@ -50,7 +50,7 @@
             "position": {
               "longitude": 33.607445,
               "latitude": 32.534314,
-              "attitude": 32.2242
+              "attitude": 12000
 
             },
             "color": "white"
