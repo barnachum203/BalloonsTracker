@@ -75,6 +75,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
   onBallonClicked(ballon: Ballon) {
     this.store.dispatch(MapActions.activeBallon({ballon}))
-    this.route.navigate([`home/${ballon.id}`]);
+    // this.route.navigate([`home/${ballon.id}`]); // now route throw effects
   }
 }
