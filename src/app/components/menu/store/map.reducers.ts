@@ -1,4 +1,6 @@
+import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
+import { Ballon } from 'src/app/Model/Ballon';
 import * as MapActions from './map.actions';
 import { MapState } from './map.models';
 
@@ -30,6 +32,7 @@ export const initialState: MapState = {
   ballons: undefined,
   activeBallon: undefined,
 };
+export const adapter: EntityAdapter<Ballon> = createEntityAdapter<Ballon>(); // test
 
 // Creating the reducer function
 //  The reducer function's responsibility is to handle the state transitions in an immutable way.
@@ -71,6 +74,20 @@ export const mapReducer = createReducer(
       ...state,
       isLoading: true,
       hasError: false,
+    })
+  ),
+  on(
+    MapActions.updatePosition,
+    (state, action): MapState => ({
+      ...state,
+      ballons: state.ballons?.map((e) => {
+        if(e.id == action.id){
+          var temp = Object.assign({}, e);
+          temp.position = action.position
+          return temp
+        }
+        return e
+      }),
     })
   ),
   on(
@@ -148,3 +165,5 @@ export const mapReducer = createReducer(
     })
   ),
 );
+
+

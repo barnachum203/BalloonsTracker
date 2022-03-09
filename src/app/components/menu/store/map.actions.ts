@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
-import { Ballon } from 'src/app/Model/Ballon';
+import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 /**
  *
  * There are a few rules to writing good actions within your application.
@@ -29,6 +29,8 @@ export const UPDATE_FAILURE: string = '[Map] Update Failure';
 export const CREATE_REQUEST: string = '[Map] Create Request';
 export const CREATE_REQUEST_SUCCESS: string = '[Map] Create Request Success';
 export const CREATE_REQUEST_FAILURE: string = '[Map] Create Request Failure' ;
+export const UPDATE_REQUEST_POSTION: string = '[Map] Update Position';
+
 
 export const GET_BALLONS: string = '[Map] Get Ballons';
 export const GET_BALLONS_SUCCESS: string = '[Map] Get Ballons Success';
@@ -65,6 +67,10 @@ export const updateSuccess = createAction(
 export const updateFailure = createAction(
   UPDATE_FAILURE,
   props<{ error: HttpErrorResponse }>()
+);
+export const updatePosition = createAction(
+  UPDATE_REQUEST_POSTION,
+  props<{ position: BallonPosition, id: string }>()
 );
 
 // Get Ballons

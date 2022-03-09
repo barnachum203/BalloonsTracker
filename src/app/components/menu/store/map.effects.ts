@@ -1,4 +1,6 @@
+import { Route } from '@angular/compiler/src/core';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
@@ -93,9 +95,40 @@ export class MapEffects {
     { dispatch: false }
   );
 
+  activeBallon$ = createEffect(
+    () => 
+      this.actions$.pipe(
+        ofType(MapActions.activeBallon),
+        tap((data) => {
+          this.router.navigate(['home/'+data.ballon.id])   
+        })
+      ),
+    { dispatch: false }
+  );
+
+  // updatePosition$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(MapActions.updatePosition),
+  //     tap((action) =>
+  //       this.ballonService.updateBallon(action.ballon).pipe(
+  //       )
+  //     )
+  //   )
+  // );
+  unactiveBallon$ = createEffect(
+    () => 
+      this.actions$.pipe(
+        ofType(MapActions.unactiveBallon),
+        tap(() => {
+          this.router.navigate(['home/'])   
+        })
+      ),
+    { dispatch: false }
+  );
   constructor(
     private actions$: Actions,
     private ballonService: BallonService,
-    private popupService: PopupMessagesService
+    private popupService: PopupMessagesService,
+    private router: Router
   ) {}
 }
