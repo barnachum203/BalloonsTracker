@@ -3,7 +3,7 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     "lib": ["DOM","ES2015"],
-    "strict": true,
+    "strict": false,
     "strictNullChecks": true,
     "esModuleInterop": true,
 
