@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": " nodemon src/index.ts"
   },
   "author": "bar",
   "license": "ISC",
@@ -22,6 +23,9 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "express-pino-logger": "^7.0.0",
+    "pino": "^7.8.1",
+    "pino-http": "^6.6.0"
   }
 }
