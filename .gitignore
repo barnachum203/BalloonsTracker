@@ -9,7 +9,9 @@
 
 # dependencies
 /node_modules
-
+backend/api-gateway/node_modules
+backend/users-microservice/node_modules
+backend/balloons-microservice/node_modules
 # profiling files
 chrome-profiler-events*.json
 
