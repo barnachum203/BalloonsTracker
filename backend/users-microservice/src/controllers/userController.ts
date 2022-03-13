@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { IUser } from '../model/user';
 import { log } from "../utils/logger";
 
 /**
@@ -12,7 +11,6 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
     //Call users service and get all users by user id(uid)
     log.info('get all users');
-    // logger.info('get all users')
     res.status(201).json({ message: 'Get all ballooos for id: ' + uid });
   } catch (error: any) {
     res.status(404).json({ message: error.message });

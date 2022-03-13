@@ -1,76 +1,76 @@
 import { FilterQuery } from 'mongoose';
 import * as dal from '../dal/dalUser';
-import { IBalloon } from '../model/user';
+import { IUser } from '../model/user';
 
 /**
- * Get all balloons:
+ * Get all users:
  *
  * */
-export const getAllBalloons = async (bid: string) => {
+export const getAllUsers = async (bid: string) => {
   try {
-    const balloons: IBalloon[] = await dal.getAllBalloons(bid);
-    console.log(`[BALLOON-SERV] - send ${balloons.length} balloons`);
-    return balloons;
+    const users: IUser[] = await dal.getAllUsers(bid);
+    console.log(`[USER-SERV] - send ${users.length} users`);
+    return users;
   } catch (error: any) {
     throw Error(error);
   }
 };
 
 /**
- * Create new balloon:
+ * Create new user:
  *
  * */
-export const create = async (balloon: IBalloon) => {
+export const create = async (user: IUser) => {
   try {
-    await dal.createBalloon(balloon);
+    await dal.createUser(user);
 
-    console.log('[BALLOON-SERV]: Balloon created successfully.');
+    console.log('[USER-SERV]: User created successfully.');
 
-    return { balloon };
+    return { user };
   } catch (error: any) {
     throw Error(error);
   }
 };
 
 /**
- * Update balloon:
+ * Update user:
  *
  * */
-export const updateBalloon = async (balloon: IBalloon, id: string) => {
-  const updatedBalloon = await dal.updateBalloonById(id, balloon);
-  if (!updatedBalloon) {
-    console.log('[BALLOON-SERV]: Balloon is not updated');
+export const updateUser = async (user: IUser, id: string) => {
+  const updatedUser = await dal.updateUserById(id, user);
+  if (!updatedUser) {
+    console.log('[USER-SERV]: User is not updated');
 
-    throw Error('Balloon is not updated');
+    throw Error('User is not updated');
   }
-  console.log('[BALLOON-SERV]: Balloon updated.');
+  console.log('[USER-SERV]: User updated.');
 
-  return updatedBalloon;
+  return updatedUser;
 };
 
-export const deleteBalloon = async (id: FilterQuery<IBalloon>) => {
-  const result = await dal.deleteBalloon(id);
+export const deleteUser = async (id: FilterQuery<IUser>) => {
+  const result = await dal.deleteUser(id);
   if (!result) {
-    console.log('[BALLOON-SERV]: Balloon is not deleted.');
-    throw Error('Balloon is not deleted.');
+    console.log('[USER-SERV]: User is not deleted.');
+    throw Error('User is not deleted.');
   }
-  console.log('[BALLOON-SERV]: Balloon deleted: ' + id);
+  console.log('[USER-SERV]: User deleted: ' + id);
 
   return result;
 };
 
 /**
- * Get Specific balloon
+ * Get Specific user
  * @param id
- * @returns balloon
+ * @returns user
  */
-export const getBalloonById = async (id: string) => {
+export const getUserById = async (id: string) => {
   try {
-    const result: IBalloon | null = await dal.getBalloonById(id);
+    const result: IUser | null = await dal.getUserById(id);
     if (!result) {
-      throw Error('Balloon is not exist');
+      throw Error('User is not exist');
     }
-    console.log('[BALLOON-SERV]: Sent balloon: ' + id);
+    console.log('[USER-SERV]: Sent user: ' + id);
     return result;
   } catch (error: any) {
     throw Error(error);

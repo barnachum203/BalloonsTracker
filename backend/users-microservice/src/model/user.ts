@@ -32,4 +32,4 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-export const BalloonModel = model<IUser>('User', userSchema);
+export const UserModel = model<IUser>('User', userSchema);

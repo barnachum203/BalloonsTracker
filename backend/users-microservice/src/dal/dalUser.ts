@@ -1,44 +1,44 @@
-import { IBalloon, BalloonModel } from '../model/user';
+import { IUser, UserModel } from '../model/user';
 import mongoose, { FilterQuery } from 'mongoose';
 
 /**
- * Get all balloons
+ * Get all users
  */
-export const getAllBalloons = async (uid: string) => {
-  const balloons: IBalloon[] = await BalloonModel.find();
-  return balloons;
+export const getAllUsers = async (uid: string) => {
+  const users: IUser[] = await UserModel.find();
+  return users;
 };
 
 /**
- * Creates new balloon
+ * Creates new user
  */
-export const createBalloon = async (balloonToCreate: IBalloon) => {
-  const newBalloon = await BalloonModel.create(balloonToCreate);
-  return newBalloon;
+export const createUser = async (userToCreate: IUser) => {
+  const newUser = await UserModel.create(userToCreate);
+  return newUser;
 };
 
 /**
- * Update balloon
+ * Update user
  */
-export const updateBalloonById = async (id: string, balloon: IBalloon) => {
-  const updatedBalloon: IBalloon | null = await BalloonModel.findByIdAndUpdate(
+export const updateUserById = async (id: string, user: IUser) => {
+  const updatedUser: IUser | null = await UserModel.findByIdAndUpdate(
     new mongoose.Types.ObjectId(id),
-    balloon
+    user
   );
 
-  return updatedBalloon;
+  return updatedUser;
 };
 
 /**
- * Delete balloon
+ * Delete user
  */
-export const deleteBalloon = async (balloonId: FilterQuery<IBalloon>) => {
-  const deletedBalloon: IBalloon | null = await BalloonModel.findOneAndDelete(balloonId);
+export const deleteUser = async (userId: FilterQuery<IUser>) => {
+  const deletedUser: IUser | null = await UserModel.findOneAndDelete(userId);
 
-  return deletedBalloon;
+  return deletedUser;
 };
 
-export const getBalloonById = async (id: string) => {
-  const balloon: IBalloon | null = await BalloonModel.findById(id);
-  return balloon;
+export const getUserById = async (id: string) => {
+  const user: IUser | null = await UserModel.findById(id);
+  return user;
 };
