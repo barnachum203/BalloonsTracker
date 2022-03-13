@@ -6,9 +6,9 @@ import { IBalloon } from '../model/balloon';
  * Get all balloons:
  *
  * */
-export const getAllBalloons = async (bid: string) => {
+export const getAllBalloonsForUser = async (uid: string) => {
   try {
-    const balloons: IBalloon[] = await dal.getAllBalloons(bid);
+    const balloons: IBalloon[] = await dal.getAllBalloons(uid);
     console.log(`[BALLOON-SERV] - send ${balloons.length} balloons`);
     return balloons;
   } catch (error: any) {
@@ -37,18 +37,17 @@ export const create = async (balloon: IBalloon) => {
  *
  * */
 export const updateBalloon = async (balloon: IBalloon, id: string) => {
-  const updatedBalloon = await dal.updateBalloonById(id, balloon);
-  if (!updatedBalloon) {
-    console.log('[BALLOON-SERV]: Balloon is not updated');
+  try {
+    const updatedBalloon = await dal.updateBalloonById(id, balloon);
+    console.log('[BALLOON-SERV]: Balloon updated.');
 
-    throw Error('Balloon is not updated');
+    return updatedBalloon;
+  } catch (error) {
+    throw Error(error);
   }
-  console.log('[BALLOON-SERV]: Balloon updated.');
-
-  return updatedBalloon;
 };
 
-export const deleteBalloon = async (id: FilterQuery<IBalloon>) => {
+export const deleteBalloon = async (id: string) => {
   const result = await dal.deleteBalloon(id);
   if (!result) {
     console.log('[BALLOON-SERV]: Balloon is not deleted.');

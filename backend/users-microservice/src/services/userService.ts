@@ -48,7 +48,7 @@ export const updateUser = async (user: IUser, id: string) => {
   return updatedUser;
 };
 
-export const deleteUser = async (id: FilterQuery<IUser>) => {
+export const deleteUser = async (id: string) => {
   const result = await dal.deleteUser(id);
   if (!result) {
     console.log('[USER-SERV]: User is not deleted.');

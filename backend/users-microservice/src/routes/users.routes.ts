@@ -2,10 +2,10 @@ import express from 'express';
 import * as userController from '../controllers/userController';
 const router = express.Router();
 
-router.get('/:uid', userController.getUsers);
-router.get('/one/:bid', userController.getUserById);
-router.put('/:bid', userController.updateUser);
-router.delete('/:bid', userController.deleteUser);
-router.post('/:uid', userController.createUser); //create user for user id
+router.get('/one/:uid', userController.getUserById);
+router.put('/:uid', userController.updateUser);
+router.delete('/:uid', userController.deleteUser);
+router.post('/register', userController.createUser);
+router.post('/login', userController.loginUser);
 
 export default router;

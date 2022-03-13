@@ -6,8 +6,8 @@ export interface IBalloon {
   description: string;
   position: BallonPosition;
   color: Color;
+  uid: string | undefined;
   created_at?: Date;
-
 }
 
 export enum Type {
@@ -24,10 +24,10 @@ export enum Color {
   white = 'white',
 }
 
-export interface BallonPosition{
-  latitude: number,
-  longitude: number,
-  attitude: number
+export interface BallonPosition {
+  latitude: number;
+  longitude: number;
+  attitude: number;
 }
 
 const ballonSchema = new Schema<IBalloon>(
@@ -35,7 +35,7 @@ const ballonSchema = new Schema<IBalloon>(
     name: {
       type: String,
       unique: true,
-      required: true
+      required: true,
     },
     description: {
       type: String,
@@ -52,8 +52,14 @@ const ballonSchema = new Schema<IBalloon>(
     },
     position: {
       type: Object,
-      required:true
+      required: true,
     },
+    uid: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
+    },
+
     created_at: {
       type: Date,
       default: Date.now(),

@@ -21,7 +21,6 @@ const userSchema = new Schema<IUser>(
     username: {
       type: String,
     },
-
     created_at: {
       type: Date,
       default: Date.now(),

@@ -3,6 +3,8 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/users.routes';
+import * as db from './db';
+
 dotenv.config({ path: './environment.env' });
 
 const app = express();
@@ -15,7 +17,7 @@ app.use(
     extended: false,
   })
 );
-
+db.connect();
 // API root
 app.use('/user', userRoutes);
 

@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import balloonRoutes from './routes/balloons.routes';
 dotenv.config({ path: './environment.env' });
+import * as db from './db';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(
     extended: false,
   })
 );
+db.connect();
 
 // API root
 app.use('/balloon', balloonRoutes);

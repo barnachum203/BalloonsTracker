@@ -32,8 +32,8 @@ export const updateUserById = async (id: string, user: IUser) => {
 /**
  * Delete user
  */
-export const deleteUser = async (userId: FilterQuery<IUser>) => {
-  const deletedUser: IUser | null = await UserModel.findOneAndDelete(userId);
+export const deleteUser = async (userId: string) => {
+  const deletedUser: IUser | null = await UserModel.findOneAndDelete({_id: userId});
 
   return deletedUser;
 };

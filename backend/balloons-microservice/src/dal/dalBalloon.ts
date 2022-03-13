@@ -2,10 +2,10 @@ import { IBalloon, BalloonModel } from '../model/balloon';
 import mongoose, { FilterQuery } from 'mongoose';
 
 /**
- * Get all balloons
+ * Get all balloons for user
  */
 export const getAllBalloons = async (uid: string) => {
-  const balloons: IBalloon[] = await BalloonModel.find();
+  const balloons: IBalloon[] = await BalloonModel.find({uid: new mongoose.Types.ObjectId(uid)});
   return balloons;
 };
 
@@ -32,9 +32,8 @@ export const updateBalloonById = async (id: string, balloon: IBalloon) => {
 /**
  * Delete balloon
  */
-export const deleteBalloon = async (balloonId: FilterQuery<IBalloon>) => {
-  const deletedBalloon: IBalloon | null = await BalloonModel.findOneAndDelete(balloonId);
-
+export const deleteBalloon = async (balloonId: string) => {
+  const deletedBalloon: IBalloon | null = await BalloonModel.findOneAndDelete({_id: balloonId});
   return deletedBalloon;
 };
 

@@ -1,20 +1,24 @@
 import { Request, Response } from 'express';
-import { IBalloon } from '../model/balloon';
-const logger = require('pino')();
-
+import * as balloonService from '../services/balloonService';
+import { log } from '../utils/logger';
 /**
  * Get all balloons by user id:
  * @input uid - user id
  * @return balloons: IBalloon[]
  * */
-export const getBalloons = async (req: Request, res: Response) => {
+export const getBalloonsForUser = async (req: Request, res: Response) => {
   const { uid } = req.body;
   try {
     //Call balloons service and get all balloons by user id(uid)
-    console.log('get all balloons');
+    log.info('get all balloons for uid: ' + uid);
+    const result = await balloonService.getAllBalloonsForUser(uid);
     // logger.info('get all balloons')
-    res.status(201).json({ message: 'Get all ballooos for id: ' + uid });
+    res
+      .status(201)
+      .json({ message: 'Get all ballooos for id: ' + uid, result: result });
   } catch (error: any) {
+    log.error('Cannot get balloons for uid: ' + uid);
+
     res.status(404).json({ message: error.message });
   }
 };
@@ -25,28 +29,35 @@ export const getBalloons = async (req: Request, res: Response) => {
  * @return balloon
  * */
 export const getBalloonById = async (req: Request, res: Response) => {
-  const { bid } = req.body;
+  const { bid } = req.params;
   try {
-    //Call balloons service and get balloon by id(bid)
-    console.log('Get specific balloon ' + bid);
-    res.status(201).json({ message: 'Get specific balloon bid: ' + bid });
+    log.info('Get specific balloon ' + bid);
+    const result = await balloonService.getBalloonById(bid);
+    res
+      .status(201)
+      .json({ message: 'Get specific balloon bid: ' + bid, result: result });
   } catch (error: any) {
+    log.error(error.message);
+
     res.status(404).json({ message: error.message });
   }
 };
 
 /**
  * Update balloon by balloon id:
- * @input bid - balloon id
+ * @input bid, balloon
  * @return updated balloon
  * */
 export const updateBalloon = async (req: Request, res: Response) => {
-  const { bid } = req.body;
+  const { bid, balloon } = req.body;
   try {
-    //Call balloons service and update balloon by id(bid)
-    console.log('Update specific balloon id ' + bid);
-    res.status(201).json({ message: 'Update specific balloon id: ' + bid });
+    const result = await balloonService.updateBalloon(balloon, bid);
+    log.info('Update specific balloon id ' + bid);
+    res
+      .status(201)
+      .json({ message: 'Update specific balloon id: ' + bid, result: result });
   } catch (error: any) {
+    log.error(error.message);
     res.status(404).json({ message: error.message });
   }
 };
@@ -57,10 +68,10 @@ export const updateBalloon = async (req: Request, res: Response) => {
  * @return: make an Asynchronus call for mesage queue for delete.
  * */
 export const deleteBalloon = async (req: Request, res: Response) => {
-  const { bid } = req.body;
+  const { bid } = req.params;
   try {
-    //Call balloons service and update balloon by id(bid)
-    console.log('Delete specific balloon id ' + bid);
+    await balloonService.deleteBalloon(bid);
+    log.info('Delete specific balloon id ' + bid);
     res.status(201).json({ message: 'Delete specific balloon id: ' + bid });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
@@ -75,11 +86,12 @@ export const deleteBalloon = async (req: Request, res: Response) => {
 export const createBalloon = async (req: Request, res: Response) => {
   const { uid, balloon } = req.body;
   try {
-    //Call balloons service and update balloon by id(bid)
-    console.log(`Create balloon ${balloon} for user id: ${uid}`);
-    res
-      .status(201)
-      .json({ message: `Create balloon ${balloon} for user id: ${uid}` });
+    const result = await balloonService.create(balloon);
+    log.info(`Created balloon ${result} for user id: ${uid}`);
+    res.status(201).json({
+      message: `Create balloon ${result} for user id: ${uid}`,
+      result: result,
+    });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
