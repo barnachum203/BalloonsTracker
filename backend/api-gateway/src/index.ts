@@ -21,7 +21,6 @@ app.use(
 app.use('/api/user', userRouter);
 app.use('/api/balloon', balloonRoutes);
 
-
 // A default hello word route
 const port: string = process.env.PORT || '8000';
 

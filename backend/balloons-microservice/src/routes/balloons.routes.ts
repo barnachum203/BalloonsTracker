@@ -2,10 +2,10 @@ import express from 'express';
 import * as balloonController from '../controllers/balloonController';
 const router = express.Router();
 
-router.get('/get/all', balloonController.getBalloons);
-router.get('/get/one', balloonController.getBalloonById);
-router.put('/put/one', balloonController.updateBalloon);
-router.delete('/del/one', balloonController.deleteBalloon);
-router.post('/post/one', balloonController.createBalloon);
+router.get('/:uid', balloonController.getBalloons);
+router.get('/one/:bid', balloonController.getBalloonById);
+router.put('/:bid', balloonController.updateBalloon);
+router.delete('/:bid', balloonController.deleteBalloon);
+router.post('/:uid', balloonController.createBalloon); //create balloon for user id
 
 export default router;
