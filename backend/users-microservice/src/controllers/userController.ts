@@ -24,8 +24,9 @@ export const getUserById = async (req: Request, res: Response) => {
  * @return updated user
  * */
 export const updateUser = async (req: Request, res: Response) => {
-  const { uid, user } = req.body;
-  try {
+  const { user } = req.body;
+  const { uid } = req.params
+  try {    
     log.info('Update specific user by id ' + uid);
     const result = await userService.updateUser(user, uid);
     res
@@ -56,19 +57,20 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 /** V
  * Create user:
- * @input user  - user id
+ * @input user  - user: {email, password}
  * @return user - created user.
  * */
 export const createUser = async (req: Request, res: Response) => {
   const { user } = req.body;
   try {
+    log.info(`Create user ${user} `);
     const result = await userService.create(user);
-    log.info(`Create user ${result.user} `);
     res.status(201).json({
       message: `Created user`,
-      result: result.user,
+      result: result,
     });
   } catch (error: any) {
+    log.error(error.message);
     res.status(404).json({ message: error.message });
   }
 };

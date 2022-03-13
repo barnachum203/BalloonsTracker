@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { IBalloon } from '../model/balloon';
-import { log } from "../utils/logger";
+import { log } from '../utils/logger';
+import * as balloonService from '../services/balloon-service';
 
 /**
  * Get all balloons by user id:
@@ -10,9 +10,11 @@ import { log } from "../utils/logger";
 export const getBalloons = async (req: Request, res: Response) => {
   const { uid } = req.body;
   try {
-    log.info("get all balloons")
-    //Call balloons service and get all balloons by user id(uid)
-    res.status(201).json({ message: 'Get all ballooos for id: ' + uid });
+    log.info('Get all ballooos for id: ' + uid);
+    const result = await balloonService.getBalloons(uid);
+    res
+      .status(201)
+      .json({ message: 'Get all ballooos for id: ' + uid, result: result });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
@@ -26,9 +28,12 @@ export const getBalloons = async (req: Request, res: Response) => {
 export const getBalloonById = async (req: Request, res: Response) => {
   const { bid } = req.body;
   try {
-    //Call balloons service and get balloon by id(bid)
     log.info('Get specific balloon ' + bid);
-    res.status(201).json({ message: 'Get specific balloon bid: ' + bid });
+    const result = await balloonService.getBalloonById(bid);
+    res
+      .status(201)
+      .json({ message: 'Get specific balloon bid: ' + bid, 
+      result: result });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
@@ -40,11 +45,13 @@ export const getBalloonById = async (req: Request, res: Response) => {
  * @return updated balloon
  * */
 export const updateBalloon = async (req: Request, res: Response) => {
-  const { bid } = req.body;
+  const { bid, balloon } = req.body;
   try {
-    //Call balloons service and update balloon by id(bid)
     log.info('Update specific balloon id ' + bid);
-    res.status(201).json({ message: 'Update specific balloon id: ' + bid });
+    const result = await balloonService.updateBalloon(bid, balloon);
+    res
+      .status(201)
+      .json({ message: 'Update specific balloon id: ' + bid, result: result });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
@@ -58,10 +65,11 @@ export const updateBalloon = async (req: Request, res: Response) => {
 export const deleteBalloon = async (req: Request, res: Response) => {
   const { bid } = req.body;
   try {
-    //Call balloons service and update balloon by id(bid)
     log.info('Delete specific balloon id ' + bid);
+    await balloonService.deleteBalloon(bid);
     res.status(201).json({ message: 'Delete specific balloon id: ' + bid });
   } catch (error: any) {
+    log.error(error.message);
     res.status(404).json({ message: error.message });
   }
 };
@@ -74,12 +82,15 @@ export const deleteBalloon = async (req: Request, res: Response) => {
 export const createBalloon = async (req: Request, res: Response) => {
   const { uid, balloon } = req.body;
   try {
-    //Call balloons service and update balloon by id(bid)
     log.info(`Create balloon ${balloon} for user id: ${uid}`);
-    res
-      .status(201)
-      .json({ message: `Create balloon ${balloon} for user id: ${uid}` });
+
+    const result = await balloonService.createBalloon(uid, balloon);
+    res.status(201).json({
+      message: `Created balloon ${balloon} for user id: ${uid}`,
+      result: result,
+    });
   } catch (error: any) {
+    log.error(error.message);
     res.status(404).json({ message: error.message });
   }
 };

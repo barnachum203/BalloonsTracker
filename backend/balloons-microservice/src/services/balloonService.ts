@@ -20,8 +20,9 @@ export const getAllBalloonsForUser = async (uid: string) => {
  * Create new balloon:
  *
  * */
-export const create = async (balloon: IBalloon) => {
+export const create = async (balloon: IBalloon, uid: string) => {
   try {
+    balloon.uid = uid
     await dal.createBalloon(balloon);
 
     console.log('[BALLOON-SERV]: Balloon created successfully.');
