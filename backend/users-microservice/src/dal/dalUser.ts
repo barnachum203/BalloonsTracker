@@ -10,6 +10,14 @@ export const getAllUsers = async (uid: string) => {
 };
 
 /**
+ * Get all users
+ */
+ export const loginUser = async (email: string) => {
+  const users: IUser | null = await UserModel.findOne({email: email});
+  return users;
+};
+
+/**
  * Creates new user
  */
 export const createUser = async (userToCreate: IUser) => {
