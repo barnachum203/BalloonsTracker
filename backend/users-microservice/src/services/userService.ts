@@ -76,3 +76,23 @@ export const getUserById = async (id: string) => {
     throw Error(error);
   }
 };
+
+/**
+ * Get Specific user
+ * @param id
+ * @returns user
+ */
+ export const loginUser = async (email: string, password:string) => {
+  try {
+    const result: IUser | null = await dal.loginUser(email);
+    if (!result) {
+      console.log("[USER-SERV]: user not found");
+      
+      throw Error('Wrong email or password');
+    }
+    console.log('[USER-SERV]: Login user: ' + result);
+    return result;
+  } catch (error: any) {
+    throw Error(error);
+  }
+};
