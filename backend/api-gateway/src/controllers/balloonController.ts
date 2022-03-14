@@ -8,13 +8,16 @@ import * as balloonService from '../services/balloon-service';
  * @return balloons: IBalloon[]
  * */
 export const getBalloons = async (req: Request, res: Response) => {
-  const { uid } = req.body;
+  // const { uid } = req.body;
+  const uid = req.header('user-id');
+  // console.log(req.headers);
+
   try {
     log.info('Get all ballooos for id: ' + uid);
-    const result = await balloonService.getBalloons(uid);
+    const data = await balloonService.getBalloons(uid!);
     res
       .status(201)
-      .json({ message: 'Get all ballooos for id: ' + uid, result: result });
+      .json( { balloons: data}); //TODO: Send {balloons: data} - send an Object !
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
@@ -32,8 +35,7 @@ export const getBalloonById = async (req: Request, res: Response) => {
     const result = await balloonService.getBalloonById(bid);
     res
       .status(201)
-      .json({ message: 'Get specific balloon bid: ' + bid, 
-      result: result });
+      .json({ message: 'Get specific balloon bid: ' + bid, result: result });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
@@ -45,15 +47,16 @@ export const getBalloonById = async (req: Request, res: Response) => {
  * @return updated balloon
  * */
 export const updateBalloon = async (req: Request, res: Response) => {
-  const { bid, balloon } = req.body;
+  const { bid, balloon } = req.body;  
   try {
     log.info('Update specific balloon id ' + bid);
     const result = await balloonService.updateBalloon(bid, balloon);
     res
       .status(201)
-      .json({ message: 'Update specific balloon id: ' + bid, result: result });
+      .json({ message: 'Update specific balloon id: ' + bid,  result });
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    log.error(error.message);
+    res.status(404).json({message: error.message, result: error});
   }
 };
 
@@ -80,15 +83,16 @@ export const deleteBalloon = async (req: Request, res: Response) => {
  * @return balloon - created balloon.
  * */
 export const createBalloon = async (req: Request, res: Response) => {
-  const { uid, balloon } = req.body;
+  const { balloon } = req.body;
+  const uid = req.header('user-id')!;
+
+  console.log(req.body);
+  
   try {
     log.info(`Create balloon ${balloon} for user id: ${uid}`);
 
-    const result = await balloonService.createBalloon(uid, balloon);
-    res.status(201).json({
-      message: `Created balloon ${balloon} for user id: ${uid}`,
-      result: result,
-    });
+    const data = await balloonService.createBalloon(uid, balloon);
+    res.status(201).json({balloon: data}); //TODO: Send {balloon: result} - send an Object !
   } catch (error: any) {
     log.error(error.message);
     res.status(404).json({ message: error.message });
