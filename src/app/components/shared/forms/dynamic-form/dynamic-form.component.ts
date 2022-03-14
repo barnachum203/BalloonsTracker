@@ -32,6 +32,8 @@ export class DynamicFormComponent implements OnInit {
     this.payLoad = this.form.getRawValue();
     this.positionPayload = this.form.getRawValue();
 
+    console.log(this.payLoad);
+    
     const position: BallonPosition = {
       longitude: Number(this.positionPayload.longitude),
       attitude: Number(this.positionPayload.attitude),
@@ -45,7 +47,7 @@ export class DynamicFormComponent implements OnInit {
         this.payLoad.description,
         this.payLoad.color,
         position,
-        this.payLoad.id
+        this.payLoad._id
       );
       console.log(ballon);
 

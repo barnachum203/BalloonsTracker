@@ -5,7 +5,8 @@ export class Ballon {
     public description: string,
     public color: Color,
     public position: BallonPosition,
-    public id?: string
+    // public id?: string,
+    public _id?: string
   ) {}
 }
 export enum Type {

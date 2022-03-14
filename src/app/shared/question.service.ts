@@ -110,9 +110,9 @@ export class QuestionService {
   getEditBallonQuestions(ballon: Ballon) {
     const questions: QuestionBase<string>[] = [
       new TextboxQuestion({
-        key: 'id',
+        key: '_id',
         label: 'id',
-        value: ballon.id,
+        value: ballon._id,
         type: 'text',
         required: true,
         order: 0,

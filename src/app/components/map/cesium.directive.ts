@@ -228,7 +228,7 @@ export class CesiumDirective implements OnInit, OnDestroy {
               let position: BallonPosition =
                 this.getDegreasFromCartesian3(position3d);
 
-              let id = pickedBallon2.id;
+              let id = pickedBallon2._id;
               // console.log(position);
               if (position && id)
                 this.store.dispatch(

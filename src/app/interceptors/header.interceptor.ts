@@ -6,6 +6,7 @@ import {
   HttpInterceptor,
   HttpResponse,
   HttpErrorResponse,
+  HttpHeaders,
 } from '@angular/common/http';
 import { Observable, of, Subscriber, throwError } from 'rxjs';
 import mockDb from '../../assets/mockdb/mockDb.json';
@@ -16,10 +17,11 @@ import { Store } from '@ngrx/store';
 import * as MapActions from '../components/menu/store/map.actions';
 import { Ballon } from '../Model/Ballon';
 import * as MapSelectors from '../components/menu/store/map.selectors';
+import { TokenStorageService } from '../shared/token-storage.service';
 
 @Injectable()
 export class HeaderInterceptor implements HttpInterceptor {
-  constructor(private store: Store) {}
+  constructor(private store: Store, private storage: TokenStorageService) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -57,7 +59,7 @@ export class HeaderInterceptor implements HttpInterceptor {
                 .toString(16)
                 .substring(1);
               const newBallon: Ballon = { ...req.body['ballon'] };
-              newBallon.id = id;
+              newBallon._id = id;
 
               return of(new HttpResponse({ status: 200, body: newBallon }));
               break;
@@ -94,7 +96,13 @@ export class HeaderInterceptor implements HttpInterceptor {
       }
     }
 
-    return next.handle(request);
+    const userId = this.storage.getUserId()! || '';
+    const modifiedReq: HttpRequest<any> = request.clone({
+      headers: request.headers.set('user-id', userId)
+    });
+    console.log(modifiedReq);
+
+    return next.handle(modifiedReq);
   }
 
   private handleError(

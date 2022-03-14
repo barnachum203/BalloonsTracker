@@ -34,15 +34,15 @@ export class BallonDetailsComponent implements OnInit, OnDestroy {
       this.id = params.id;
     });
     this.subscribtion = this.ballons$.subscribe((data) => {
-      this.ballon = data?.find((e) => e.id == this.id);
-      this.position = this.ballon?.position    
+      this.ballon = data?.find(e => e._id == this.id);
+      this.position = this.ballon?.position
     });
   }
 
   getBallonById() {}
   backToMenu() {
     this.store.dispatch(MapActions.unactiveBallon())
-    this.route.navigate(['home']);
+    // this.route.navigate(['home']);
   }
 
   onSave() {}
