@@ -12,7 +12,9 @@ export const getUserById = async (req: Request, res: Response) => {
   try {
     const result = await userService.getUserById(uid);
     log.info('Get specific user ' + uid);
-    res.status(201).json({ message: 'Get specific user uid: ' + uid , result: result});
+    res
+      .status(201)
+      .json({ message: 'Get specific user uid: ' + uid, result: result });
   } catch (error: any) {
     res.status(404).json({ message: error.message });
   }
@@ -25,8 +27,8 @@ export const getUserById = async (req: Request, res: Response) => {
  * */
 export const updateUser = async (req: Request, res: Response) => {
   const { user } = req.body;
-  const { uid } = req.params
-  try {    
+  const { uid } = req.params;
+  try {
     log.info('Update specific user by id ' + uid);
     const result = await userService.updateUser(user, uid);
     res
@@ -46,8 +48,7 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   const { uid } = req.params;
   try {
-
-    await userService.deleteUser(uid)
+    await userService.deleteUser(uid);
     log.info('Delete specific user id ' + uid);
     res.status(201).json({ message: 'Delete specific user id: ' + uid });
   } catch (error: any) {
@@ -85,10 +86,10 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     //Call users service and login user
     log.info(`Loggin called `);
-    res.status(201).json({
-      message: `Loggin called`,
-    });
+    const result = await userService.loginUser(email, password);
+    res.status(201).json(result);
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    log.error(error.message)
+    res.status(404).json( error.message );
   }
 };
