@@ -62,6 +62,7 @@ export const loginReducer = createReducer(
       isLoggedIn: true,
       isLoadingLogin: false,
       hasLoginError: false,
+      errorMessage: undefined
     })
   ),
   on(
@@ -72,7 +73,7 @@ export const loginReducer = createReducer(
       isLoggedIn: false,
       isLoadingLogin: false,
       hasLoginError: true,
-      errorMessage: action.error.statusText,
+      errorMessage: action.error.error.message,
       error: action.error,
     })
   ),
