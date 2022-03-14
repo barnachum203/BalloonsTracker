@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import userRouter from './routes/users.routes';
 import balloonRoutes from './routes/balloons.routes';
+import cors from "cors";
 dotenv.config({ path: './environment.env' });
 
 const app = express();
@@ -16,9 +17,10 @@ app.use(
     extended: false,
   })
 );
+app.use(cors())
 
 // API root
-app.use('/api/user', userRouter);
+app.use('/api', userRouter);
 app.use('/api/balloon', balloonRoutes);
 
 // A default hello word route
