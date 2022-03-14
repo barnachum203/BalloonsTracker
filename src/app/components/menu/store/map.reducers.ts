@@ -81,7 +81,7 @@ export const mapReducer = createReducer(
     (state, action): MapState => ({
       ...state,
       ballons: state.ballons?.map((e) => {
-        if(e.id == action.id){
+        if(e._id == action.id){ //TODO: Check that works by id
           var temp = Object.assign({}, e);
           temp.position = action.position
           return temp
@@ -98,7 +98,7 @@ export const mapReducer = createReducer(
       isLoading: false,
       hasError: false,
       ballons: state.ballons?.map((e) => {
-        return e.id == action.updatedBallon.id ? action.updatedBallon : e;
+        return e._id == action.updatedBallon._id ? action.updatedBallon : e;
       }),
     })
   ),

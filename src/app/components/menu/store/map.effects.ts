@@ -7,6 +7,7 @@ import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
 import { Ballon } from 'src/app/Model/Ballon';
 import { BallonService } from 'src/app/services/ballon.service';
 import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
+import { TokenStorageService } from 'src/app/shared/token-storage.service';
 import * as MapActions from './map.actions';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class MapEffects {
       ofType(MapActions.getBallons),
       exhaustMap(() =>
         this.ballonService.getAllBallons().pipe(
-          map((ballons) => MapActions.getBallonsSuccess({ ballons })),
+          map((data:any) => MapActions.getBallonsSuccess({ballons: data.balloons})),
           catchError((error) => of(MapActions.getBallonsFailure({ error })))
         )
       )
@@ -64,7 +65,7 @@ export class MapEffects {
       ofType(MapActions.createBallonRequest),
       exhaustMap((action) =>
         this.ballonService.createBallon(action.ballon).pipe(
-          map((ballon) => MapActions.createBallonSuccess({ballon})),
+          map((data:any) => MapActions.createBallonSuccess({ballon: data.balloon})),
           catchError((error) => of(MapActions.createBallonFailure({error})))
         )
       )
@@ -75,7 +76,7 @@ export class MapEffects {
     () =>
       this.actions$.pipe(
         ofType(MapActions.createBallonSuccess),
-        tap(() => {
+        tap(() => {          
           this.popupService.openSuccessCreate();
         })
       ),
@@ -100,7 +101,7 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.activeBallon),
         tap((data) => {
-          this.router.navigate(['home/'+data.ballon.id])   
+          this.router.navigate(['home/'+data.ballon._id])   
         })
       ),
     { dispatch: false }
@@ -129,6 +130,7 @@ export class MapEffects {
     private actions$: Actions,
     private ballonService: BallonService,
     private popupService: PopupMessagesService,
-    private router: Router
+    private router: Router,
+    private storage: TokenStorageService
   ) {}
 }
