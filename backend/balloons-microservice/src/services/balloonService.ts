@@ -23,11 +23,11 @@ export const getAllBalloonsForUser = async (uid: string) => {
 export const create = async (balloon: IBalloon, uid: string) => {
   try {
     balloon.uid = uid
-    await dal.createBalloon(balloon);
+    const result = await dal.createBalloon(balloon);
 
     console.log('[BALLOON-SERV]: Balloon created successfully.');
 
-    return { balloon };
+    return result;
   } catch (error: any) {
     throw Error(error);
   }
@@ -43,7 +43,9 @@ export const updateBalloon = async (balloon: IBalloon, id: string) => {
     console.log('[BALLOON-SERV]: Balloon updated.');
 
     return updatedBalloon;
-  } catch (error) {
+  } catch (error) {    
+    console.log(error);
+    
     throw Error(error);
   }
 };
