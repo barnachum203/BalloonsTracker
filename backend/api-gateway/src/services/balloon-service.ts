@@ -27,10 +27,15 @@ export async function deleteBalloon(bid: string) {
 }
 export async function updateBalloon(bid: string, balloon: IBalloon) {
   let payload = { balloon: balloon };
-  let res = await axios.put(`${baseUrl}/${bid}`, payload);
-  let data = res.data;
-  // console.log(data);
-  return data;
+  try {
+    let res = await axios.put(`${baseUrl}/${bid}`, payload);
+    let data = res.data;
+    // console.log(data);
+    return data;
+  } catch (error) {
+    throw Error(error.response.data)
+  }
+
 }
 export async function getBalloonById(bid: any) {
   let res = await axios.get(`${baseUrl}/one/${bid}`);
