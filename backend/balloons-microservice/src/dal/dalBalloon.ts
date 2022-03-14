@@ -22,10 +22,12 @@ export const createBalloon = async (balloonToCreate: IBalloon) => {
  */
 export const updateBalloonById = async (id: string, balloon: IBalloon) => {
   const updatedBalloon: IBalloon | null = await BalloonModel.findByIdAndUpdate(
-    new mongoose.Types.ObjectId(id),
+    {_id: id},
     balloon
   );
 
+  console.log(balloon);
+  
   return updatedBalloon;
 };
 
