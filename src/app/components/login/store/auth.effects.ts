@@ -5,6 +5,7 @@ import { EMPTY, of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
+import { TokenStorageService } from 'src/app/shared/token-storage.service';
 import * as AuthActions from './auth.actions';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class AuthEffects {
       ofType(AuthActions.loginRequest),
       exhaustMap((action) =>
         this.authService.login(action.email, action.password).pipe(
-          map((user) => AuthActions.loginSuccess({ user })),
+          map((user) => AuthActions.loginSuccess( user )),
           catchError((error) => of(AuthActions.loginFailure({ error })))
         )
       )
@@ -26,8 +27,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
         tap(() => this.router.navigate(['/home'])),
-        tap(() => {
+        tap((data) => {
           this.popupService.openSuccessLogin();
+          this.storage.saveUserId(data.user._id!);
         })
       ),
     { dispatch: false }
@@ -61,6 +63,8 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
-    private popupService: PopupMessagesService
+    private popupService: PopupMessagesService,
+    private storage: TokenStorageService
+
   ) {}
 }
