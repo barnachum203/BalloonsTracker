@@ -61,10 +61,12 @@ export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     //Call users service and login user
-    log.info(`Login user: ${email} , ${password}`);
-    res.status(201).json({ message: `Login user: ${email} , ${password}` });
-  } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    log.info(`User connected: ${email} , ${password}`);
+    const user = await userService.loginUser(email, password)
+    res.status(201).json({ user });
+  } catch (error) {
+    log.error(error.message)
+    res.status(404).json( {message: error.message, result: error} ); //pattern of error handling body:{message,result}
   }
 };
 
