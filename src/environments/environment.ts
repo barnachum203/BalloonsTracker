@@ -6,8 +6,11 @@ export const environment = {
   production: false,
   title:'Running in mock mode',
 
-  IS_MOCK: true,
-  apiUrl: 'http://localhost:3000'
+  // IS_MOCK: true,
+  // apiUrl: 'http://localhost:3000'
+  IS_MOCK: false,
+
+  apiUrl: 'http://localhost:8000/api'
 };
 
 /*
