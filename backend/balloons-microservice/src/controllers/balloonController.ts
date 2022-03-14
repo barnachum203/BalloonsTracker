@@ -11,11 +11,11 @@ export const getBalloonsForUser = async (req: Request, res: Response) => {
   try {
     //Call balloons service and get all balloons by user id(uid)
     log.info('get all balloons for uid: ' + uid);
-    const result = await balloonService.getAllBalloonsForUser(uid);
+    const data = await balloonService.getAllBalloonsForUser(uid);
     // logger.info('get all balloons')
     res
       .status(201)
-      .json({ message: 'Get all ballooos for id: ' + uid, result: result });
+      .json(data);
   } catch (error: any) {
     log.error('Cannot get balloons for uid: ' + uid);
 
@@ -56,10 +56,10 @@ export const updateBalloon = async (req: Request, res: Response) => {
     log.info('Update specific balloon id ' + bid);
     res
       .status(201)
-      .json({ message: 'Update specific balloon id: ' + bid, result: result });
+      .json( result );
   } catch (error: any) {
     log.error(error.message);
-    res.status(404).json({ message: error.message });
+    res.status(404).json( error.message );
   }
 };
 
@@ -90,10 +90,7 @@ export const createBalloon = async (req: Request, res: Response) => {
   try {
     log.info(`Create balloon ${balloon} for user id: ${uid}`);
     const result = await balloonService.create(balloon, uid);
-    res.status(201).json({
-      message: `Create balloon ${result} for user id: ${uid}`,
-      result: result,
-    });
+    res.status(201).json(result);
   } catch (error: any) {
     log.error(error.message);
     res.status(404).json({ message: error.message });
