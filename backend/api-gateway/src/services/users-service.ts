@@ -27,10 +27,17 @@ export async function deleteUser(uid: string) {
   await axios.delete(`${baseUrl}/${uid}`);
 }
 
-export async function loginUser() {
-  let res = await axios.get(`${baseUrl}/login`);
-  let data = res.data;
-  console.log(data);
+export async function loginUser(email: string, password:string) {
+  const payload = {email: email, password: password}
+  try {
+    let res = await axios.post(`${baseUrl}/login`, payload);
+    let data = res.data;
+    // console.log(data);
+    return data;
   
-  return data;
+  } catch (error) {
+    // console.log(error.response.data);
+    throw Error(error.response.data)
+    
+  }
 }
