@@ -65,14 +65,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditDialog(ballon: any) {
-    const dialogRef = this.dialog.open(BallonDialogComponent, {
-      width: '440px',
-      height: '700px',
-      disableClose: false,
-      data: { dialogType: IDialog.EDIT, ballon: ballon },
-    });
-  }
   onBallonClicked(ballon: Ballon) {
     this.store.dispatch(MapActions.activeBallon({ballon}))
     // this.route.navigate([`home/${ballon.id}`]); // now route throw effects

@@ -5,6 +5,9 @@ import { Subscription } from 'rxjs';
 import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 import * as MapSelectors from '../store/map.selectors';
 import * as MapActions from '../store/map.actions';
+import { MatDialog } from '@angular/material/dialog';
+import { BallonDialogComponent } from '../ballon-dialog/ballon-dialog.component';
+import * as IDialog from '../ballon-dialog/dialog.types';
 
 @Component({
   selector: 'app-ballon-details',
@@ -23,7 +26,9 @@ export class BallonDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private route: Router,
     private activatedRoute: ActivatedRoute,
-    private store: Store
+    private store: Store,
+    public dialog: MatDialog,
+
   ) {}
   ngOnDestroy(): void {
     this.subscribtion.unsubscribe();
@@ -40,6 +45,15 @@ export class BallonDetailsComponent implements OnInit, OnDestroy {
   }
 
   getBallonById() {}
+
+  openEditDialog() {
+    const dialogRef = this.dialog.open(BallonDialogComponent, {
+      width: '440px',
+      height: '700px',
+      disableClose: false,
+      data: { dialogType: IDialog.EDIT, ballon: this.ballon },
+    });
+  }
   backToMenu() {
     this.store.dispatch(MapActions.unactiveBallon())
     // this.route.navigate(['home']);

@@ -2,46 +2,20 @@
   <h1 class="text-center">Action menu</h1>
 </div>
 
-<button class="btn btn-primary" (click)="openCreationDialog()">
+<button class="btn btn-primary btn-block" (click)="openCreationDialog()">
   Add Ballon
 </button>
-
-<!-- <div class="list-group" *ngFor="let ballon of ballons">
-  <div class="row">
-    <div class="col-6">
+<br>
+<H2>Balloons list:</H2>
+<div class="balloon-container border border-5 rounded-3">
+  <div class="list-group" *ngFor="let ballon of (ballons$ | async)!">
+    <div class="row">
       <button
         type="button"
         (click)="onBallonClicked(ballon)"
-        class="btn btn-outline-info btn-block"
+        class="btn btn-outline-info btn-block shadow p-1 mb-2  rounded"
       >
         {{ ballon.name }}
-      </button>
-    </div>
-    <div class="col-2">
-      <button class="btn btn-link" (click)="openEditDialog(ballon)">
-        edit
-      </button>
-    </div>
-  </div>
-</div> -->
-
-<h3>
-  ballons from store
-</h3>
-<div class="list-group" *ngFor="let ballon of (ballons$ | async)!">
-  <div class="row">
-    <div class="col-6">
-      <button
-        type="button"
-        (click)="onBallonClicked(ballon)"
-        class="btn btn-outline-info btn-block"
-      >
-        {{ ballon.name }}
-      </button>
-    </div>
-    <div class="col-2">
-      <button class="btn btn-link" (click)="openEditDialog(ballon)">
-        edit
       </button>
     </div>
   </div>

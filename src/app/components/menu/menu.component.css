@@ -1,3 +1,8 @@
-button{
-    margin: 2px;
+button {
+  /* margin: 2px; */
+  
+}
+
+.balloon-container {
+  padding: 20px;
 }
