@@ -47,6 +47,7 @@ export class DynamicFormComponent implements OnInit {
         this.payLoad.description,
         this.payLoad.color,
         position,
+        position,
         this.payLoad._id
       );
       console.log(ballon);
@@ -59,6 +60,7 @@ export class DynamicFormComponent implements OnInit {
         this.payLoad.type,
         this.payLoad.description,
         this.payLoad.color,
+        position,
         position
       );
       console.log(ballon);
