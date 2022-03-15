@@ -100,7 +100,7 @@ export class HeaderInterceptor implements HttpInterceptor {
     const modifiedReq: HttpRequest<any> = request.clone({
       headers: request.headers.set('user-id', userId)
     });
-    console.log(modifiedReq);
+    // console.log(modifiedReq);
 
     return next.handle(modifiedReq);
   }
