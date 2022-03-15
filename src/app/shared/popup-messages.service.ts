@@ -13,7 +13,6 @@ export class PopupMessagesService {
       data: 'Login Success!! :)',
       duration: 2500,
       panelClass: ['green-snackbar', 'login-snackbar'],
-      // verticalPosition: 'top',
     });
   }
   openFailureLogin() {
@@ -21,43 +20,24 @@ export class PopupMessagesService {
       data: 'Wrong username or password :(',
       duration: 2500,
       panelClass: ['red-snackbar', 'login-snackbar'],
-      // verticalPosition: 'top',
-      // horizontalPosition:'right'
     });
   }
-  openFailureUpdate() {
+
+  openSuccessPopup(msg: string){
     this.snackBar.openFromComponent(SnackBarComponent, {
-      data: 'Failed update a ballon :(',
+      data: msg,
       duration: 2500,
-      panelClass: ['red-snackbar', 'login-snackbar'],
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-    });
-  }
-  openSuccessUpdate() {
-    this.snackBar.openFromComponent(SnackBarComponent, {
-      data: 'Updated :)',
-      duration: 2500,
-      panelClass: ['red-snackbar', 'login-snackbar'],
+      panelClass: ['green-snackbar', 'success-snackbar'],
       verticalPosition: 'top',
       horizontalPosition: 'right',
     });
   }
 
-  openSuccessCreate() {
+  openFailurePopup(msg: string){
     this.snackBar.openFromComponent(SnackBarComponent, {
-      data: 'Created :)',
+      data: msg,
       duration: 2500,
-      panelClass: ['red-snackbar', 'login-snackbar'],
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-    });
-  }
-  openFailureCreate() {
-    this.snackBar.openFromComponent(SnackBarComponent, {
-      data: 'Fail to create new Air Ballon.',
-      duration: 2500,
-      panelClass: ['red-snackbar', 'login-snackbar'],
+      panelClass: ['red-snackbar', 'failure-snackbar'],
       verticalPosition: 'top',
       horizontalPosition: 'right',
     });

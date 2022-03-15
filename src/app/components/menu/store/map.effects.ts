@@ -43,7 +43,7 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.updateSuccess),
         tap(() => {
-          this.popupService.openSuccessUpdate();
+          this.popupService.openSuccessPopup("Update Air Balloon Successfully!");
         })
       ),
     { dispatch: false }
@@ -54,7 +54,7 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.updateFailure),
         tap(() => {
-          this.popupService.openFailureUpdate();
+          this.popupService.openFailurePopup("Unable To Update Air Balloon :(");
         })
       ),
     { dispatch: false }
@@ -77,7 +77,7 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.createBallonSuccess),
         tap(() => {          
-          this.popupService.openSuccessCreate();
+          this.popupService.openSuccessPopup("Balloon Created Successfully!");
         })
       ),
     { dispatch: false }
@@ -90,7 +90,7 @@ export class MapEffects {
         tap((error) => {
           console.log(error.error.message);
           
-          this.popupService.openFailureCreate();
+          this.popupService.openFailurePopup("Unable to create Balloon :(");
         })
       ),
     { dispatch: false }
