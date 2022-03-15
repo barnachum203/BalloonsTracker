@@ -1,32 +1,37 @@
 <div class="container">
   <div class="group">
-    <h1 class="text-center">
-      {{ ballon?.name }} Details
-    </h1>
-    <button class="btn btn-primary text-right" (click)="openEditDialog()">Edit</button
-      >
-    <button class="btn btn-outline-primary text-right" (click)="backToMenu()">Back</button
-        >
+    <h1 class="text-center">{{ ballon?.name }} Details</h1>
   </div>
 </div>
+<div class="btn-group" role="group">
+  <button class="btn btn-primary" (click)="openEditDialog()">Edit</button>
+  <button class="btn btn-outline-primary" (click)="backToMenu()">
+    Back
+  </button>
+</div>
+
 <div class="form-groum">
-    <label for="name">Name</label>
-    <div class="text-detail">{{ballon?.name}}</div>
+  <label for="name">Name</label>
+  <div class="text-detail">{{ ballon?.name }}</div>
 
-    <label for="name">Description</label>
-    <div class="text-detail">{{ballon?.description}}</div>
+  <label for="name">Description</label>
+  <div class="text-detail">{{ ballon?.description }}</div>
 
-    <label for="name">Position</label>
-    <div class="text-detail">X: {{position?.longitude}}</div>
-    <div class="text-detail">Z: {{position?.attitude}}</div>
-    <div class="text-detail">Y: {{position?.latitude}}</div>
+  <label for="name">Position</label>
+  <div class="text-detail">X: {{ position?.longitude }}</div>
+  <div class="text-detail">Z: {{ position?.attitude }}</div>
+  <div class="text-detail">Y: {{ position?.latitude }}</div>
 
-    <label for="name">Type</label>
-    <div class="text-detail">{{ballon?.type}}</div>
+  <label for="name">Type</label>
+  <div class="text-detail">{{ ballon?.type }}</div>
 
-    <label for="name">Color</label>
-    <div class="color-detail" [style.color]="ballon?.color" [ngStyle]="{'background-color': ballon?.color}">{{ballon?.color}}</div>
-
-
+  <label for="name">Color</label>
+  <div
+    class="color-detail"
+    [style.color]="ballon?.color"
+    [ngStyle]="{ 'background-color': ballon?.color }"
+  >
+    {{ ballon?.color }}
+  </div>
 </div>
 <!-- {{ ballon | json }} -->

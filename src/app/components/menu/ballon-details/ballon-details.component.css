@@ -8,14 +8,15 @@ label {
 .text-detail {
   font-weight: 400;
 }
-
-.color-detail{
-    font-weight: 500;
-    size: 16px;
-    width: 40px;
-    background-color: aliceblue;
-    margin: 3px;
-    border: 1px, 1px, 1px, 1px;
-    border-style: ridge;
-    
+.btn-group {
+  width: -webkit-fill-available;
+}
+.color-detail {
+  font-weight: 500;
+  size: 16px;
+  width: 40px;
+  background-color: aliceblue;
+  margin: 3px;
+  border: 1px, 1px, 1px, 1px;
+  border-style: ridge;
 }
