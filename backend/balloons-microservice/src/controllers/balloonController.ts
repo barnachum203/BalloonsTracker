@@ -52,8 +52,8 @@ export const updateBalloon = async (req: Request, res: Response) => {
   const { balloon } = req.body;
   const { bid } = req.params;
   try {
+    log.info('Updating specific balloon id ' + bid);
     const result = await balloonService.updateBalloon(balloon, bid);
-    log.info('Update specific balloon id ' + bid);
     res
       .status(201)
       .json( result );

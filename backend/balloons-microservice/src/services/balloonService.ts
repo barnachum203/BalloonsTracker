@@ -46,9 +46,12 @@ export const create = async (balloon: IBalloon, uid: string) => {
  * */
 export const updateBalloon = async (balloon: IBalloon, id: string) => {
   try {
-    const updatedBalloon = await dal.updateBalloonById(id, balloon);
+     const result = await dal.updateBalloonById(id, balloon);
+     const updatedBalloon = await dal.findBalloonByName(balloon)
     console.log('[BALLOON-SERV]: Balloon updated.');
 
+    console.log(updatedBalloon);
+    
     return updatedBalloon;
   } catch (error) {    
     console.log(error);

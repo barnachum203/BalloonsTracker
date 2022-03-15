@@ -26,7 +26,7 @@ export const updateBalloonById = async (id: string, balloon: IBalloon) => {
     balloon
   );
 
-  console.log(balloon);
+  // console.log(balloon);
   
   return updatedBalloon;
 };

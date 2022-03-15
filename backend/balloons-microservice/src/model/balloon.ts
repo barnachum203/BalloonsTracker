@@ -5,6 +5,7 @@ export interface IBalloon {
   type: Type;
   description: string;
   position: BallonPosition;
+  point: BallonPosition;
   color: Color;
   uid: string | undefined;
   created_at?: Date;
@@ -52,8 +53,13 @@ const ballonSchema = new Schema<IBalloon>(
     },
     position: {
       type: Object,
+      required: false,
+    },
+    point: {
+      type: Object,
       required: true,
     },
+
     uid: {
       type: Schema.Types.ObjectId,
       ref: 'users',
