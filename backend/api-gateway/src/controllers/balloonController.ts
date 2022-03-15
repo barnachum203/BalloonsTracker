@@ -86,7 +86,6 @@ export const createBalloon = async (req: Request, res: Response) => {
   const { balloon } = req.body;
   const uid = req.header('user-id')!;
 
-  console.log(req.body);
   
   try {
     log.info(`Create balloon ${balloon} for user id: ${uid}`);
@@ -94,7 +93,7 @@ export const createBalloon = async (req: Request, res: Response) => {
     const data = await balloonService.createBalloon(uid, balloon);
     res.status(201).json({balloon: data}); //TODO: Send {balloon: result} - send an Object !
   } catch (error: any) {
-    log.error(error.message);
-    res.status(404).json({ message: error.message });
+    log.error(error.message);    
+    res.status(404).json( {message: error.message, result: error} ); //pattern of error handling body:{message,result}
   }
 };

@@ -15,10 +15,14 @@ export async function getBalloons(uid: string) {
 
 export async function createBalloon(uid: string, balloon: IBalloon) {
   let payload = { balloon: balloon };
-  let res = await axios.post(`${baseUrl}/${uid}`, payload);
-  let data = res.data;
-  // console.log(data);
-  return data;
+  try {
+    let res = await axios.post(`${baseUrl}/${uid}`, payload);
+    let data = res.data;
+    // console.log(data);
+    return data;
+  } catch (error) {
+    throw Error(error.response.data);
+  }
 }
 
 //TODO: send request to message queue
@@ -33,14 +37,13 @@ export async function updateBalloon(bid: string, balloon: IBalloon) {
     // console.log(data);
     return data;
   } catch (error) {
-    throw Error(error.response.data)
+    throw Error(error.response.data);
   }
-
 }
 export async function getBalloonById(bid: any) {
   let res = await axios.get(`${baseUrl}/one/${bid}`);
   let data = res.data;
   console.log(data);
-  
+
   return data;
 }

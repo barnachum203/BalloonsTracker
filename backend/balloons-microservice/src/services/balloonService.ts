@@ -11,7 +11,7 @@ export const getAllBalloonsForUser = async (uid: string) => {
     const balloons: IBalloon[] = await dal.getAllBalloons(uid);
     console.log(`[BALLOON-SERV] - send ${balloons.length} balloons`);
     return balloons;
-  } catch (error: any) {
+  } catch (error: any) {    
     throw Error(error);
   }
 };
@@ -23,12 +23,19 @@ export const getAllBalloonsForUser = async (uid: string) => {
 export const create = async (balloon: IBalloon, uid: string) => {
   try {
     balloon.uid = uid
+    //Check if the balloon name already exists
+    const checkDuplicate = await dal.findBalloonByName(balloon);
+    if(checkDuplicate){
+      throw Error(`balloon name "${balloon.name}" already exists.`) //Make Error handler to throw status code in more generic way
+    }
     const result = await dal.createBalloon(balloon);
 
     console.log('[BALLOON-SERV]: Balloon created successfully.');
 
     return result;
   } catch (error: any) {
+    // console.log(error);
+
     throw Error(error);
   }
 };

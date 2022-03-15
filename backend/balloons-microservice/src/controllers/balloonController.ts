@@ -93,6 +93,8 @@ export const createBalloon = async (req: Request, res: Response) => {
     res.status(201).json(result);
   } catch (error: any) {
     log.error(error.message);
-    res.status(404).json({ message: error.message });
+    // console.log(error);
+    
+    res.status(404).json( error.message );
   }
 };

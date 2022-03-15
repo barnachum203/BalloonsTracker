@@ -39,7 +39,17 @@ export const deleteBalloon = async (balloonId: string) => {
   return deletedBalloon;
 };
 
+/**
+ * Find balloon by id
+ */
 export const getBalloonById = async (id: string) => {
   const balloon: IBalloon | null = await BalloonModel.findById(id);
   return balloon;
+};
+/**
+ * Find balloon by name
+ */
+ export const findBalloonByName = async (balloon: IBalloon) => {
+  const newBalloon = await BalloonModel.findOne({name: balloon.name});
+  return newBalloon;
 };
