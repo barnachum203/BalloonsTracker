@@ -32,7 +32,7 @@ export class MapEffects {
           map((data: any) =>
             MapActions.updateSuccess({ updatedBallon: data.result})
           ),
-          catchError((error) => of(MapActions.updateFailure({ error })))
+          catchError((error) => of(MapActions.updateFailure({ error: error.error })))
         )
       )
     )
@@ -43,7 +43,7 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.updateSuccess),
         tap((data) => {
-          console.log(data);
+          // console.log(data);
           
           this.popupService.openSuccessPopup("Update Air Balloon Successfully!");
         })
@@ -55,8 +55,8 @@ export class MapEffects {
     () =>
       this.actions$.pipe(
         ofType(MapActions.updateFailure),
-        tap(() => {
-          this.popupService.openFailurePopup("Unable To Update Air Balloon :(");
+        tap((error) => {
+          this.popupService.openFailurePopup(error.error.message);
         })
       ),
     { dispatch: false }
@@ -68,7 +68,7 @@ export class MapEffects {
       exhaustMap((action) =>
         this.ballonService.createBallon(action.ballon).pipe(
           map((data:any) => MapActions.createBallonSuccess({ballon: data.balloon})),
-          catchError((error) => of(MapActions.createBallonFailure({error})))
+          catchError((error) => of(MapActions.createBallonFailure({error: error.error})))
         )
       )
     )
@@ -89,10 +89,8 @@ export class MapEffects {
     () => 
       this.actions$.pipe(
         ofType(MapActions.createBallonFailure),
-        tap((error) => {
-          console.log(error.error.message);
-          
-          this.popupService.openFailurePopup("Unable to create Balloon :(");
+        tap((error) => {          
+          this.popupService.openFailurePopup(error.error.message);
         })
       ),
     { dispatch: false }
