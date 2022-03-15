@@ -124,35 +124,6 @@ export class CesiumDirective implements OnInit, OnDestroy {
         //TODO: rebuild the array in a way that not affect the track entity when it gets updates
         console.log('getiing data ');
 
-        if (this.ballons && data) {
-          for (let i = 0; i < data?.length; i++) {
-            // console.log(Object.is(data[i].point,this.ballons[i].point));
-
-            //   console.log(data[i].point,this.ballons[i].point);
-            if (!Object.is(data[i].point, this.ballons[i].point)) {
-              console.log('Update required !!!!!!!!');
-              if (data[i]) {
-                var entity: Cesium.Entity | undefined =
-                  this.viewer.entities.getById(this.selectedEntityId!);
-                // entity?.properties?.removeProperty("position")
-                const newPosition = this.computeCirclularFlight(
-                  data[i].point.longitude,
-                  data[i].point.latitude,
-                  data[i]!.point.attitude,
-                  0.5
-                );
-
-                entity!['position'] = newPosition;
-
-                // this.viewer.entities.getById(this.selectedEntityId!)!.position == newPosition
-                this.ballons = data;
-              }
-            } else {
-              // console.log("NO Update required .");
-            }
-          }
-        }
-
         if (data?.length != this.ballons?.length) {
           //check if no ballons added
           console.log('Build array of entities');
@@ -178,6 +149,35 @@ export class CesiumDirective implements OnInit, OnDestroy {
             //   },
             // });
           });
+        } else {
+          if (this.ballons && data) {
+            for (let i = 0; i < data?.length; i++) {
+              // console.log(Object.is(data[i].point,this.ballons[i].point));
+
+              //   console.log(data[i].point,this.ballons[i].point);
+              if (!Object.is(data[i].point, this.ballons[i].point)) {
+                console.log('Update required !!!!!!!!');
+                if (data[i]) {
+                  var entity: Cesium.Entity | undefined =
+                    this.viewer.entities.getById(this.selectedEntityId!);
+                  // entity?.properties?.removeProperty("position")
+                  const newPosition = this.computeCirclularFlight(
+                    data[i].point.longitude,
+                    data[i].point.latitude,
+                    data[i]!.point.attitude,
+                    0.5
+                  );
+
+                  entity!['position'] = newPosition;
+
+                  // this.viewer.entities.getById(this.selectedEntityId!)!.position == newPosition
+                  this.ballons = data;
+                }
+              } else {
+                // console.log("NO Update required .");
+              }
+            }
+          }
         }
       })
     );
@@ -273,45 +273,40 @@ export class CesiumDirective implements OnInit, OnDestroy {
     if (entity) {
       let ballon: Ballon | undefined = this.getBallonFromEntity(entity);
 
-      this.helper.add(
-        this.viewer.clock.onTick,
-        (clock) => {
-          counter++;
+      this.helper.add(this.viewer.clock.onTick, (clock) => {
+        counter++;
 
-          var position3d;
-          var position2d;
+        var position3d;
+        var position2d;
 
-          if (counter == 50) {
-            const pickedBallon2 = Object.assign({}, ballon);
+        if (counter == 50) {
+          const pickedBallon2 = Object.assign({}, ballon);
 
-            if (entity.position) {
-              position3d = entity.position.getValue(
-                clock.currentTime,
-                this.scratch3dPosition
-              );
-              let position: BallonPosition =
-                this.getDegreasFromCartesian3(position3d);
-
-              let id = pickedBallon2._id;
-              // console.log(position);
-              if (position && id)
-                this.store.dispatch(
-                  MapActions.updatePosition({ position, id })
-                );
-            }
-            counter = 0;
-          }
-
-          // Moving entities don't have a position for every possible time, need to check.
-          if (position3d) {
-            position2d = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
-              this.viewer.scene,
-              position3d,
-              this.scratch2dPosition
+          if (entity.position) {
+            position3d = entity.position.getValue(
+              clock.currentTime,
+              this.scratch3dPosition
             );
+            let position: BallonPosition =
+              this.getDegreasFromCartesian3(position3d);
+
+            let id = pickedBallon2._id;
+            // console.log(position);
+            if (position && id)
+              this.store.dispatch(MapActions.updatePosition({ position, id }));
           }
+          counter = 0;
         }
-      );
+
+        // Moving entities don't have a position for every possible time, need to check.
+        if (position3d) {
+          position2d = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
+            this.viewer.scene,
+            position3d,
+            this.scratch2dPosition
+          );
+        }
+      });
     } else {
       this.helper.removeAll();
     }
