@@ -1,10 +1,8 @@
 import { Directive, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-// import { CallbackProperty, Cartesian3, Color, JulianDate, PolygonGraphics, PolygonHierarchy, Viewer } from 'cesium';
 import * as Cesium from 'cesium';
 import { Subscription } from 'rxjs';
-
-import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
+import { Ballon, BallonPosition, Color } from 'src/app/Model/Ballon';
 import * as MapSelectors from '../menu/store/map.selectors';
 import * as MapActions from '../menu/store/map.actions';
 
@@ -16,11 +14,12 @@ export class CesiumDirective implements OnInit, OnDestroy {
    * Lat = Y Long = X Att/Height = Z
    */
   viewer: Cesium.Viewer;
-  camHeight = 180000 // camera view height when tracking entity
+  camHeight = 180000; // camera view height when tracking entity
   subsctiptions: Subscription[] = [];
   ballons$ = this.store.select(MapSelectors.selectMapBallons);
   ballons: Ballon[] | undefined;
   activeBallon$ = this.store.select(MapSelectors.selectActiveBallon);
+  selectedEntityId: string | undefined = '1';
 
   //for circle compute
   start = Cesium.JulianDate.fromDate(new Date(2020, 2, 25, 16));
@@ -32,9 +31,13 @@ export class CesiumDirective implements OnInit, OnDestroy {
       // terrainProvider: Cesium.createWorldTerrain(),
     });
     this.viewer.entities.collectionChanged.addEventListener(this.onChanged); // test
-    this.viewer.selectedEntityChanged.addEventListener((ballon: Ballon) => { //Listener triggered when choosing entity
-      console.log(ballon);
+    this.viewer.selectedEntityChanged.addEventListener((ballon: Ballon) => {
+      //Listener triggered when choosing entity
+      // console.log(ballon);
+      this.selectedEntityId = this.viewer.selectedEntity?.id;
+      // console.log(this.selectedEntityId);
     });
+
     //Make sure viewer is at the desired time.
     //Movement settings
     this.viewer.clock.startTime = this.start.clone();
@@ -56,7 +59,7 @@ export class CesiumDirective implements OnInit, OnDestroy {
     this.buildEntities();
 
     //Init camera to israel
-    // this.setViewToIsrael();
+    this.setViewToIsrael();
 
     //Focus on selected ballon from the menu
     //Always check if active ballom, else back to israel
@@ -93,6 +96,25 @@ export class CesiumDirective implements OnInit, OnDestroy {
     this.entityPicker();
   }
 
+  equals(
+    o1: { [key: string]: number | string },
+    o2: { [key: string]: number | string }
+  ) {
+    if (typeof o1 !== 'object' || typeof o2 !== 'object') {
+      return false; // we compare objects only!
+    }
+    // when one object has more attributes than the other - they can't be eq
+    if (Object.keys(o1).length !== Object.keys(o2).length) {
+      return false;
+    }
+    for (let k of Object.keys(o1)) {
+      if (o1[k] !== o2[k]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   //Get data from NgRx ballons array and create entities
   // TODO: should render the list and not rebuild it.
   buildEntities() {
@@ -100,6 +122,37 @@ export class CesiumDirective implements OnInit, OnDestroy {
       this.ballons$.subscribe((data) => {
         // console.log(data);
         //TODO: rebuild the array in a way that not affect the track entity when it gets updates
+        console.log('getiing data ');
+
+        if (this.ballons && data) {
+          for (let i = 0; i < data?.length; i++) {
+            // console.log(Object.is(data[i].point,this.ballons[i].point));
+
+            //   console.log(data[i].point,this.ballons[i].point);
+            if (!Object.is(data[i].point, this.ballons[i].point)) {
+              console.log('Update required !!!!!!!!');
+              if (data[i]) {
+                var entity: Cesium.Entity | undefined =
+                  this.viewer.entities.getById(this.selectedEntityId!);
+                // entity?.properties?.removeProperty("position")
+                const newPosition = this.computeCirclularFlight(
+                  data[i].point.longitude,
+                  data[i].point.latitude,
+                  data[i]!.point.attitude,
+                  0.5
+                );
+
+                entity!['position'] = newPosition;
+
+                // this.viewer.entities.getById(this.selectedEntityId!)!.position == newPosition
+                this.ballons = data;
+              }
+            } else {
+              // console.log("NO Update required .");
+            }
+          }
+        }
+
         if (data?.length != this.ballons?.length) {
           //check if no ballons added
           console.log('Build array of entities');
@@ -109,6 +162,21 @@ export class CesiumDirective implements OnInit, OnDestroy {
           //build new array of Entities
           data?.forEach((e: Ballon) => {
             this.viewer.entities.add(this.createEntity(e));
+            // this.viewer.entities.add({
+            //   position: new Cesium.Cartesian3(e.point.longitude,e.point.latitude, Cesium.HeightReference.CLAMP_TO_GROUND),
+            //   availability: new Cesium.TimeIntervalCollection([
+            //     new Cesium.TimeInterval({
+            //       start: this.start,
+            //       stop: this.stop,
+            //     }),
+            //   ]),
+            //   point: {
+            //     pixelSize: 50,
+            //     color: Cesium.Color.TRANSPARENT,
+            //     outlineColor: Cesium.Color.AQUA,
+            //     outlineWidth: 3,
+            //   },
+            // });
           });
         }
       })
@@ -133,9 +201,9 @@ export class CesiumDirective implements OnInit, OnDestroy {
   createEntity(ballon: Ballon) {
     //Compute a circular steps for entity
     const position = this.computeCirclularFlight(
-      ballon.position.longitude,
-      ballon.position.latitude,
-      ballon.position.attitude,
+      ballon.point.longitude,
+      ballon.point.latitude,
+      ballon.point.attitude,
       0.5
     );
 
@@ -163,6 +231,7 @@ export class CesiumDirective implements OnInit, OnDestroy {
         outline: true,
         outlineColor: Cesium.Color.BLACK,
       },
+      description: ballon.description,
       path: {
         resolution: 1,
         material: new Cesium.PolylineGlowMaterialProperty({
@@ -182,18 +251,13 @@ export class CesiumDirective implements OnInit, OnDestroy {
     let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
 
     handler.setInputAction((movement: any) => {
-      // console.log('inside entityPicker');
-
       const pickedObject = this.viewer.scene.pick(movement.position);
       if (Cesium.defined(pickedObject)) {
         let entity: Cesium.Entity = pickedObject.id;
         this.showBalloonInfoInMenu(entity);
-        // this.updateLive(entity); //get called from another fuction - check from where and terminate.
-        // this.trackEntity(entity); //get called from another fuction - check from where and terminate.
       } else {
         this.stopTrackEntity();
       }
-      // this.trackAndShow(entity);
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
   }
   scratch3dPosition = new Cesium.Cartesian3();
@@ -246,8 +310,7 @@ export class CesiumDirective implements OnInit, OnDestroy {
               this.scratch2dPosition
             );
           }
-        },
-        this
+        }
       );
     } else {
       this.helper.removeAll();
@@ -291,8 +354,8 @@ export class CesiumDirective implements OnInit, OnDestroy {
         easingFunction: Cesium.EasingFunction.QUADRATIC_IN_OUT,
         complete: this.startTrackEntity(entity),
       });
-    }else{
-      console.error("No such entity")
+    } else {
+      console.error('No such entity');
     }
   }
   private startTrackEntity(entity: Cesium.Entity): any {
@@ -343,7 +406,7 @@ export class CesiumDirective implements OnInit, OnDestroy {
   menuBackClicked() {
     this.stopTrackEntity();
     this.setViewToIsrael();
-    this.helper.removeAll();//remove clock event when returning to menu - destroy clock enevt listener
+    this.helper.removeAll(); //remove clock event when returning to menu - destroy clock enevt listener
   }
 
   //Use this function to navigate to specefic ballon
@@ -383,6 +446,13 @@ export class CesiumDirective implements OnInit, OnDestroy {
     return this.viewer.canvas as HTMLCanvasElement;
   }
 
+  //generate color from string
+  getColor(colorName: string, alpha: string) {
+    // Cesium.Color['']
+    // const color = new Cesium.Color[colorName.toUpperCase()];
+    // return Cesium.Color.fromAlpha(color, parseFloat(alpha));
+  }
+
   computeCirclularFlight(
     lon: number,
     lat: number,
@@ -407,16 +477,32 @@ export class CesiumDirective implements OnInit, OnDestroy {
       property.addSample(time, position);
 
       //Also create a point for each sample we generate.
-      this.viewer.entities.add({
-        position: position,
-        point: {
-          pixelSize: 8,
-          color: Cesium.Color.TRANSPARENT,
-          outlineColor: Cesium.Color.YELLOW,
-          outlineWidth: 3,
-        },
-      });
+      // this.viewer.entities.add({
+      //   position: position,
+      //   point: {
+      //     pixelSize: 8,
+      //     color: Cesium.Color.TRANSPARENT,
+      //     outlineColor: Cesium.Color.YELLOW,
+      //     outlineWidth: 3,
+      //   },
+      // });
     }
+    const elipse = new Cesium.CheckerboardMaterialProperty({
+      evenColor: Cesium.Color.WHITE,
+      oddColor: Cesium.Color.BLACK,
+      repeat: new Cesium.Cartesian2(4, 4),
+    });
+    //Add Target dot
+    const position = Cesium.Cartesian3.fromDegrees(lon, lat, height);
+    this.viewer.entities.add({
+      position: position,
+      point: {
+        pixelSize: 3,
+        color: Cesium.Color.TRANSPARENT,
+        outlineColor: Cesium.Color.RED,
+        outlineWidth: 3,
+      },
+    });
     return property;
   }
 }
