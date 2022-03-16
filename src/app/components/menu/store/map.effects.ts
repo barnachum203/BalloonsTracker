@@ -30,7 +30,7 @@ export class MapEffects {
       exhaustMap((action) =>
         this.ballonService.updateBallon(action.ballon).pipe(
           map((data: any) =>
-            MapActions.updateSuccess({ updatedBallon: data.result})
+            MapActions.updateSuccess({ updatedBallon: data.balloon})
           ),
           catchError((error) => of(MapActions.updateFailure({ error: error.error })))
         )
@@ -43,7 +43,7 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.updateSuccess),
         tap((data) => {
-          // console.log(data);
+          console.log(data);
           
           this.popupService.openSuccessPopup("Update Air Balloon Successfully!");
         })
