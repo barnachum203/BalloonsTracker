@@ -2,9 +2,9 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
+import cors from "cors";
 import userRouter from './routes/users.routes';
 import balloonRoutes from './routes/balloons.routes';
-import cors from "cors";
 dotenv.config({ path: './environment.env' });
 
 const app = express();

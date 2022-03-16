@@ -3,8 +3,8 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import balloonRoutes from './routes/balloons.routes';
-dotenv.config({ path: './environment.env' });
 import * as db from './db';
+dotenv.config({ path: './environment.env' });
 
 const app = express();
 
