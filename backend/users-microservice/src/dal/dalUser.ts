@@ -1,52 +1,79 @@
-import { IUser, UserModel } from '../model/user';
-import mongoose, { FilterQuery } from 'mongoose';
+import mongoose from 'mongoose';
+import { IUser } from '../model/user';
+import { UserModel } from '../model/userSchema';
 
 /**
  * Get all users
  */
 export const getAllUsers = async (uid: string) => {
-  const users: IUser[] = await UserModel.find();
-  return users;
+  try {
+    const users: IUser[] = await UserModel.find();
+    return users;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 /**
  * Get all users
  */
- export const loginUser = async (email: string) => {
-  const users: IUser | null = await UserModel.findOne({email: email});
-  return users;
+export const loginUser = async (email: string) => {
+  try {
+    const users: IUser | null = await UserModel.findOne({ email: email });
+    return users;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 /**
  * Creates new user
  */
 export const createUser = async (userToCreate: IUser) => {
-  const newUser = await UserModel.create(userToCreate);
-  return newUser;
+  try {
+    const newUser = await UserModel.create(userToCreate);
+    return newUser;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 /**
  * Update user
  */
 export const updateUserById = async (id: string, user: IUser) => {
-  const updatedUser: IUser | null = await UserModel.findByIdAndUpdate(
-    new mongoose.Types.ObjectId(id),
-    user
-  );
+  try {
+    const updatedUser: IUser | null = await UserModel.findByIdAndUpdate(
+      new mongoose.Types.ObjectId(id),
+      user
+    );
 
-  return updatedUser;
+    return updatedUser;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 /**
  * Delete user
  */
 export const deleteUser = async (userId: string) => {
-  const deletedUser: IUser | null = await UserModel.findOneAndDelete({_id: userId});
+  try {
+    const deletedUser: IUser | null = await UserModel.findOneAndDelete({
+      _id: userId,
+    });
 
-  return deletedUser;
+    return deletedUser;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 export const getUserById = async (id: string) => {
-  const user: IUser | null = await UserModel.findById(id);
-  return user;
+  try {
+    const user: IUser | null = await UserModel.findById(id);
+    return user;
+  } catch (error) {
+    throw Error(error);
+  }
 };
