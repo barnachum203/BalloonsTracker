@@ -1,12 +1,13 @@
 import { NextFunction,Response, Request } from "express";
+import { logger } from "../utils/logger";
 
 export default function joiMiddleware(schema) {
     return (req: Request, res: Response, next: NextFunction) => {
-      // console.log(req.body);
+      console.log(req.body);
       const { error } = schema.validate(req.body);
   
       const valid = error == null;
-      console.log('VALIDATION: ' + valid);
+      logger.info('VALIDATION: ' + valid);
   
       if (valid) {
         next();
@@ -14,7 +15,7 @@ export default function joiMiddleware(schema) {
         const { details } = error;
         const message = details.map((i) => i.message).join(',');
   
-        console.log('error', message);
+        logger.error('error', message);
         
         return res.status(422).json({ error: message });
       }
