@@ -1,5 +1,5 @@
-import { FilterQuery } from 'mongoose';
 import * as dal from '../dal/dalUser';
+import { logger } from '../utils/logger';
 import { IUser } from '../model/user';
 
 /**
@@ -9,7 +9,7 @@ import { IUser } from '../model/user';
 export const getAllUsers = async (bid: string) => {
   try {
     const users: IUser[] = await dal.getAllUsers(bid);
-    console.log(`[USER-SERV] - send ${users.length} users`);
+    logger.info(`[USER-SERV] - send ${users.length} users`);
     return users;
   } catch (error: any) {
     throw Error(error);
@@ -24,7 +24,7 @@ export const create = async (user: IUser) => {
   try {
     await dal.createUser(user);
 
-    console.log('[USER-SERV]: User created successfully.');
+    logger.info('[USER-SERV]: User created successfully.');
 
     return { user };
   } catch (error: any) {
@@ -37,26 +37,34 @@ export const create = async (user: IUser) => {
  *
  * */
 export const updateUser = async (user: IUser, id: string) => {
-  const updatedUser = await dal.updateUserById(id, user);
-  if (!updatedUser) {
-    console.log('[USER-SERV]: User is not updated');
+  try {
+    const updatedUser = await dal.updateUserById(id, user);
+    if (!updatedUser) {
+      logger.error('[USER-SERV]: User is not updated');
 
-    throw Error('User is not updated');
+      throw Error('User is not updated');
+    }
+    logger.info('[USER-SERV]: User updated.');
+
+    return updatedUser;
+  } catch (error) {
+    throw Error(error);
   }
-  console.log('[USER-SERV]: User updated.');
-
-  return updatedUser;
 };
 
 export const deleteUser = async (id: string) => {
-  const result = await dal.deleteUser(id);
-  if (!result) {
-    console.log('[USER-SERV]: User is not deleted.');
-    throw Error('User is not deleted.');
-  }
-  console.log('[USER-SERV]: User deleted: ' + id);
+  try {
+    const result = await dal.deleteUser(id);
+    if (!result) {
+      logger.error('[USER-SERV]: User is not deleted.');
+      throw Error('User is not deleted.');
+    }
+    logger.info('[USER-SERV]: User deleted: ' + id);
 
-  return result;
+    return result;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 /**
@@ -70,7 +78,7 @@ export const getUserById = async (id: string) => {
     if (!result) {
       throw Error('User is not exist');
     }
-    console.log('[USER-SERV]: Sent user: ' + id);
+    logger.info('[USER-SERV]: Sent user: ' + id);
     return result;
   } catch (error: any) {
     throw Error(error);
@@ -82,15 +90,15 @@ export const getUserById = async (id: string) => {
  * @param id
  * @returns user
  */
- export const loginUser = async (email: string, password:string) => {
+export const loginUser = async (email: string, password: string) => {
   try {
     const result: IUser | null = await dal.loginUser(email);
     if (!result) {
-      console.log("[USER-SERV]: user not found");
-      
+      logger.error('[USER-SERV]: user not found');
+
       throw Error('Wrong email or password');
     }
-    console.log('[USER-SERV]: Login user: ' + result);
+    logger.info('[USER-SERV]: Login user: ' + result);
     return result;
   } catch (error: any) {
     throw Error(error);
