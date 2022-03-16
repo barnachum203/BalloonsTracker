@@ -8,13 +8,13 @@
     <div *ngSwitchCase="'EDIT'">
       <small> mode: EDIT </small>
       <div>
-        <app-dynamic-form [mode]='mode' [buttonName]='buttonName' [questions]="questions$ | async"></app-dynamic-form>
+        <app-dynamic-form [mode]='mode' [buttonName]='buttonName' [fields]="fields$ | async"></app-dynamic-form>
       </div>
     </div>
     <div *ngSwitchCase="'ADD_NEW'">
       <small> mode: NEW </small>
       <div>
-        <app-dynamic-form [mode]='mode' [buttonName]='buttonName' [questions]="questions$ | async"></app-dynamic-form>
+        <app-dynamic-form [mode]='mode' [buttonName]='buttonName' [fields]="fields$ | async"></app-dynamic-form>
       </div>
     </div>
     <div mat-dialog-actions>
