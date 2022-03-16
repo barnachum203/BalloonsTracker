@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose';
 import * as dal from '../dal/dalBalloon';
 import { IBalloon } from '../model/balloon';
 
@@ -11,7 +10,7 @@ export const getAllBalloonsForUser = async (uid: string) => {
     const balloons: IBalloon[] = await dal.getAllBalloons(uid);
     console.log(`[BALLOON-SERV] - send ${balloons.length} balloons`);
     return balloons;
-  } catch (error: any) {    
+  } catch (error: any) {
     throw Error(error);
   }
 };
@@ -22,11 +21,11 @@ export const getAllBalloonsForUser = async (uid: string) => {
  * */
 export const create = async (balloon: IBalloon, uid: string) => {
   try {
-    balloon.uid = uid
+    balloon.uid = uid;
     //Check if the balloon name already exists
     const checkDuplicate = await dal.findBalloonByName(balloon);
-    if(checkDuplicate){
-      throw Error(`balloon name "${balloon.name}" already exists.`) //Make Error handler to throw status code in more generic way
+    if (checkDuplicate) {
+      throw Error(`balloon name "${balloon.name}" already exists.`); //Make Error handler to throw status code in more generic way
     }
     const result = await dal.createBalloon(balloon);
 
@@ -46,29 +45,33 @@ export const create = async (balloon: IBalloon, uid: string) => {
  * */
 export const updateBalloon = async (balloon: IBalloon, id: string) => {
   try {
-     const result = await dal.updateBalloonById(id, balloon);
-     const updatedBalloon = await dal.findBalloonByName(balloon)
+    const result = await dal.updateBalloonById(id, balloon);
+    const updatedBalloon = await dal.findBalloonByName(balloon);
     console.log('[BALLOON-SERV]: Balloon updated.');
 
     console.log(updatedBalloon);
-    
+
     return updatedBalloon;
-  } catch (error) {    
+  } catch (error) {
     console.log(error);
-    
+
     throw Error(error);
   }
 };
 
 export const deleteBalloon = async (id: string) => {
-  const result = await dal.deleteBalloon(id);
-  if (!result) {
-    console.log('[BALLOON-SERV]: Balloon is not deleted.');
-    throw Error('Balloon is not deleted.');
-  }
-  console.log('[BALLOON-SERV]: Balloon deleted: ' + id);
+  try {
+    const result = await dal.deleteBalloon(id);
+    if (!result) {
+      console.log('[BALLOON-SERV]: Balloon is not deleted.');
+      throw Error('Balloon is not deleted.');
+    }
+    console.log('[BALLOON-SERV]: Balloon deleted: ' + id);
 
-  return result;
+    return result;
+  } catch (error) {
+    throw Error(error);
+  }
 };
 
 /**
