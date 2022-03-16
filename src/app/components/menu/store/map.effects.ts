@@ -5,7 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
 import { Ballon } from 'src/app/Model/Ballon';
-import { BallonService } from 'src/app/services/ballon.service';
+import { BallonService } from 'src/app/shared/services/ballon.service';
 import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
 import { TokenStorageService } from 'src/app/shared/token-storage.service';
 import * as MapActions from './map.actions';
