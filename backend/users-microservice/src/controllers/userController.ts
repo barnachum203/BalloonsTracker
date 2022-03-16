@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { log } from '../utils/logger';
+import { logger } from '../utils/logger';
 import * as userService from '../services/userService';
 
 /** V
@@ -11,12 +11,12 @@ export const getUserById = async (req: Request, res: Response) => {
   const { uid } = req.body;
   try {
     const result = await userService.getUserById(uid);
-    log.info('Get specific user ' + uid);
+    logger.info('Get specific user ' + uid);
     res
       .status(201)
-      .json({ message: 'Get specific user uid: ' + uid, result: result });
+      .json({ message: 'Get specific user uid: ' + uid, user: result });
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 };
 
@@ -29,13 +29,13 @@ export const updateUser = async (req: Request, res: Response) => {
   const { user } = req.body;
   const { uid } = req.params;
   try {
-    log.info('Update specific user by id ' + uid);
+    logger.info('Update specific user by id ' + uid);
     const result = await userService.updateUser(user, uid);
     res
       .status(201)
-      .json({ message: 'Update specific user id: ' + uid, result: result });
+      .json({ message: 'Update specific user id: ' + uid, user: result });
   } catch (error: any) {
-    log.error(error.message);
+    logger.error(error.message);
     res.status(404).json({ message: error.message });
   }
 };
@@ -49,10 +49,10 @@ export const deleteUser = async (req: Request, res: Response) => {
   const { uid } = req.params;
   try {
     await userService.deleteUser(uid);
-    log.info('Delete specific user id ' + uid);
+    logger.info('Delete specific user id ' + uid);
     res.status(201).json({ message: 'Delete specific user id: ' + uid });
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json(error.message);
   }
 };
 
@@ -64,15 +64,15 @@ export const deleteUser = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   const { user } = req.body;
   try {
-    log.info(`Create user ${user} `);
+    logger.info(`Create user ${user} `);
     const result = await userService.create(user);
     res.status(201).json({
       message: `Created user`,
-      result: result,
+      user: result,
     });
   } catch (error: any) {
-    log.error(error.message);
-    res.status(404).json({ message: error.message });
+    logger.error(error.message);
+    res.status(404).json(error.message);
   }
 };
 
@@ -85,11 +85,11 @@ export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     //Call users service and login user
-    log.info(`Loggin called `);
+    logger.info(`Loggin called `);
     const result = await userService.loginUser(email, password);
     res.status(201).json(result);
   } catch (error: any) {
-    log.error(error.message)
+    logger.error(error.message)
     res.status(404).json( error.message );
   }
 };

@@ -29,15 +29,15 @@ export const getBalloons = async (req: Request, res: Response) => {
  * @return balloon
  * */
 export const getBalloonById = async (req: Request, res: Response) => {
-  const { bid } = req.body;
+  const { bid } = req.params;
   try {
     log.info('Get specific balloon ' + bid);
     const result = await balloonService.getBalloonById(bid);
     res
       .status(201)
-      .json({ message: 'Get specific balloon bid: ' + bid, result: result });
+      .json({ message: 'Get specific balloon bid: ' + bid, balloon: result });
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({ message: error.message ,error: error});
   }
 };
 
@@ -53,7 +53,7 @@ export const updateBalloon = async (req: Request, res: Response) => {
     const result = await balloonService.updateBalloon(bid, balloon);
     res
       .status(201)
-      .json({ message: 'Update specific balloon id: ' + bid,  result });
+      .json({ message: 'Update specific balloon id: ' + bid,  balloon:result });
   } catch (error: any) {
     log.error(error.message);
     res.status(404).json({message: error.message, result: error});
