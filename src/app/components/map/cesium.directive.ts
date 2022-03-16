@@ -96,25 +96,6 @@ export class CesiumDirective implements OnInit, OnDestroy {
     this.entityPicker();
   }
 
-  equals(
-    o1: { [key: string]: number | string },
-    o2: { [key: string]: number | string }
-  ) {
-    if (typeof o1 !== 'object' || typeof o2 !== 'object') {
-      return false; // we compare objects only!
-    }
-    // when one object has more attributes than the other - they can't be eq
-    if (Object.keys(o1).length !== Object.keys(o2).length) {
-      return false;
-    }
-    for (let k of Object.keys(o1)) {
-      if (o1[k] !== o2[k]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   //Get data from NgRx ballons array and create entities
   // TODO: should render the list and not rebuild it.
   buildEntities() {
@@ -124,8 +105,8 @@ export class CesiumDirective implements OnInit, OnDestroy {
         //TODO: rebuild the array in a way that not affect the track entity when it gets updates
         console.log('getiing data ');
 
+        //check if balloon added/removed
         if (data?.length != this.ballons?.length) {
-          //check if no ballons added
           console.log('Build array of entities');
 
           this.ballons = data;
@@ -133,48 +114,37 @@ export class CesiumDirective implements OnInit, OnDestroy {
           //build new array of Entities
           data?.forEach((e: Ballon) => {
             this.viewer.entities.add(this.createEntity(e));
-            // this.viewer.entities.add({
-            //   position: new Cesium.Cartesian3(e.point.longitude,e.point.latitude, Cesium.HeightReference.CLAMP_TO_GROUND),
-            //   availability: new Cesium.TimeIntervalCollection([
-            //     new Cesium.TimeInterval({
-            //       start: this.start,
-            //       stop: this.stop,
-            //     }),
-            //   ]),
-            //   point: {
-            //     pixelSize: 50,
-            //     color: Cesium.Color.TRANSPARENT,
-            //     outlineColor: Cesium.Color.AQUA,
-            //     outlineWidth: 3,
-            //   },
-            // });
           });
         } else {
+          //check if the data exists
           if (this.ballons && data) {
             for (let i = 0; i < data?.length; i++) {
               // console.log(Object.is(data[i].point,this.ballons[i].point));
 
-              //   console.log(data[i].point,this.ballons[i].point);
-              if (!Object.is(data[i].point, this.ballons[i].point)) {
-                console.log('Update required !!!!!!!!');
-                if (data[i]) {
-                  var entity: Cesium.Entity | undefined =
-                    this.viewer.entities.getById(this.selectedEntityId!);
-                  // entity?.properties?.removeProperty("position")
-                  const newPosition = this.computeCirclularFlight(
-                    data[i].point.longitude,
-                    data[i].point.latitude,
-                    data[i]!.point.attitude,
+              const newBallon = data[i];
+              const oldBallon = this.ballons[i];
+              // check if there is a change is the positions
+              if (!Object.is(oldBallon.point, newBallon.point)) {
+                var entity: Cesium.Entity | undefined =
+                  this.viewer.entities.getById(this.selectedEntityId!);
+                const newPosition = this.computeCirclularFlight(
+                  newBallon.point.longitude,
+                  newBallon.point.latitude,
+                  newBallon.point.attitude,
+                  0.5
+                );
+                entity!['position'] = newPosition;
+                this.ballons = data;
+              }
+              // check if there is a change in the color of balloon
+              if (!Object.is(oldBallon.color, newBallon.color)) {
+                var entity: Cesium.Entity | undefined =
+                  this.viewer.entities.getById(this.selectedEntityId!);
+                entity!.ellipsoid!.material = new Cesium.ColorMaterialProperty(
+                  Cesium.Color.fromCssColorString(newBallon.color).withAlpha(
                     0.5
-                  );
-
-                  entity!['position'] = newPosition;
-
-                  // this.viewer.entities.getById(this.selectedEntityId!)!.position == newPosition
-                  this.ballons = data;
-                }
-              } else {
-                // console.log("NO Update required .");
+                  )
+                );
               }
             }
           }
@@ -183,7 +153,7 @@ export class CesiumDirective implements OnInit, OnDestroy {
     );
   }
 
-  // An Event listener example of Data Chagned
+  // An Test Event listener example of Data Chagned
   onChanged(
     collection: Cesium.EntityCollection,
     added: string | any[],
@@ -208,7 +178,6 @@ export class CesiumDirective implements OnInit, OnDestroy {
     );
 
     var polygon = new Cesium.PolygonGraphics(); // test
-    var color = new Cesium.Color(); // TODO: get color from ballon (get the Hex number)
     let entity: Cesium.Entity = new Cesium.Entity({
       position: position,
       // Cesium.Cartesian3.fromDegrees(
@@ -226,8 +195,8 @@ export class CesiumDirective implements OnInit, OnDestroy {
       orientation: new Cesium.VelocityOrientationProperty(position),
       name: ballon.name,
       ellipsoid: {
-        radii: new Cesium.Cartesian3(25000.0, 25000.0, 25000.0),
-        material: Cesium.Color.RED.withAlpha(0.5),
+        radii: new Cesium.Cartesian3(20000.0, 20000.0, 20000.0),
+        material: Cesium.Color.fromCssColorString(ballon.color).withAlpha(0.5),
         outline: true,
         outlineColor: Cesium.Color.BLACK,
       },
@@ -242,7 +211,6 @@ export class CesiumDirective implements OnInit, OnDestroy {
       },
     });
     entity.polygon = polygon; // test
-
     return entity;
   }
 
@@ -442,10 +410,22 @@ export class CesiumDirective implements OnInit, OnDestroy {
   }
 
   //generate color from string
-  getColor(colorName: string, alpha: string) {
-    // Cesium.Color['']
-    // const color = new Cesium.Color[colorName.toUpperCase()];
-    // return Cesium.Color.fromAlpha(color, parseFloat(alpha));
+  // getColor(colorName: string, alpha: string) {
+  //   Cesium.Color[]
+  //   const color = new Cesium.Color[colorName.toUpperCase()];
+  //   return Cesium.Color.fromAlpha(color, parseFloat(alpha));
+  // }
+  getColor(colorName: string) {
+    var hash = 0;
+    for (var i = 0; i < colorName.length; i++) {
+      hash = colorName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = '';
+    for (var i = 0; i < 3; i++) {
+      var value = (hash >> (i * 8)) & 0xff;
+      colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour;
   }
 
   computeCirclularFlight(
