@@ -1,49 +1,17 @@
 import { Injectable } from '@angular/core';
 
 import { of } from 'rxjs';
-import { QuestionBase } from '../components/shared/forms/question-base';
-import { DropdownQuestion } from '../components/shared/forms/question-dropdown';
-import { TextareaQuestion } from '../components/shared/forms/question-textarea';
-import { TextboxQuestion } from '../components/shared/forms/question-textbox';
+import { FormBase } from '../components/shared/forms/form-base';
+import { DropdownForm } from '../components/shared/forms/form-dropdown';
+import { TextareaForm } from '../components/shared/forms/form-textarea';
+import { TextboxForm } from '../components/shared/forms/form-textbox';
 import { Ballon, Color, Type } from '../Model/Ballon';
 @Injectable()
-export class QuestionService {
-  // TODO: get from a remote source of question metadata
-  getQuestions() {
-    const questions: QuestionBase<string>[] = [
-      new DropdownQuestion({
-        key: 'color',
-        label: 'Color',
-        options: [
-          { key: Color.red, value: Color.red },
-          { key: Color.blue, value: Color.blue },
-          { key: Color.black, value: Color.black },
-          { key: Color.white, value: Color.white },
-        ],
-        order: 3,
-      }),
-
-      new TextboxQuestion({
-        key: 'firstName',
-        label: 'First name',
-        value: 'Bombasto',
-        required: true,
-        order: 1,
-      }),
-
-      new TextboxQuestion({
-        key: 'emailAddress',
-        label: 'Email',
-        type: 'email',
-        order: 2,
-      }),
-    ];
-
-    return of(questions.sort((a, b) => a.order - b.order));
-  }
-  getAddBallonQuestions() {
-    const questions: QuestionBase<string>[] = [
-      new TextboxQuestion({
+export class FormService {
+  // TODO: get from a remote source of field metadata
+  getAddBallonFields() {
+    const fields: FormBase<string>[] = [
+      new TextboxForm({
         key: 'name',
         label: 'Ballon name',
         type: 'text',
@@ -51,7 +19,7 @@ export class QuestionService {
         required: true,
         order: 1,
       }),
-      new TextareaQuestion({
+      new TextareaForm({
         key: 'description',
         label: 'description',
         type: 'textarea',
@@ -59,21 +27,21 @@ export class QuestionService {
         required: true,
         order: 2,
       }),
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'latitude',
         label: 'latitude',
         type: 'number',
         required: false,
         order: 3,
       }),
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'longitude',
         label: 'longitude',
         type: 'number',
         required: false,
         order: 3,
       }),
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'attitude',
         label: 'attitude',
         type: 'number',
@@ -81,7 +49,7 @@ export class QuestionService {
         order: 3,
       }),
 
-      new DropdownQuestion({
+      new DropdownForm({
         key: 'color',
         label: 'Color',
         options: [
@@ -92,7 +60,7 @@ export class QuestionService {
         ],
         order: 4,
       }),
-      new DropdownQuestion({
+      new DropdownForm({
         key: 'type',
         label: 'Type',
         options: [
@@ -105,20 +73,21 @@ export class QuestionService {
       }),
     ];
 
-    return of(questions.sort((a, b) => a.order - b.order));
+    return of(fields.sort((a, b) => a.order - b.order));
   }
-  getEditBallonQuestions(ballon: Ballon) {
-    const questions: QuestionBase<string>[] = [
-      new TextboxQuestion({
+  getEditBallonFields(ballon: Ballon) {
+    const fields: FormBase<string>[] = [
+      new TextboxForm({
         key: '_id',
         label: 'id',
         value: ballon._id,
+        disabled: true,
         type: 'text',
         required: true,
         order: 0,
       }),
 
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'name',
         label: 'Ballon name',
         value: ballon.name,
@@ -128,7 +97,7 @@ export class QuestionService {
         order: 1,
       }),
 
-      new TextareaQuestion({
+      new TextareaForm({
         key: 'description',
         label: 'description',
         type: 'textarea',
@@ -137,7 +106,7 @@ export class QuestionService {
         maxLength: 150,
         order: 2,
       }),
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'latitude',
         label: 'latitude',
         type: 'number',
@@ -145,7 +114,7 @@ export class QuestionService {
         required: false,
         order: 3,
       }),
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'longitude',
         label: 'longitude',
         type: 'number',
@@ -153,7 +122,7 @@ export class QuestionService {
         required: false,
         order: 3,
       }),
-      new TextboxQuestion({
+      new TextboxForm({
         key: 'attitude',
         label: 'attitude',
         type: 'number',
@@ -162,7 +131,7 @@ export class QuestionService {
         order: 3,
       }),
 
-      new DropdownQuestion({
+      new DropdownForm({
         key: 'color',
         label: 'Color',
         required: true,
@@ -175,7 +144,7 @@ export class QuestionService {
         ],
         order: 4,
       }),
-      new DropdownQuestion({
+      new DropdownForm({
         key: 'type',
         label: 'Type',
         value: ballon.type,
@@ -190,6 +159,6 @@ export class QuestionService {
       }),
     ];
 
-    return of(questions.sort((a, b) => a.order - b.order));
+    return of(fields.sort((a, b) => a.order - b.order));
   }
 }

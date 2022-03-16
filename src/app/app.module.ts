@@ -31,7 +31,7 @@ import { CesiumDirective } from './components/map/cesium.directive';
 import { SnackBarComponent } from './components/login/snack-bar/snack-bar.component';
 import { BallonDialogComponent } from './components/menu/ballon-dialog/ballon-dialog.component';
 import { DynamicFormComponent } from './components/shared/forms/dynamic-form/dynamic-form.component';
-import { DynamicFormQuestionComponent } from './components/shared/forms/dynamic-form-question/dynamic-form-question.component';
+import { DynamicFormFieldComponent } from './components/shared/forms/dynamic-form-field/dynamic-form-field.component';
 import { BallonDetailsComponent } from './components/menu/ballon-details/ballon-details.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { mapReducer } from './components/menu/store/map.reducers';
@@ -58,7 +58,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     SnackBarComponent,
     BallonDialogComponent,
     DynamicFormComponent,
-    DynamicFormQuestionComponent,
+    DynamicFormFieldComponent,
     BallonDetailsComponent,
     ShowErrorsComponent,
   ],
