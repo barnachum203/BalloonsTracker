@@ -7,10 +7,14 @@ dotenv.config({ path: './environment.env' });
 const baseUrl: string | undefined = process.env.BALL_SERVICE;
 
 export async function getBalloons(uid: string) {
-  let res = await axios.get(`${baseUrl}/${uid}`);
-  let data = res.data;
-  // console.log(data);
-  return data;
+  try {
+    let res = await axios.get(`${baseUrl}/${uid}`);
+    let data = res.data;
+    // console.log(data);
+    return data;
+  } catch (error) {
+    throw Error(error.response.data);
+  }
 }
 
 export async function createBalloon(uid: string, balloon: IBalloon) {
@@ -27,7 +31,13 @@ export async function createBalloon(uid: string, balloon: IBalloon) {
 
 //TODO: send request to message queue
 export async function deleteBalloon(bid: string) {
-  await axios.delete(`${baseUrl}/${bid}`);
+  try {
+    
+    await axios.delete(`${baseUrl}/${bid}`);
+  } catch (error) {
+    throw Error(error.response.data);
+
+  }
 }
 export async function updateBalloon(bid: string, balloon: IBalloon) {
   let payload = { balloon: balloon };
@@ -41,9 +51,13 @@ export async function updateBalloon(bid: string, balloon: IBalloon) {
   }
 }
 export async function getBalloonById(bid: any) {
-  let res = await axios.get(`${baseUrl}/one/${bid}`);
-  let data = res.data;
-  console.log(data);
+  try {
+    let res = await axios.get(`${baseUrl}/one/${bid}`);
+    let data = res.data;
+    // console.log(data);
 
-  return data;
+    return data;
+  } catch (error) {
+    throw Error(error.response.data);
+  }
 }
