@@ -1,6 +1,6 @@
 import pino from 'pino';
 import PinoPretty from 'pino-pretty';
-export const log = pino(
+export const logger = pino(
   PinoPretty({
     colorize: true,
     timestampKey: 'time', // --timestampKey
