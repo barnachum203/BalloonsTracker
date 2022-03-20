@@ -68,7 +68,7 @@ export const loginUser = async (req: Request, res: Response) => {
     //Call users service and login user
     log.info(`User connected: ${user}`);
     const result = await userService.loginUser(user);
-    res.status(201).json({ user: result });
+    res.status(201).json({ user: result.user , token:result.token});
   } catch (error) {
     log.error(error.message);
     res.status(404).json({ message: error.message, result: error }); //pattern of error handling body:{message,result}
