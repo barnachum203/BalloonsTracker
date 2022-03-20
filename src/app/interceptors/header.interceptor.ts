@@ -96,12 +96,12 @@ export class HeaderInterceptor implements HttpInterceptor {
       }
     }
 
-    const userId = this.storage.getUserId()! || '';
-    const token = this.storage.getToken()! || 'no-token';
+    const userId = this.storage.getUserId() || "null";
+    const token = this.storage.getToken() || "null";
     const modifiedReq: HttpRequest<any> = request.clone({
       setHeaders: {
         'user-id': userId,
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
     });
 
