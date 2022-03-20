@@ -2,6 +2,8 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { IUser } from '../model/user';
+import { log } from '../utils/logger';
+
 dotenv.config({ path: './environment.env' });
 
 const baseUrl: string | undefined = process.env.USER_SERVICE;
@@ -39,6 +41,26 @@ export async function deleteUser(uid: string) {
   }
 }
 
+
+axios.interceptors.request.use((req) => {
+  // `req` is the Axios request config, so you can modify
+  // the `headers`.
+
+  // console.log(req.headers!.authorization);
+
+  return req;
+});
+
+// axios.interceptors.request.use(
+//   config => {
+//     config.headers!['Authorization'] = `Bearer 456`;
+//         return config;
+//     },
+//     error => {
+//         return Promise.reject(error);
+//     }
+// );
+
 export async function loginUser(user) {
   const payload = { user };
   try {
@@ -51,3 +73,17 @@ export async function loginUser(user) {
     throw Error(error.response.data);
   }
 }
+export async function checkToken(authHeader: any) {
+  const options = {
+    headers: { authorization: authHeader },
+  };
+  try {
+    let res = await axios.get(`${baseUrl}/check-token`, options);
+    let data = res.data;
+    console.log(data);
+    return data;
+  } catch (error) {
+    // log.error(error.response.data);
+    throw Error(error.response.data);
+  }}
+

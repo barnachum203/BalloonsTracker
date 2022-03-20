@@ -1,12 +1,20 @@
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import { checkToken } from '../services/users-service.service';
+
 import { log } from '../utils/logger';
 
 /**
  * Check if the user have an authorized token
- * @augments x-auth-token should be in request header.
+ * @augments authorization should be in request header.
  */
-const requireUser = async (req, res, next) => {
-  const token: string = req.header('x-auth-token');
+export const requireUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
   log.info(`token: ${token}`);
 
   if (!token) {
@@ -15,15 +23,17 @@ const requireUser = async (req, res, next) => {
   }
   log.info('token verified.');
 
-  jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
-    if (err) {
-      log.error('jwt not verified.');
-      log.info(user);
-
-      return res.status(400).json({ message: 'User not authorized' });
-    }
-    log.info('jwt verified.');
+  try {
+    const result = await checkToken(authHeader);
+    const { error } = result;
+    log.info(`jwt result: ${result}`);
+    log.error(error);
     next();
-  });
+  } catch (error) {
+    log.error(error.message);
+    return res
+      .status(401)
+      .json({ message: 'User not authorized.', errorMessage: error.message });
+  }
 };
 export default requireUser;

@@ -1,6 +1,6 @@
 import express from 'express';
 import * as userController from '../controllers/userController';
-
+import requireUser from '../middleware/auth'
 const router = express.Router();
 
 router.put('/', userController.updateUser);
