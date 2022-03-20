@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { log } from '../utils/logger';
-import * as userService from '../services/users-service';
+import * as userService from '../services/users-service.service';
 
 /**
  * Create/Register user:

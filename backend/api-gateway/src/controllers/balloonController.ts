@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { log } from '../utils/logger';
-import * as balloonService from '../services/balloon-service';
+import * as balloonService from '../services/balloon-service.service';
 
 /**
  * Get all balloons by user id:
