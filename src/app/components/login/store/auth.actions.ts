@@ -37,7 +37,7 @@ export const loginRequest = createAction(
 );
 export const loginSuccess = createAction(
   LOGIN_SUCCESS,
-  props<{ user: AuthUser }>()
+  props<{ user: AuthUser, token: string }>()
 );
 export const loginFailure = createAction(
   LOGIN_FAILURE,
