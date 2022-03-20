@@ -15,12 +15,12 @@ export const getAllUsers = async (uid: string) => {
 };
 
 /**
- * Get all users
+ * Login user
  */
-export const loginUser = async (email: string) => {
+export const loginUser = async (user) => {
   try {
-    const users: IUser | null = await UserModel.findOne({ email: email });
-    return users;
+    const result: IUser | null = await UserModel.findOne({ email: user.email });
+    return result;
   } catch (error) {
     throw Error(error);
   }

@@ -82,11 +82,11 @@ export const createUser = async (req: Request, res: Response) => {
  * @return user - logged user.
  * */
 export const loginUser = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { user } = req.body;
   try {
     //Call users service and login user
     logger.info(`Loggin called `);
-    const result = await userService.loginUser(email, password);
+    const result = await userService.loginUser(user);
     res.status(201).json(result);
   } catch (error: any) {
     logger.error(error.message)

@@ -39,8 +39,8 @@ export async function deleteUser(uid: string) {
   }
 }
 
-export async function loginUser(email: string, password: string) {
-  const payload = { email: email, password: password };
+export async function loginUser(user) {
+  const payload = { user };
   try {
     let res = await axios.post(`${baseUrl}/login`, payload);
     let data = res.data;

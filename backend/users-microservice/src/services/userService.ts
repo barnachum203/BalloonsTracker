@@ -90,9 +90,9 @@ export const getUserById = async (id: string) => {
  * @param id
  * @returns user
  */
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async (user) => {
   try {
-    const result: IUser | null = await dal.loginUser(email);
+    const result: IUser | null = await dal.loginUser(user);
     if (!result) {
       logger.error('[USER-SERV]: user not found');
 

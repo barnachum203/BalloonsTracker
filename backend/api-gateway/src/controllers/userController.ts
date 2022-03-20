@@ -58,12 +58,14 @@ export const deleteUser = async (req: Request, res: Response) => {
  * @return user
  * */
 export const loginUser = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { user } = req.body;
+  console.log(user);
   try {
+    
     //Call users service and login user
-    log.info(`User connected: ${email} , ${password}`);
-    const user = await userService.loginUser(email, password)
-    res.status(201).json({ user });
+    log.info(`User connected: ${user}`);
+    const result = await userService.loginUser(user)
+    res.status(201).json({ user: result });
   } catch (error) {
     log.error(error.message)
     res.status(404).json( {message: error.message, result: error} ); //pattern of error handling body:{message,result}
