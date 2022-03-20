@@ -101,7 +101,7 @@ export class HeaderInterceptor implements HttpInterceptor {
     const modifiedReq: HttpRequest<any> = request.clone({
       setHeaders: {
         'user-id': userId,
-        'x-auth-token': token,
+        Authorization: `Bearer ${token}`,
       },
     });
 
