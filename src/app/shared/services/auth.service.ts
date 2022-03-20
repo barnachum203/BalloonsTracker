@@ -17,19 +17,12 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
-    // NOTE: uncomment to get latency
-    // let user: AuthUser;
-    // this.user.email = email;
-    // user.password = password;
-    if (environment.IS_MOCK) {
-      // return new Observable((observer) => {
-      //   setTimeout(() => {
-      //       observer.next(mockDb['login'])
-      //       // observer.error({"message": 'Wrong username or password.'})
-      //   }, 1000)
-      // });
-    }
-    return this.http.post(this.apiUrl + '/login', {user: { email, password }});
+    const user = {
+      email: email,
+      password: password,
+    };
+
+    return this.http.post(this.apiUrl + '/login', { user });
   }
 
   logout() {
