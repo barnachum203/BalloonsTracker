@@ -97,10 +97,13 @@ export class HeaderInterceptor implements HttpInterceptor {
     }
 
     const userId = this.storage.getUserId()! || '';
+    const token = this.storage.getToken()! || 'no-token';
     const modifiedReq: HttpRequest<any> = request.clone({
-      headers: request.headers.set('user-id', userId)
+      setHeaders: {
+        'user-id': userId,
+        'x-auth-token': token,
+      },
     });
-    // console.log(modifiedReq);
 
     return next.handle(modifiedReq);
   }
