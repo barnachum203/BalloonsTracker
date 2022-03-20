@@ -5,6 +5,7 @@ import mockDb from '../../assets/mockdb/mockDb.json';
 
 import { environment } from '../../../environments/environment';
 import { User } from '../../Model/User';
+import { AuthUser } from 'src/app/components/login/store/auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,9 @@ export class AuthService {
 
   login(email: string, password: string): Observable<any> {
     // NOTE: uncomment to get latency
+    // let user: AuthUser;
+    // this.user.email = email;
+    // user.password = password;
     if (environment.IS_MOCK) {
       // return new Observable((observer) => {
       //   setTimeout(() => {
@@ -25,7 +29,7 @@ export class AuthService {
       //   }, 1000)
       // });
     }
-    return this.http.post(this.apiUrl + '/login', { email, password });
+    return this.http.post(this.apiUrl + '/login', {user: { email, password }});
   }
 
   logout() {
