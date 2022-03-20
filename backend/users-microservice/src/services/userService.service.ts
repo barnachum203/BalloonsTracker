@@ -1,6 +1,9 @@
 import * as dal from '../dal/dalUser';
 import { logger } from '../utils/logger';
 import { IUser } from '../model/user';
+import { getJWTToken, getSaltHashPassword, verifyPassword } from '../utils/crypto'
+import creatToken from '../utils/jwt';
+import compare from '../utils/bcrypt';
 
 /**
  * Get all users:
@@ -22,11 +25,14 @@ export const getAllUsers = async (bid: string) => {
  * */
 export const create = async (user: IUser) => {
   try {
-    await dal.createUser(user);
-
-    logger.info('[USER-SERV]: User created successfully.');
-
-    return { user };
+    const checkDuplication = await dal.findUserByEmail(user.email)
+    if(!checkDuplication){      
+     const result = await dal.createUser(user);
+     logger.info('[USER-SERV]: User created successfully.');
+     return { user: result };
+    }else{
+      throw Error("user already exists.")
+    }
   } catch (error: any) {
     throw Error(error);
   }
@@ -92,14 +98,22 @@ export const getUserById = async (id: string) => {
  */
 export const loginUser = async (user) => {
   try {
-    const result: IUser | null = await dal.loginUser(user);
+    const result: IUser | null = await dal.findUserByEmail(user.email);
     if (!result) {
       logger.error('[USER-SERV]: user not found');
-
       throw Error('Wrong email or password');
+    }else{
+      let auth = await compare(user.password, result.password)      
+      if(auth){
+        logger.info("authenticated")
+        const token = creatToken(result._id.toString())
+        return {user: result, token: token}
+      }
+      logger.error("NOT authenticated")
+      throw Error('Wrong email or password')
     }
-    logger.info('[USER-SERV]: Login user: ' + result);
-    return result;
+    // logger.info('[USER-SERV]: Login user: ' + result);
+    // return result;
   } catch (error: any) {
     throw Error(error);
   }
