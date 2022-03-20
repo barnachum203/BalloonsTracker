@@ -15,7 +15,7 @@ export class AuthEffects {
       ofType(AuthActions.loginRequest),
       exhaustMap((action) =>
         this.authService.login(action.email, action.password).pipe(
-          map((user) => AuthActions.loginSuccess( user )),
+          map((data: any) => AuthActions.loginSuccess( {user: data.user, token: data.token} )),
           catchError((error) => of(AuthActions.loginFailure({ error })))
         )
       )
@@ -28,8 +28,10 @@ export class AuthEffects {
         ofType(AuthActions.loginSuccess),
         tap(() => this.router.navigate(['/home'])),
         tap((data) => {
+          // console.log(data);
           this.popupService.openSuccessLogin();
           this.storage.saveUserId(data.user._id!);
+          this.storage.saveToken(data.token!)
         })
       ),
     { dispatch: false }
@@ -39,10 +41,10 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginFailure),
-        tap(() => {
+        tap((data) => {
+          // console.log(data);
           this.router.navigate([`/login`]);
-        }),
-        tap(() => {
+          
           this.popupService.openFailureLogin();
         })
       ),
