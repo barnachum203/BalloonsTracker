@@ -17,7 +17,7 @@ export const getAllUsers = async (uid: string) => {
 /**
  * Login user
  */
-export const loginUser = async (user) => {
+export const getUserByEmail = async (user) => {
   try {
     const result: IUser | null = await UserModel.findOne({ email: user.email });
     return result;
@@ -76,4 +76,9 @@ export const getUserById = async (id: string) => {
   } catch (error) {
     throw Error(error);
   }
+};
+
+export const findUserByEmail = async (email: string) => {
+    const user: IUser | null = await UserModel.findOne({email: email});
+    return user;
 };
