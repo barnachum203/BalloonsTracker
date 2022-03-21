@@ -27,7 +27,7 @@ export interface DialogData {
   styleUrls: ['./ballon-dialog.component.css'],
   providers: [FormService],
 })
-export class BallonDialogComponent implements OnInit {
+export class BallonDialogComponent {
   ballon?: Ballon;
   fields$?: Observable<FormBase<any>[]>;
   title = '';
@@ -65,8 +65,6 @@ export class BallonDialogComponent implements OnInit {
         break;
     }
   }
-
-  ngOnInit(): void {}
 
   onSave() {
     console.log('onSave()');
