@@ -7,7 +7,7 @@ import * as userService from '../services/userService.service';
  * @input uid - user id
  * @return user
  * */
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   const { uid } = req.body;
   try {
     const result = await userService.getUserById(uid);
@@ -15,8 +15,8 @@ export const getUserById = async (req: Request, res: Response) => {
     res
       .status(201)
       .json({ message: 'Get specific user uid: ' + uid, user: result });
-  } catch (error: any) {
-    res.status(404).json(error.message);
+  } catch (error) {
+    next(error)
   }
 };
 
@@ -25,7 +25,7 @@ export const getUserById = async (req: Request, res: Response) => {
  * @input uid - user id
  * @return updated user
  * */
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req.body;
   const { uid } = req.params;
   try {
@@ -34,9 +34,9 @@ export const updateUser = async (req: Request, res: Response) => {
     res
       .status(201)
       .json({ message: 'Update specific user id: ' + uid, user: result });
-  } catch (error: any) {
+  } catch (error) {
     logger.error(error.message);
-    res.status(404).json({ message: error.message });
+    next(error)
   }
 };
 
@@ -45,14 +45,14 @@ export const updateUser = async (req: Request, res: Response) => {
  * @input uid - user id
  * @return: make an Asynchronus call for mesage queue for delete.
  * */
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   const { uid } = req.params;
   try {
     await userService.deleteUser(uid);
     logger.info('Delete specific user id ' + uid);
     res.status(201).json({ message: 'Delete specific user id: ' + uid });
-  } catch (error: any) {
-    res.status(404).json(error.message);
+  } catch (error) {
+    next(error)
   }
 };
 
@@ -61,7 +61,7 @@ export const deleteUser = async (req: Request, res: Response) => {
  * @input user  - user: {email, password}
  * @return user - created user.
  * */
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req.body;
   try {
     logger.info(`Create user ${user} `);
@@ -72,7 +72,7 @@ export const createUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     logger.error(error.message);
-    res.status(406).json(error.message);
+    next(error)
   }
 };
 
