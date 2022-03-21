@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as balloonService from '../services/balloonService.service';
 import { logger } from '../utils/logger';
 /**
@@ -6,7 +6,7 @@ import { logger } from '../utils/logger';
  * @input uid - user id
  * @return balloons: IBalloon[]
  * */
-export const getBalloonsForUser = async (req: Request, res: Response) => {
+export const getBalloonsForUser = async (req: Request, res: Response, next: NextFunction) => {
   const { uid } = req.params;
   try {
     //Call balloons service and get all balloons by user id(uid)
@@ -16,8 +16,7 @@ export const getBalloonsForUser = async (req: Request, res: Response) => {
     res.status(201).json(data);
   } catch (error: any) {
     logger.error('Cannot get balloons for uid: ' + uid);
-
-    res.status(404).json({ message: error.message });
+    next(error)
   }
 };
 
@@ -26,7 +25,7 @@ export const getBalloonsForUser = async (req: Request, res: Response) => {
  * @input bid - balloon id
  * @return balloon
  * */
-export const getBalloonById = async (req: Request, res: Response) => {
+export const getBalloonById = async (req: Request, res: Response, next: NextFunction) => {
   const { bid } = req.params;
   try {
     logger.info('Get specific balloon ' + bid);
@@ -36,8 +35,7 @@ export const getBalloonById = async (req: Request, res: Response) => {
       .json({ message: 'Get specific balloon bid: ' + bid, result: result });
   } catch (error: any) {
     logger.error(error.message);
-
-    res.status(404).json(error.message);
+    next(error)
   }
 };
 
@@ -46,7 +44,7 @@ export const getBalloonById = async (req: Request, res: Response) => {
  * @input bid, balloon
  * @return updated balloon
  * */
-export const updateBalloon = async (req: Request, res: Response) => {
+export const updateBalloon = async (req: Request, res: Response, next: NextFunction) => {
   const { balloon } = req.body;
   const { bid } = req.params;
   try {
@@ -55,7 +53,7 @@ export const updateBalloon = async (req: Request, res: Response) => {
     res.status(201).json(result);
   } catch (error: any) {
     logger.error(error.message);
-    res.status(404).json(error.message);
+    next(error)
   }
 };
 
@@ -64,14 +62,14 @@ export const updateBalloon = async (req: Request, res: Response) => {
  * @input bid - balloon id
  * @return: make an Asynchronus call for mesage queue for delete.
  * */
-export const deleteBalloon = async (req: Request, res: Response) => {
+export const deleteBalloon = async (req: Request, res: Response, next: NextFunction) => {
   const { bid } = req.params;
   try {
     logger.info('Delete specific balloon id ' + bid);
     await balloonService.deleteBalloon(bid);
     res.status(201).json({ message: 'Delete specific balloon id: ' + bid });
   } catch (error: any) {
-    res.status(404).json(error.message);
+    next(error)
   }
 };
 
@@ -80,7 +78,7 @@ export const deleteBalloon = async (req: Request, res: Response) => {
  * @input balloon ,uid - user id
  * @return balloon - created balloon.
  * */
-export const createBalloon = async (req: Request, res: Response) => {
+export const createBalloon = async (req: Request, res: Response, next: NextFunction) => {
   const { balloon } = req.body;
   const { uid } = req.params;
   try {
@@ -89,8 +87,6 @@ export const createBalloon = async (req: Request, res: Response) => {
     res.status(201).json(result);
   } catch (error: any) {
     logger.error(error.message);
-    // console.logger(error);
-
-    res.status(404).json(error.message);
+    next(error)
   }
 };

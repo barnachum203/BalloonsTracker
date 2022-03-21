@@ -1,4 +1,8 @@
 import * as dal from '../dal/dalBalloon';
+import { BalloonAlreadyExist } from '../exceptions/BalloonAlreadyExist';
+import { BalloonNotFound } from '../exceptions/BalloonNotFound';
+import { BaseError } from '../exceptions/BaseError';
+import { UpdateException } from '../exceptions/UpdateException';
 import { IBalloon } from '../model/balloon';
 
 /**
@@ -8,10 +12,13 @@ import { IBalloon } from '../model/balloon';
 export const getAllBalloonsForUser = async (uid: string) => {
   try {
     const balloons: IBalloon[] = await dal.getAllBalloons(uid);
+    if(!balloons){
+      throw new BalloonNotFound("Cannot get balloons for uid: " + uid);
+    }
     console.log(`[BALLOON-SERV] - send ${balloons.length} balloons`);
     return balloons;
   } catch (error: any) {
-    throw Error(error);
+    throw error;
   }
 };
 
@@ -25,7 +32,7 @@ export const create = async (balloon: IBalloon, uid: string) => {
     //Check if the balloon name already exists
     const checkDuplicate = await dal.findBalloonByName(balloon);
     if (checkDuplicate) {
-      throw Error(`balloon name "${balloon.name}" already exists.`); //Make Error handler to throw status code in more generic way
+      throw new BalloonAlreadyExist(`balloon name "${balloon.name}" already exists.`); //Make Error handler to throw status code in more generic way
     }
     const result = await dal.createBalloon(balloon);
 
@@ -35,7 +42,7 @@ export const create = async (balloon: IBalloon, uid: string) => {
   } catch (error: any) {
     // console.log(error);
 
-    throw Error(error);
+    throw (error);
   }
 };
 
@@ -46,19 +53,27 @@ export const create = async (balloon: IBalloon, uid: string) => {
 export const updateBalloon = async (balloon: IBalloon, id: string) => {
   try {
     const result = await dal.updateBalloonById(id, balloon);
+    if(!result){
+      throw new UpdateException("Balloon not updated");
+    }
+
     const updatedBalloon = await dal.findBalloonByName(balloon);
+    if(!updatedBalloon){
+      throw new BalloonNotFound("Balloon not found.");
+    }
     console.log('[BALLOON-SERV]: Balloon updated.');
 
-    console.log(updatedBalloon);
+    // console.log(updatedBalloon);
 
     return updatedBalloon;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
-    throw Error(error);
+    throw error;
   }
 };
 
+//TODO: rabbitMQ
 export const deleteBalloon = async (id: string) => {
   try {
     const result = await dal.deleteBalloon(id);
@@ -83,11 +98,11 @@ export const getBalloonById = async (id: string) => {
   try {
     const result: IBalloon | null = await dal.getBalloonById(id);
     if (!result) {
-      throw Error('Balloon is not exist');
+      throw new BalloonNotFound('Balloon is not exist');
     }
     console.log('[BALLOON-SERV]: Sent balloon: ' + id);
     return result;
-  } catch (error: any) {
-    throw Error(error);
+  } catch (error) {
+    throw error;
   }
 };

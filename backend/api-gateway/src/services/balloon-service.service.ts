@@ -13,7 +13,7 @@ export async function getBalloons(uid: string) {
     // console.log(data);
     return data;
   } catch (error) {
-    throw Error(error.response.data);
+    throw error//.response.data;
   }
 }
 
@@ -25,7 +25,7 @@ export async function createBalloon(uid: string, balloon: IBalloon) {
     // console.log(data);
     return data;
   } catch (error) {
-    throw Error(error.response.data);
+    throw error//.response.data);
   }
 }
 
@@ -46,8 +46,8 @@ export async function updateBalloon(bid: string, balloon: IBalloon) {
     let data = res.data;
     // console.log(data);
     return data;
-  } catch (error) {
-    throw Error(error.response.data);
+  } catch (error) {    
+    throw error//.response.data);
   }
 }
 export async function getBalloonById(bid: any) {
@@ -58,6 +58,6 @@ export async function getBalloonById(bid: any) {
 
     return data;
   } catch (error) {
-    throw Error(error.response.data);
+    throw error
   }
 }

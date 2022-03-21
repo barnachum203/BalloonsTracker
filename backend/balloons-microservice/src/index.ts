@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import balloonRoutes from './routes/balloons.routes';
 import * as db from './db';
+import { globalErrorHandler } from './middleware/globalErrorHandler'
+
 dotenv.config({ path: './environment.env' });
 
 const app = express();
@@ -20,7 +22,7 @@ db.connect();
 
 // API root
 app.use('/balloon', balloonRoutes);
-
+app.use(globalErrorHandler)
 // A default hello word route
 const port: string = process.env.PORT || '8100';
 

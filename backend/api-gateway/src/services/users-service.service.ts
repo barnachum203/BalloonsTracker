@@ -16,7 +16,7 @@ export async function updateUser(uid: string, updatedUser: IUser) {
     // console.log(data);
     return data;
   } catch (error) {
-    throw Error(error.response.data);
+    throw error;
   }
 }
 
@@ -28,7 +28,7 @@ export async function createUser(user: IUser) {
     // console.log(data);
     return data;
   } catch (error) {
-    throw Error(error.response.data);
+    throw error;
   }
 }
 
@@ -37,7 +37,7 @@ export async function deleteUser(uid: string) {
   try {
     await axios.delete(`${baseUrl}/${uid}`);
   } catch (error) {
-    throw Error(error.response.data);
+    throw error;
   }
 }
 

@@ -19,7 +19,8 @@ export const getBalloons = async (req: Request, res: Response) => {
       .status(201)
       .json( { balloons: data}); //TODO: Send {balloons: data} - send an Object !
   } catch (error: any) {
-    res.status(404).json({ message: error.message });
+    log.error(error.message +": "+ error.response.data.error.message);    
+    res.status(error.response.status).json({message: error.response.data.error.message, result: error}); //pattern of error handling body:{message,result}
   }
 };
 
@@ -37,7 +38,8 @@ export const getBalloonById = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: 'Get specific balloon bid: ' + bid, balloon: result });
   } catch (error: any) {
-    res.status(404).json({ message: error.message ,error: error});
+    log.error(error.message +": "+ error.response.data.error.message);    
+    res.status(error.response.status).json({message: error.response.data.error.message, result: error}); //pattern of error handling body:{message,result}
   }
 };
 
@@ -55,8 +57,8 @@ export const updateBalloon = async (req: Request, res: Response) => {
       .status(201)
       .json({ message: 'Update specific balloon id: ' + bid,  balloon:result });
   } catch (error: any) {
-    log.error(error.message);
-    res.status(404).json({message: error.message, result: error});
+    log.error(error.message +": "+ error.response.data.error.message);    
+    res.status(error.response.status).json({message: error.response.data.error.message, result: error}); //pattern of error handling body:{message,result}
   }
 };
 
@@ -85,15 +87,13 @@ export const deleteBalloon = async (req: Request, res: Response) => {
 export const createBalloon = async (req: Request, res: Response) => {
   const { balloon } = req.body;
   const uid = req.header('user-id')!;
-
-  
   try {
     log.info(`Create balloon ${balloon} for user id: ${uid}`);
 
     const data = await balloonService.createBalloon(uid, balloon);
     res.status(201).json({balloon: data}); //TODO: Send {balloon: result} - send an Object !
   } catch (error: any) {
-    log.error(error.message);    
-    res.status(404).json( {message: error.message, result: error} ); //pattern of error handling body:{message,result}
+    log.error(error.message +": "+ error.response.data.error.message);    
+    res.status(error.response.status).json({message: error.response.data.error.message, result: error}); //pattern of error handling body:{message,result}
   }
 };
