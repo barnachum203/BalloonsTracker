@@ -70,7 +70,9 @@ export async function loginUser(user) {
     return data;
   } catch (error) {
     // console.log(error.response.data);
-    throw Error(error.response.data);
+    // console.log(error.response.status);
+    
+    throw (error);
   }
 }
 export async function checkToken(authHeader: any) {

@@ -70,8 +70,8 @@ export const loginUser = async (req: Request, res: Response) => {
     const result = await userService.loginUser(user);
     res.status(201).json({ user: result.user , token:result.token});
   } catch (error) {
-    log.error(error.message);
-    res.status(404).json({ message: error.message, result: error }); //pattern of error handling body:{message,result}
+    // console.log(error.response.data);
+    res.status(error.response.status).json({ message: error.response.data.error.message, result: error }); //pattern of error handling body:{message,result}
   }
 };
 
