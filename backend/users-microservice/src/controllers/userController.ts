@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { logger } from '../utils/logger';
 import * as userService from '../services/userService.service';
 
@@ -72,7 +72,7 @@ export const createUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     logger.error(error.message);
-    res.status(404).json(error.message);
+    res.status(406).json(error.message);
   }
 };
 
@@ -81,15 +81,15 @@ export const createUser = async (req: Request, res: Response) => {
  * @input email, password
  * @return user - logged user.
  * */
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   const { user } = req.body;
   try {
     //Call users service and login user
     logger.info(`Loggin called `);
     const result = await userService.loginUser(user);
     res.status(201).json(result);
-  } catch (error: any) {
+  } catch (error) {
     logger.error(error.message)
-    res.status(404).json( error.message );
+    next(error)
   }
 };

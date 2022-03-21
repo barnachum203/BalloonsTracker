@@ -1,4 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
+import { ValidationException } from '../exceptions/ValidationException';
 import { logger } from '../utils/logger';
 
 export default function joiMiddleware(schema) {
@@ -16,8 +17,8 @@ export default function joiMiddleware(schema) {
       const message = details.map((i) => i.message).join(',');
 
       logger.error('error', message);
-      let errorRes = new Error(message);
-      return res.status(422).json(`Error: ${errorRes.message}`);
+      let errorRes = new ValidationException(message);
+      next(errorRes)
     }
   };
 }

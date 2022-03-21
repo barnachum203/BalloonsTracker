@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/users.routes';
 import * as db from './db';
+import { globalErrorHandler } from './middleware/globalErrorHandler'
 
 dotenv.config({ path: './environment.env' });
 
@@ -17,9 +18,11 @@ app.use(
     extended: false,
   })
 );
+
 db.connect();
 // API root
 app.use('/user', userRoutes);
+app.use(globalErrorHandler)
 
 // A default hello word route
 const port: string = process.env.PORT || '8100';

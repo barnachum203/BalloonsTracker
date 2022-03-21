@@ -1,9 +1,12 @@
 import * as dal from '../dal/dalUser';
 import { logger } from '../utils/logger';
 import { IUser } from '../model/user';
-import { getJWTToken, getSaltHashPassword, verifyPassword } from '../utils/crypto'
+import { UnauthorizedException } from "../exceptions/UnauthorizedException";
 import creatToken from '../utils/jwt';
 import compare from '../utils/bcrypt';
+import { UserAlreadyExist } from '../exceptions/UserAlreadyExist';
+import { UserNotFound } from '../exceptions/UserNotFound';
+
 
 /**
  * Get all users:
@@ -31,10 +34,10 @@ export const create = async (user: IUser) => {
      logger.info('[USER-SERV]: User created successfully.');
      return { user: result };
     }else{
-      throw Error("user already exists.")
+      throw new UserAlreadyExist("user already exists.")
     }
   } catch (error: any) {
-    throw Error(error);
+    throw error;
   }
 };
 
@@ -54,7 +57,7 @@ export const updateUser = async (user: IUser, id: string) => {
 
     return updatedUser;
   } catch (error) {
-    throw Error(error);
+    throw error;
   }
 };
 
@@ -69,7 +72,7 @@ export const deleteUser = async (id: string) => {
 
     return result;
   } catch (error) {
-    throw Error(error);
+    throw error;
   }
 };
 
@@ -82,12 +85,12 @@ export const getUserById = async (id: string) => {
   try {
     const result: IUser | null = await dal.getUserById(id);
     if (!result) {
-      throw Error('User is not exist');
+      throw new UserNotFound('User is not exist');
     }
     logger.info('[USER-SERV]: Sent user: ' + id);
     return result;
   } catch (error: any) {
-    throw Error(error);
+    throw error;
   }
 };
 
@@ -101,7 +104,8 @@ export const loginUser = async (user) => {
     const result: IUser | null = await dal.findUserByEmail(user.email);
     if (!result) {
       logger.error('[USER-SERV]: user not found');
-      throw Error('Wrong email or password');
+      throw new UnauthorizedException('Wrong email or password')
+      
     }else{
       let auth = await compare(user.password, result.password)      
       if(auth){
@@ -110,11 +114,11 @@ export const loginUser = async (user) => {
         return {user: result, token: token}
       }
       logger.error("NOT authenticated")
-      throw Error('Wrong email or password')
+      throw new UnauthorizedException('Wrong email or password')
     }
     // logger.info('[USER-SERV]: Login user: ' + result);
     // return result;
-  } catch (error: any) {
-    throw Error(error);
+  } catch (error) {
+    throw error;
   }
 };
