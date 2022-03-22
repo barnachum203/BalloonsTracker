@@ -44,6 +44,7 @@ import { MenuModule } from './components/menu/menu.module';
 import { MapComponent } from './components/map/map.component';
 import { HomeComponent } from './components/home/home.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 //Should be in seperate module.
 const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
 
@@ -86,6 +87,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeaderInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
