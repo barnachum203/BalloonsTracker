@@ -2,13 +2,15 @@ import { Route } from '@angular/compiler/src/core';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
 import { Ballon } from 'src/app/Model/Ballon';
 import { BallonService } from 'src/app/shared/services/ballon.service';
 import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
 import { TokenStorageService } from 'src/app/shared/token-storage.service';
 import * as MapActions from './map.actions';
+import { Store } from '@ngrx/store';
+import * as AuthActions from '../../login/store/auth.actions';
 
 @Injectable()
 export class MapEffects {
@@ -18,7 +20,9 @@ export class MapEffects {
       exhaustMap(() =>
         this.ballonService.getAllBallons().pipe(
           map((data:any) => MapActions.getBallonsSuccess({ballons: data.balloons})),
-          catchError((error) => of(MapActions.getBallonsFailure({ error })))
+          catchError((error) => {
+            this.errorHandler(error)
+            return of(MapActions.getBallonsFailure({ error }))})
         )
       )
     )
@@ -68,7 +72,11 @@ export class MapEffects {
       exhaustMap((action) =>
         this.ballonService.createBallon(action.ballon).pipe(
           map((data:any) => MapActions.createBallonSuccess({ballon: data.balloon})),
-          catchError((error) => of(MapActions.createBallonFailure({error: error.error})))
+          catchError((error) => {
+            this.errorHandler(error)
+            // console.log(error);
+            
+            return of(MapActions.createBallonFailure({error: error.error}))})
         )
       )
     )
@@ -126,11 +134,21 @@ export class MapEffects {
       ),
     { dispatch: false }
   );
+
+  errorHandler(error:any){
+    // console.log(error);
+    if(error.status === 401){
+      console.error("Got error 401");
+      this.store.dispatch(AuthActions.logout())
+      return EMPTY
+    }    
+    return 
+  }
   constructor(
     private actions$: Actions,
     private ballonService: BallonService,
     private popupService: PopupMessagesService,
     private router: Router,
-    private storage: TokenStorageService
+    private store: Store,
   ) {}
 }
