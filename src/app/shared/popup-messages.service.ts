@@ -42,4 +42,14 @@ export class PopupMessagesService {
       horizontalPosition: 'right',
     });
   }
+
+  openGlobalPopup(msg: string){
+    this.snackBar.openFromComponent(SnackBarComponent, {
+      data: msg,
+      duration: 5500,
+      panelClass: ['blue-snackbar', 'failure-snackbar'],
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+    });
+  }
 }
