@@ -73,8 +73,8 @@ export const loginReducer = createReducer(
       isLoggedIn: false,
       isLoadingLogin: false,
       hasLoginError: true,
-      errorMessage: action.error.error.message,
-      error: action.error,
+      errorMessage: action.error.message,
+      error: action.error.error,
     })
   ),
   //Logout
