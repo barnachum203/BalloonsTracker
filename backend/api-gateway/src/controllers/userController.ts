@@ -13,8 +13,9 @@ export const createUser = async (req: Request, res: Response) => {
     log.info(`Created user ${user}`);
     const result = await userService.createUser(user);
     res.status(201).json({ message: `Created user ${user}`, result: result });
-  } catch (error: any) {
-    res.status(404).json({ message: error.message });
+  } catch (error) {
+    log.error(error.response.data.error.message);
+    res.status(error.response.status).json({ message: error.response.data.error.message, error: error }); //pattern of error handling body:{message,result}
   }
 };
 
@@ -70,8 +71,10 @@ export const loginUser = async (req: Request, res: Response) => {
     const result = await userService.loginUser(user);
     res.status(201).json({ user: result.user , token:result.token});
   } catch (error) {
-    // console.log(error.response.data);
-    res.status(error.response.status).json({ message: error.response.data.error.message, result: error }); //pattern of error handling body:{message,result}
+    log.error(error.response.data.error.message);
+    
+    log.error(error.response.data.error.message);
+    res.status(error.response.status).json({ message: error.response.data.error.message, error: error }); //pattern of error handling body:{message,result}
   }
 };
 
@@ -86,13 +89,15 @@ export const registerUser = async (req: Request, res: Response) => {
     //Call users service and update user
     log.info(`Register user ${user}`);
     res.status(201).json({ message: `Register user ${user}` });
-  } catch (error: any) {
-    res.status(404).json({ message: error.message });
+  } catch (error) {
+    log.error(error.response.data.error.message);
+    res.status(error.response.status).json({ message: error.response.data.error.message, error: error }); //pattern of error handling body:{message,result}
+    // res.status(404).json({ message: error.message });
   }
 };
 
 /**
- * Register user:
+ * Check Token:
  * @input user
  * @return user
  * */
