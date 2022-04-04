@@ -9,15 +9,16 @@ import {
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PopupMessagesService } from '../shared/popup-messages.service';
+import { AuthFacade } from '../components/login/store/auth.facade';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private popupService: PopupMessagesService) {}
+  constructor(private popupService: PopupMessagesService, private athService: AuthFacade) {}
 
   intercept(
-    request: HttpRequest<unknown>,
+    request: HttpRequest<any>,
     next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
+  ): Observable<HttpEvent<any>> {
     console.log('Inside Error Interceptor');
 
     return next.handle(request).pipe((s) => this.handleError(s, request.url));
@@ -33,9 +34,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error.status === 500) {
           return this.handle500(error);
         }
-        // if (error.status === 401 && !urlString.includes('login')) {
-        //   return this.handle401(error);
-        // }
+        if (error.status === 401 && !urlString.includes('login')) {
+          return this.handle401(error);
+        }
 
         // console.log(error);
 
@@ -46,12 +47,12 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
   private handle500(err: HttpErrorResponse) {
     this.popupService.openGlobalPopup(err.message);
-    return EMPTY;
+    return EMPTY
   }
   private handle401(err: HttpErrorResponse) {
     console.log(err);
-
     this.popupService.openGlobalPopup(err.message);
-    return EMPTY;
+    this.athService.logout();
+    return EMPTY
   }
 }
