@@ -10,7 +10,7 @@ export enum TokenStatus {
 
 export interface MapState {
   isLoading: boolean;
-  hasError: boolean;
+  hasError: boolean | undefined;
   error?: HttpErrorResponse;
   errorMessage?: string;
   ballons: Ballon[] | undefined;

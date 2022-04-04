@@ -26,7 +26,7 @@ export const mapFeatureKey = 'map';
 //  The initial state gives the state an initial value, or provides a value if the current state is undefined.
 export const initialState: MapState = {
   isLoading: false,
-  hasError: false,
+  hasError: undefined,
   error: undefined,
   errorMessage: undefined,
   ballons: undefined,
@@ -44,6 +44,7 @@ export const mapReducer = createReducer(
     MapActions.createBallonRequest,
     (state): MapState => ({
       ...state,
+      error: undefined,
       isLoading: true,
       hasError: false,
     })
@@ -54,6 +55,7 @@ export const mapReducer = createReducer(
       ...state,
       isLoading: false,
       hasError: false,
+      error: undefined,
       ballons: [...state.ballons!, action.ballon],
     })
   ),
@@ -97,6 +99,7 @@ export const mapReducer = createReducer(
       //TODO: update ballon state
       isLoading: false,
       hasError: false,
+      error: undefined,
       ballons: state.ballons?.map((e) => {
         return e._id == action.updatedBallon._id ? action.updatedBallon : e;
       }),
