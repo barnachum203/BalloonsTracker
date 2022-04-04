@@ -1,30 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { SnackBarComponent } from './snack-bar/snack-bar.component';
-import * as authLogin from './store/auth.actions';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AuthFacade } from './store/auth.facade';
 import { AuthUser } from './store/auth.models';
-import * as authSelectors from './store/auth.selectors';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   public loginForm: FormGroup;
   public submitted = false;
-  isLoadingLogin$ = this.store.select(authSelectors.selectIsLoadingLogin);
-  isLoginFailed$ = this.store.select(authSelectors.selectLoginError);
-  hasLoginError$ = this.store.select(authSelectors.selectLoginError);
+  isLoadingLogin$ = this.authFacade.isLoadingLogin$;
+  isLoginFailed$ = this.authFacade.hasLoginError$;
+  hasLoginError$ = this.authFacade.hasLoginError$;
   public user: AuthUser = {
     email: '',
     password: '',
@@ -32,18 +21,12 @@ export class LoginComponent implements OnInit {
     username: '',
   };
   message: string = '';
-  errorMessage: string = 'Wrong username or password.';
 
-  errorMessage$ = this.store.select(authSelectors.selectAuthErrorMessage);
-
-  pwdPattern = '^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?!.*s).{8,12}$';
+  errorMessage$ = this.authFacade.errorMessage$;
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private store: Store,
-    public snackBar: MatSnackBar
+    private authFacade: AuthFacade
   ) {
     this.loginForm = this.formBuilder.group({
       email: [
@@ -64,9 +47,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    console.log();
-  }
   get f() {
     return this.loginForm.controls;
   }
@@ -74,39 +54,15 @@ export class LoginComponent implements OnInit {
   onReset(): void {
     this.submitted = false;
     this.loginForm.reset();
+    this.authFacade.logout();
     //add logout action
   }
-  async onLogin() {
-    // console.log(this.loginForm.value);
+  onLogin() {
     let { email, password } = this.loginForm.value;
     this.submitted = true;
 
-    console.log(email);
-
     this.user.email = email;
     this.user.password = password;
-    await this.store.dispatch(
-      authLogin.loginRequest({ email: email, password: password })
-    );
-
-    // this.store.dispatch(AuthActions.loginRequest({ username, password }));
-
-    // this.authService.login(email, password).subscribe(
-    //   (data) => {
-    //     if (data) {
-    //       console.log(data);
-    //       // this.submitted = false;
-    //       this.message = data.message;
-    //       this.authService.currentUser.next(data);
-    //       this.store.dispatch(authLogin.loginSuccess({ user: this.user }));
-
-    //       this.router.navigate(['home']);
-    //     }
-    //   },
-    //   (error) => {
-    //     this.store.dispatch(authLogin.loginFailure(error));
-    //     this.errorMessage = error.message;
-    //   }
-    // );
+    this.authFacade.login(email, password);
   }
 }
