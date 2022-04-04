@@ -35,4 +35,7 @@ export class MapFacade {
   deactivateBalloon() {
     this.store.dispatch(MapActions.unactiveBallon());
   }
+  onLogout(){
+    this.store.dispatch(MapActions.onLogout())
+  }
 }

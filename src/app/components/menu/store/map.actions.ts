@@ -39,6 +39,8 @@ export const GET_BALLONS_FAILURE: string = '[Map] Get Ballons Failure';
 export const ACTIVE_BALLON: string = '[Map] Active Ballon';
 export const UNACTIVE_BALLON: string = '[Map] De-Activate Ballon';
 
+export const ON_LOGOUT: string = '[Map] Logout';
+
 let action: IAction;
 // createAction function returns a function, that when called returns an object in the shape of the Action interface.
 // The props method is used to define any additional metadata needed for the handling of the action.
@@ -93,5 +95,9 @@ export const activeBallon = createAction(
 );
 export const unactiveBallon = createAction(
   UNACTIVE_BALLON
+);
+
+export const onLogout = createAction(
+  ON_LOGOUT
 );
 

@@ -167,6 +167,13 @@ export const mapReducer = createReducer(
       activeBallon: undefined
     })
   ),
+  on(
+    MapActions.onLogout,
+    (state): MapState => ({
+      ...state,
+      ballons: undefined
+    })
+  ),
 );
 
 
