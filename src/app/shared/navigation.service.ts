@@ -13,5 +13,8 @@ export class NavigationService {
   login(){
     this.router.navigate(['/login'])
   }
+  navToBalloonById(id: string){
+    this.router.navigate(['home/'+id])   
+  }
 
 }
