@@ -1,16 +1,12 @@
-import { Route } from '@angular/compiler/src/core';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
-import { Ballon } from 'src/app/Model/Ballon';
 import { BallonService } from 'src/app/shared/services/ballon.service';
 import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
-import { TokenStorageService } from 'src/app/shared/token-storage.service';
 import * as MapActions from './map.actions';
-import { Store } from '@ngrx/store';
-import * as AuthActions from '../../login/store/auth.actions';
+import { NavigationService } from 'src/app/shared/navigation.service';
 
 @Injectable()
 export class MapEffects {
@@ -21,7 +17,6 @@ export class MapEffects {
         this.ballonService.getAllBallons().pipe(
           map((data:any) => MapActions.getBallonsSuccess({ballons: data.balloons})),
           catchError((error) => {
-            this.errorHandler(error)
             return of(MapActions.getBallonsFailure({ error }))})
         )
       )
@@ -72,10 +67,7 @@ export class MapEffects {
       exhaustMap((action) =>
         this.ballonService.createBallon(action.ballon).pipe(
           map((data:any) => MapActions.createBallonSuccess({ballon: data.balloon})),
-          catchError((error) => {
-            this.errorHandler(error)
-            // console.log(error);
-            
+          catchError((error) => {            
             return of(MapActions.createBallonFailure({error: error.error}))})
         )
       )
@@ -109,46 +101,27 @@ export class MapEffects {
       this.actions$.pipe(
         ofType(MapActions.activeBallon),
         tap((data) => {
-          this.router.navigate(['home/'+data.ballon._id])   
+          this.router.navToBalloonById(data.ballon._id!.toString()) 
         })
       ),
     { dispatch: false }
   );
 
-  // updatePosition$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(MapActions.updatePosition),
-  //     tap((action) =>
-  //       this.ballonService.updateBallon(action.ballon).pipe(
-  //       )
-  //     )
-  //   )
-  // );
   unactiveBallon$ = createEffect(
     () => 
       this.actions$.pipe(
         ofType(MapActions.unactiveBallon),
         tap(() => {
-          this.router.navigate(['home/'])   
+          this.router.home()
         })
       ),
     { dispatch: false }
   );
 
-  errorHandler(error:any){
-    // console.log(error);
-    if(error.status === 401){
-      console.error("Got error 401");
-      this.store.dispatch(AuthActions.logout())
-      return EMPTY
-    }    
-    return 
-  }
-  constructor(
+  constructor( 
     private actions$: Actions,
     private ballonService: BallonService,
     private popupService: PopupMessagesService,
-    private router: Router,
-    private store: Store,
+    private router: NavigationService,
   ) {}
 }
