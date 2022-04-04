@@ -1,10 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormControlService } from 'src/app/shared/form-control.service';
 import { FormBase } from '../form-base';
-import * as IDialog from '../../../menu/ballon-dialog/dialog.types';
 import { Store } from '@ngrx/store';
-import * as MapActions from '../../../menu/store/map.actions';
 import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 
 @Component({
@@ -17,7 +15,11 @@ export class DynamicFormComponent implements OnInit {
   @Input() fields: FormBase<string>[] | null = [];
   @Input() buttonName: string | undefined;
   @Input() mode: string | undefined;
+  @Input() isDialog: boolean = false;
 
+  @Output() close = new EventEmitter<any>();
+  @Output() submit = new EventEmitter<any>();
+  
   form!: FormGroup;
   payLoad!: Ballon;
   positionPayload!: BallonPosition;
@@ -31,41 +33,10 @@ export class DynamicFormComponent implements OnInit {
   onSubmit() {
     this.payLoad = this.form.getRawValue();
     this.positionPayload = this.form.getRawValue();
+    this.submit.emit(this.payLoad);
+  }
 
-    // console.log(this.payLoad);
-
-    const position: BallonPosition = {
-      longitude: Number(this.positionPayload.longitude),
-      attitude: Number(this.positionPayload.attitude),
-      latitude: Number(this.positionPayload.latitude),
-    };
-
-    if (this.mode == IDialog.EDIT) {
-      const ballon: Ballon = new Ballon(
-        this.payLoad.name,
-        this.payLoad.type,
-        this.payLoad.description,
-        this.payLoad.color,
-        position,
-        position,
-        this.payLoad._id
-      );
-      console.log(ballon);
-
-      this.store.dispatch(MapActions.updateRequest({ ballon }));
-    }
-    if (this.mode == IDialog.ADD_NEW) {
-      const ballon: Ballon = new Ballon(
-        this.payLoad.name,
-        this.payLoad.type,
-        this.payLoad.description,
-        this.payLoad.color,
-        position,
-        position
-      );
-      console.log(ballon);
-
-      this.store.dispatch(MapActions.createBallonRequest({ ballon }));
-    }
+  onCancel() {
+    this.close.emit(null);
   }
 }
