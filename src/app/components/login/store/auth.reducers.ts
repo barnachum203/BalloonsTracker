@@ -92,6 +92,4 @@ export const loginReducer = createReducer(
       accessTokenStatus: TokenStatus.INVALID,
     })
   )
-  // on(ScoreboardPageActions.resetScore, state => ({ home: 0, away: 0 })),
-  // on(ScoreboardPageActions.setScores, (state, { game }) => ({ home: game.home, away: game.away }))
 );
