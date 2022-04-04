@@ -45,6 +45,8 @@ import { MapComponent } from './components/map/map.component';
 import { HomeComponent } from './components/home/home.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { MapFacade } from './components/menu/store/map.facade';
+import { AuthFacade } from './components/login/store/auth.facade';
 //Should be in seperate module.
 const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
 
@@ -75,7 +77,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     // MenuModule,
     materials,
     StoreModule.forRoot({'auth': loginReducer, 'map': mapReducer}, {}),
-    EffectsModule.forRoot([AuthEffects , MapEffects]),
+    EffectsModule.forRoot([AuthEffects ,MapFacade, MapEffects, AuthFacade]),
     // AngularCesiumModule.forRoot({fixEntitiesShadows: false, customPipes: []}) ,
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
