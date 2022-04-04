@@ -12,6 +12,7 @@ export class AuthFacade {
   isLoggedIn$ = this.store.select(AuthSelectors.selectIsLoggedIn);
   isLoadingLogin$ = this.store.select(AuthSelectors.selectIsLoadingLogin);
   hasLoginError$ = this.store.select(AuthSelectors.selectLoginError);
+  errorMessage$ = this.store.select(AuthSelectors.selectAuthErrorMessage);
 
   constructor(private store: Store, private storageService: TokenStorageService) {}
 
