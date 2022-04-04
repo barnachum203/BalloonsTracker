@@ -8,10 +8,11 @@
       <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
         {{ buttonName || "Save"}}
       </button>
+      <button class="btn btn-danger" *ngIf="isDialog" type="button" (click)="onCancel()">Cancel</button>
     </div>
   </form>
 
-  <div *ngIf="payLoad" class="form-row">
+  <!-- <div *ngIf="payLoad" class="form-row">
     <strong>Saved the following values</strong><br />{{ payLoad }}
-  </div>
+  </div> -->
 </div>
