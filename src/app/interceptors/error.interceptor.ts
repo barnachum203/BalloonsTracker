@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { PopupMessagesService } from '../shared/popup-messages.service';
+import { PopupMessagesService } from '../services/shared/popup-messages.service';
 import { AuthFacade } from '../components/login/store/auth.facade';
 
 @Injectable()

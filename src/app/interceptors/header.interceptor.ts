@@ -7,8 +7,8 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable, of, Subscriber, throwError } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { TokenStorageService } from '../shared/token-storage.service';
-import { PopupMessagesService } from '../shared/popup-messages.service';
+import { TokenStorageService } from '../services/shared/token-storage.service';
+import { PopupMessagesService } from '../services/shared/popup-messages.service';
 
 @Injectable()
 export class HeaderInterceptor implements HttpInterceptor {

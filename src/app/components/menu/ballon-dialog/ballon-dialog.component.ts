@@ -7,7 +7,7 @@ import {
 } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
-import { FormService } from 'src/app/shared/form.service';
+import { FormService } from 'src/app/services/shared/forms/form.service';
 import { FormBase } from '../../shared/forms/form-base';
 import * as IDialog from './dialog.types';
 import { MapFacade } from '../store/map.facade';

@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Ballon } from 'src/app/Model/Ballon';
-import { BallonService } from 'src/app/shared/services/ballon.service';
+import { BallonService } from 'src/app/services/ballon.service';
 import { BallonDialogComponent } from './ballon-dialog/ballon-dialog.component';
 import * as IDialog from './ballon-dialog/dialog.types';
 import * as MapActions from './store/map.actions';

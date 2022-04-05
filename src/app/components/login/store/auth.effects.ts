@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, exhaustMap, tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { PopupMessagesService } from 'src/app/shared/popup-messages.service';
-import { TokenStorageService } from 'src/app/shared/token-storage.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { PopupMessagesService } from 'src/app/services/shared/popup-messages.service';
+import { TokenStorageService } from 'src/app/services/shared/token-storage.service';
 import * as AuthActions from './auth.actions';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NavigationService } from 'src/app/shared/navigation.service';
+import { NavigationService } from 'src/app/services/shared/navigation.service';
 
 @Injectable()
 export class AuthEffects {

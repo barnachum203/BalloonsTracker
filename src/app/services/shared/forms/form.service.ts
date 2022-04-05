@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { of } from 'rxjs';
-import { FormBase } from '../components/shared/forms/form-base';
-import { DropdownForm } from '../components/shared/forms/form-dropdown';
-import { TextareaForm } from '../components/shared/forms/form-textarea';
-import { TextboxForm } from '../components/shared/forms/form-textbox';
-import { Ballon, Color, Type } from '../Model/Ballon';
+import { FormBase } from '../../../components/shared/forms/form-base';
+import { DropdownForm } from '../../../components/shared/forms/form-dropdown';
+import { TextareaForm } from '../../../components/shared/forms/form-textarea';
+import { TextboxForm } from '../../../components/shared/forms/form-textbox';
+import { Ballon, Color, Type } from '../../../Model/Ballon';
 @Injectable()
 export class FormService {
   // TODO: get from a remote source of field metadata

@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import mockDb from '../../assets/mockdb/mockDb.json';
 
-import { environment } from '../../../environments/environment';
-import { User } from '../../Model/User';
+import { environment } from '../../environments/environment';
+import { User } from '../Model/User';
 import { AuthUser } from 'src/app/components/login/store/auth.models';
 
 @Injectable({

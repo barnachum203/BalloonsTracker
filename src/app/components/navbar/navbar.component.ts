@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { User } from 'src/app/Model/User';
-import { AuthService } from 'src/app/shared/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import * as authSelectors from '../login/store/auth.selectors';
 import * as authActions from '../login/store/auth.actions';
 // import {  } from "../../../assets/logo/devalore.png";

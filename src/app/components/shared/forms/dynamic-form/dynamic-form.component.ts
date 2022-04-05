@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormControlService } from 'src/app/shared/form-control.service';
+import { FormControlService } from 'src/app/services/shared/forms/form-control.service';
 import { FormBase } from '../form-base';
 import { Store } from '@ngrx/store';
 import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
@@ -17,7 +17,9 @@ export class DynamicFormComponent implements OnInit {
   @Input() mode: string | undefined;
   @Input() isDialog: boolean = false;
 
+  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() close = new EventEmitter<any>();
+  // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() submit = new EventEmitter<any>();
   
   form!: FormGroup;

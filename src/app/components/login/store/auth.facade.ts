@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TokenStorageService } from 'src/app/shared/token-storage.service';
+import { TokenStorageService } from 'src/app/services/shared/token-storage.service';
 
 import * as AuthActions from './auth.actions';
 import * as AuthSelectors from './auth.selectors';
