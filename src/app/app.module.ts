@@ -10,7 +10,7 @@ import { HeaderInterceptor } from './interceptors/header.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 //NGRX
-import { StoreModule } from "@ngrx/store";
+import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { loginReducer } from './components/login/store/auth.reducers';
 import { EffectsModule } from '@ngrx/effects';
@@ -20,14 +20,14 @@ import { MapEffects } from './components/menu/store/map.effects';
 import { MapFacade } from './components/menu/store/map.facade';
 import { AuthFacade } from './components/login/store/auth.facade';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 //Materials
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatDialogModule} from '@angular/material/dialog';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+//Bootstrap
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 //Cesium
 // import { AngularCesiumModule } from 'angular-cesium';
 // import { AngularCesiumModule } from 'angular-cesium';
@@ -35,11 +35,13 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { CesiumDirective } from './components/map/cesium.directive';
 
 //Modules
-import { LoginModule } from "./components/login/login.module";
+import { LoginModule } from './components/login/login.module';
 import { HomeModule } from './components/home/home.module';
 import { MenuModule } from './components/menu/menu.module';
 import { AppRoutingModule } from './app-routing.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+//Services
+import { LoaderService } from './services/shared/loader.service';
 
 //Components
 import { ShowErrorsComponent } from './components/shared/forms/show-errors/show-errors.component';
@@ -53,9 +55,17 @@ import { MapComponent } from './components/map/map.component';
 import { HomeComponent } from './components/home/home.component';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { LoaderComponent } from './components/shared/loader/loader.component';
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 //Should be in seperate module.
-const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenavModule,MatSnackBarModule,MatDialogModule];
+const materials = [
+  MatProgressSpinnerModule,
+  MatProgressSpinnerModule,
+  MatSidenavModule,
+  MatSnackBarModule,
+  MatDialogModule,
+];
 
 @NgModule({
   declarations: [
@@ -71,6 +81,7 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     DynamicFormFieldComponent,
     BallonDetailsComponent,
     ShowErrorsComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,8 +94,8 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
     // HomeModule,
     // MenuModule,
     materials,
-    StoreModule.forRoot({'auth': loginReducer, 'map': mapReducer}, {}),
-    EffectsModule.forRoot([AuthEffects ,MapFacade, MapEffects, AuthFacade]),
+    StoreModule.forRoot({ auth: loginReducer, map: mapReducer }, {}),
+    EffectsModule.forRoot([AuthEffects, MapFacade, MapEffects, AuthFacade]),
     // AngularCesiumModule.forRoot({fixEntitiesShadows: false, customPipes: []}) ,
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
@@ -92,9 +103,9 @@ const materials = [MatProgressSpinnerModule, MatProgressSpinnerModule,MatSidenav
       autoPause: true, // Pauses recording actions and state changes when the extension window is not open
     }),
     FontAwesomeModule,
-
   ],
-  providers: [
+  providers: [LoaderService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HeaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
