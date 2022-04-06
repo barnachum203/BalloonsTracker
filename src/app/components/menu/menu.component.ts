@@ -1,14 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { Ballon } from 'src/app/Model/Ballon';
-import { BallonService } from 'src/app/services/ballon.service';
 import { BallonDialogComponent } from './ballon-dialog/ballon-dialog.component';
 import * as IDialog from './ballon-dialog/dialog.types';
-import * as MapActions from './store/map.actions';
-import { MapState } from './store/map.models';
-import * as MapSelectors from './store/map.selectors';
+import { MenuFacade } from './store/menu.facade';
+import { Subscription } from 'rxjs';
+import { MapFacade } from '../map/store/map.facade';
 
 @Component({
   selector: 'app-menu',
@@ -16,35 +13,36 @@ import * as MapSelectors from './store/map.selectors';
   styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit, OnDestroy {
-  // @Input() currentBallon!: Ballon;
+  mode: string ='';
 
-  // ballons!: Ballon[];
-
-  ballons$ = this.store.select(MapSelectors.selectMapBallons);
+  ballons$ = this.mapFacade.ballons$;
   storeData: Ballon[] | undefined;
-  subscribtion;
+  subscribtions: Subscription[] = [];
 
   constructor(
     public dialog: MatDialog,
-    private route: Router,
-    private store: Store
+    private menuFacade: MenuFacade,
+    private mapFacade: MapFacade
   ) {
     //Check if data exist in store before send http request.
-    this.subscribtion = this.ballons$.subscribe((data) => {
+    this.subscribtions.push(this.ballons$.subscribe((data) => {
       this.storeData = data;
+      console.log(this.mode);
+      
       //if data isn't exist - send request
       if (!this.storeData) {
         this.getBallons();
       }
-    });
+    })
+    )
 
-    // ballonService.getAllBallons().subscribe((data) => {
-    //   this.ballons = data;
-    //   console.log(this.ballons);
-    // });
+    this.subscribtions.push(this.menuFacade.mode$.subscribe(val => {
+      this.mode = val
+      
+    }))
   }
   ngOnDestroy(): void {
-    this.subscribtion.unsubscribe();
+    this.subscribtions.forEach(s => s.unsubscribe())
   }
 
   ngOnInit(): void {
@@ -53,7 +51,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   getBallons() {
     //TODO: get ballons once
-    this.store.dispatch(MapActions.getBallons());
+    this.mapFacade.getAllBalloons();
   }
 
   openCreationDialog() {
@@ -66,7 +64,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onBallonClicked(ballon: Ballon) {
-    this.store.dispatch(MapActions.activeBallon({ballon}))
-    // this.route.navigate([`home/${ballon.id}`]); // now route throw effects
+    this.mapFacade.setActiveBalloon(ballon)
   }
 }
