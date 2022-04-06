@@ -10,7 +10,7 @@ import { Ballon, BallonPosition } from 'src/app/Model/Ballon';
 import { FormService } from 'src/app/services/shared/forms/form.service';
 import { FormBase } from '../../shared/forms/form-base';
 import * as IDialog from './dialog.types';
-import { MapFacade } from '../store/map.facade';
+import { MapFacade } from '../../map/store/map.facade';
 
 export interface DialogData {
   ballon?: Ballon;
