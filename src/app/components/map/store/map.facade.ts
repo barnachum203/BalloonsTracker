@@ -25,7 +25,7 @@ export class MapFacade {
     this.store.dispatch(MapActions.updateRequest({ ballon }));
   }
 
-  getAllBaoons() {
+  getAllBalloons() {
     this.store.dispatch(MapActions.getBallons());
   }
   setActiveBalloon(ballon: Ballon) {
