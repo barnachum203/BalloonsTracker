@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { environment } from '../environments/environment'; // Angular CLI environment
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //INTERCEPTORS
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { HeaderInterceptor } from './interceptors/header.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 
@@ -15,24 +16,26 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { loginReducer } from './components/login/store/auth.reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './components/login/store/auth.effects';
-import { mapReducer } from './components/menu/store/map.reducers';
-import { MapEffects } from './components/menu/store/map.effects';
-import { MapFacade } from './components/menu/store/map.facade';
+import { mapReducer } from './components/map/store/map.reducers';
+import { MapEffects } from './components/map/store/map.effects';
+import { MapFacade } from './components/map/store/map.facade';
 import { AuthFacade } from './components/login/store/auth.facade';
-
+import { menuReducer } from './components/menu/store/menu.reducers'
 
 //Materials
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
+
 //Bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 //Cesium
 // import { AngularCesiumModule } from 'angular-cesium';
 // import { AngularCesiumModule } from 'angular-cesium';
 // import{ MapLayerProviderOptions } from 'angular-cesium';
-import { CesiumDirective } from './components/map/cesium.directive';
+import { CesiumDirective } from './components/map/map3d/cesium.directive';
 
 //Modules
 import { LoginModule } from './components/login/login.module';
@@ -51,12 +54,14 @@ import { DynamicFormComponent } from './components/shared/forms/dynamic-form/dyn
 import { DynamicFormFieldComponent } from './components/shared/forms/dynamic-form-field/dynamic-form-field.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BallonDetailsComponent } from './components/menu/ballon-details/ballon-details.component';
-import { MapComponent } from './components/map/map.component';
+import { MapComponent } from './components/map/map3d/map.component';
 import { HomeComponent } from './components/home/home.component';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { LoaderComponent } from './components/shared/loader/loader.component';
-import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { Map2dComponent } from './components/map/map2d/map2d.component';
+import { Cesium2dDirective } from './components/map/map2d/cesium2d.directive';
+import { MenuFacade } from './components/menu/store/menu.facade';
 
 //Should be in seperate module.
 const materials = [
@@ -65,6 +70,7 @@ const materials = [
   MatSidenavModule,
   MatSnackBarModule,
   MatDialogModule,
+  MatRadioModule,
 ];
 
 @NgModule({
@@ -82,11 +88,14 @@ const materials = [
     BallonDetailsComponent,
     ShowErrorsComponent,
     LoaderComponent,
+    Map2dComponent,
+    Cesium2dDirective,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     NgbModule,
     BrowserAnimationsModule,
@@ -94,8 +103,8 @@ const materials = [
     // HomeModule,
     // MenuModule,
     materials,
-    StoreModule.forRoot({ auth: loginReducer, map: mapReducer }, {}),
-    EffectsModule.forRoot([AuthEffects, MapFacade, MapEffects, AuthFacade]),
+    StoreModule.forRoot({ auth: loginReducer, map: mapReducer, menu:  menuReducer}, {}),
+    EffectsModule.forRoot([AuthEffects, MapFacade, MapEffects, AuthFacade, MenuFacade]),
     // AngularCesiumModule.forRoot({fixEntitiesShadows: false, customPipes: []}) ,
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
@@ -104,7 +113,8 @@ const materials = [
     }),
     FontAwesomeModule,
   ],
-  providers: [LoaderService,
+  providers: [
+    LoaderService,
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HeaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
