@@ -12,18 +12,24 @@ export class HomeComponent {
 
   radioValue: '3D' | '2D' = '2D';
 
-  get selected() {
-    // console.log("dsad");
+  // get selected() {
+  //   console.log("dsad");
 
-    switch (this.radioValue) {
-      case '3D': {
-        return MapComponent;
-      }
-      case '2D': {
-        return Map2dComponent;
-      }
-      default:
-        return MapComponent;
-    }
-  }
+  //   switch (this.radioValue) {
+  //     case '3D': {
+  //       return MapComponent;
+  //     }
+  //     case '2D': {
+  //       return Map2dComponent;
+  //     }
+  //     default:
+  //       return MapComponent;
+  //   }
+  // }
+
+  // componentName: string = '';
+  // onKey(componentName: string): void {
+  //   this.componentName = componentName;
+  // }
+
 }

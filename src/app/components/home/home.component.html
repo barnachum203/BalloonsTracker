@@ -4,7 +4,11 @@
       <input type="radio" value="2D" name="comp" [(ngModel)]="radioValue" /> 2D
       <input type="radio" value="3D" name="comp" [(ngModel)]="radioValue" /> 3D
     </div>
-    <ng-container [ngComponentOutlet]="selected"></ng-container>
+
+    <ng-container class="parent-component" [ngSwitch]="radioValue">
+      <app-map2d *ngSwitchCase="'2D'"></app-map2d>
+      <app-map *ngSwitchCase="'3D'"></app-map>
+    </ng-container>
   </div>
   <div class="col-3 menu">
     <router-outlet></router-outlet>
