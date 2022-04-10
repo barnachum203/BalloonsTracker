@@ -21,6 +21,10 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
   activeBallon$ = this.store.select(MapSelectors.selectActiveBallon);
   selectedEntityId: string | undefined = '1';
 
+  hirarchy: Cesium.Cartesian3[] = [];
+
+  pos: Cesium.PolygonHierarchy;
+
   //for circle compute
   start = Cesium.JulianDate.fromDate(new Date(2020, 2, 25, 16));
   stop = Cesium.JulianDate.addSeconds(this.start, 360, new Cesium.JulianDate());
@@ -30,6 +34,7 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
       shouldAnimate: true,
       // terrainProvider: Cesium.createWorldTerrain(),
     });
+    this.viewer.scene.mode = Cesium.SceneMode.SCENE2D;
     this.viewer.entities.collectionChanged.addEventListener(this.onChanged); // test
     this.viewer.selectedEntityChanged.addEventListener((ballon: Ballon) => {
       //Listener triggered when choosing entity
@@ -61,6 +66,41 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     //Init camera to israel
     this.setViewToIsrael();
 
+    this.hirarchy.push(
+      new Cesium.Cartesian3(
+        4591277.760414044,
+        2985886.739490979,
+        3257874.9467227855
+      )
+    );
+    this.hirarchy.push(
+      new Cesium.Cartesian3(
+        4484434.171863908,
+        3151307.104244023,
+        3250925.835174008
+      )
+    );
+    this.hirarchy.push(
+      new Cesium.Cartesian3(4647844.315983227, 3109584.7585609765, 3057069)
+    );
+
+    let posTest = new Cesium.Cartesian2(35, 31);
+    let posc3 = new Cesium.Cartesian3(
+      posTest.x,
+      posTest.y,
+      Cesium.HeightReference.CLAMP_TO_GROUND
+    );
+    this.viewer.entities.add({
+      position: posc3,
+      point: {
+        color: Cesium.Color.WHITE,
+        pixelSize: 5,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+      },
+    });
+
+    this.pos = new Cesium.PolygonHierarchy(this.hirarchy);
+    this.buildShapes();
     //Focus on selected ballon from the menu
     //Always check if active ballom, else back to israel
     this.subsctiptions.push(
@@ -96,6 +136,9 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     this.entityPicker();
   }
 
+  buildShapes() {
+    this.drawShape(this.pos);
+  }
   //Get data from NgRx ballons array and create entities
   // TODO: should render the list and not rebuild it.
   buildEntities() {
@@ -106,51 +149,21 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
         console.log('getiing data ');
 
         //check if balloon added/removed
-        if (data?.length != this.ballons?.length) {
-          console.log('Build array of entities');
-
-          this.ballons = data;
-          this.viewer.entities.removeAll();
-          //build new array of Entities
-          data?.forEach((e: Ballon) => {
-            this.viewer.entities.add(this.createEntity(e));
-          });
-        } else {
-          //check if the data exists
-          if (this.ballons && data) {
-            for (let i = 0; i < data?.length; i++) {
-              // console.log(Object.is(data[i].point,this.ballons[i].point));
-
-              const newBallon = data[i];
-              const oldBallon = this.ballons[i];
-              // check if there is a change is the positions
-              if (!Object.is(oldBallon.point, newBallon.point)) {
-                var entity: Cesium.Entity | undefined =
-                  this.viewer.entities.getById(this.selectedEntityId!);
-                const newPosition = this.computeCirclularFlight(
-                  newBallon.point.longitude,
-                  newBallon.point.latitude,
-                  newBallon.point.attitude,
-                  0.5
-                );
-                entity!['position'] = newPosition;
-                this.ballons = data;
-              }
-              // check if there is a change in the color of balloon
-              if (!Object.is(oldBallon.color, newBallon.color)) {
-                var entity: Cesium.Entity | undefined =
-                  this.viewer.entities.getById(this.selectedEntityId!);
-                entity!.ellipsoid!.material = new Cesium.ColorMaterialProperty(
-                  Cesium.Color.fromCssColorString(newBallon.color).withAlpha(
-                    0.5
-                  )
-                );
-              }
-            }
-          }
-        }
       })
     );
+  }
+  createPoint(
+    worldPosition: Cesium.SampledPositionProperty | Cesium.Cartesian3
+  ) {
+    const point = this.viewer.entities.add({
+      position: worldPosition,
+      point: {
+        color: Cesium.Color.WHITE,
+        pixelSize: 5,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+      },
+    });
+    return point;
   }
 
   // An Test Event listener example of Data Chagned
@@ -165,6 +178,40 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
       msg += '\n' + added[i].id;
     }
     // console.log(msg);
+  }
+
+  drawShape(positionData: any) {
+    // let shape;
+
+    console.log(positionData);
+
+    this.viewer.entities.add({
+      polygon: {
+        hierarchy: positionData,
+        material: new Cesium.ColorMaterialProperty(
+          Cesium.Color.WHITE.withAlpha(0.7)
+        ),
+      },
+    });
+
+    // return shape;
+  }
+  drawShape2D(positionData: any) {
+    // let shape;
+
+    console.log(positionData);
+    Cesium.PolygonHierarchy;
+
+    this.viewer.entities.add({
+      polygon: {
+        hierarchy: positionData,
+        material: new Cesium.ColorMaterialProperty(
+          Cesium.Color.WHITE.withAlpha(0.7)
+        ),
+      },
+    });
+
+    // return shape;
   }
 
   //Create entity from given Ballon object with circular directions
@@ -214,19 +261,104 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     return entity;
   }
 
+  activeShapePoints: Cesium.Cartesian3[] = [];
+  activeShapePoints2D: Cesium.Cartesian2[] = [];
+  activeShape: any;
+  floatingPoint: any;
   //Set Event handler to hanlde map clicks.
   entityPicker() {
     let handler = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
 
-    handler.setInputAction((movement: any) => {
-      const pickedObject = this.viewer.scene.pick(movement.position);
-      if (Cesium.defined(pickedObject)) {
-        let entity: Cesium.Entity = pickedObject.id;
-        this.showBalloonInfoInMenu(entity);
-      } else {
-        this.stopTrackEntity();
+    handler.setInputAction((event) => {
+      const earthPosition = this.viewer.scene.pickPosition(event.position);
+      // `earthPosition` will be undefined if our mouse is not over the globe.
+      /**
+       * TODO: get position for 2d map and create the entity
+       *       should use cartesian 3 - with elliposoid get the x,y and create cartesian 3
+       */
+      var mousePosition = new Cesium.Cartesian2(event.clientX, event.clientY);
+      let ellipsoid = this.viewer.scene.globe.ellipsoid;
+      let cartesian = this.viewer.camera.pickEllipsoid(
+        event.position,
+        ellipsoid
+      );
+      console.log(ellipsoid);
+
+      // console.log(cartesian);
+      // const earthPosition2d = this.viewer.scene.pickPosition(cartesian!);
+
+      // console.log(earthPosition);
+
+      const point = Cesium.Cartographic.fromCartesian(cartesian!);
+      console.log(point.longitude * (180 / Cesium.Math.PI));
+      console.log(point.latitude * (180 / Cesium.Math.PI));
+
+      if (Cesium.defined(point)) {
+        console.log('point');
+
+        const point3d: Cesium.Cartesian3 = new Cesium.Cartesian3(
+          point.longitude,
+          point.latitude,
+          point.height
+        );
+        if (this.activeShapePoints.length === 0) {
+          console.log('activeShapePoints == 0 - point');
+          this.floatingPoint = this.createPoint(point3d);
+          this.activeShapePoints.push(point3d);
+          const dynamicPositions = new Cesium.CallbackProperty(() => {
+            return new Cesium.PolygonHierarchy(this.activeShapePoints);
+          }, false);
+          this.activeShape = this.drawShape(dynamicPositions);
+        }
+        this.activeShapePoints.push(point3d);
+        this.createPoint(point3d);
+      }
+
+      if (Cesium.defined(earthPosition)) {
+        console.log('earthPosition');
+
+        if (this.activeShapePoints.length === 0) {
+          console.log('activeShapePoints == 0');
+
+          this.floatingPoint = this.createPoint(earthPosition);
+          this.activeShapePoints.push(earthPosition);
+          const dynamicPositions = new Cesium.CallbackProperty(() => {
+            return new Cesium.PolygonHierarchy(this.activeShapePoints);
+          }, false);
+          this.activeShape = this.drawShape(dynamicPositions);
+        }
+        this.activeShapePoints.push(earthPosition);
+        this.createPoint(earthPosition);
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    handler.setInputAction((event) => {
+      this.terminateShape();
+    }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+    handler.setInputAction((event) => {
+      if (Cesium.defined(this.floatingPoint)) {
+        const newPosition = this.viewer.scene.pickPosition(event.endPosition);
+        if (Cesium.defined(newPosition)) {
+          this.floatingPoint.position.setValue(newPosition);
+          this.activeShapePoints.pop();
+          this.activeShapePoints.push(newPosition);
+        }
+      }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+  }
+  terminateShape() {
+    this.hirarchy = [];
+    this.activeShapePoints.pop();
+    for (let i = 0; i < this.activeShapePoints.length; i++) {
+      this.hirarchy.push(this.activeShapePoints[i]);
+    }
+    this.drawShape(this.hirarchy);
+    this.viewer.entities.remove(this.floatingPoint);
+    this.viewer.entities.remove(this.activeShape);
+    this.floatingPoint = undefined;
+    this.activeShape = undefined;
+    this.activeShapePoints = [];
   }
   scratch3dPosition = new Cesium.Cartesian3();
   scratch2dPosition = new Cesium.Cartesian2();
