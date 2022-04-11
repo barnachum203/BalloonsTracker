@@ -16,14 +16,9 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
   viewer: Cesium.Viewer;
   camHeight = 180000; // camera view height when tracking entity
   subsctiptions: Subscription[] = [];
-  ballons$ = this.store.select(MapSelectors.selectMapBallons);
-  ballons: Ballon[] | undefined;
-  activeBallon$ = this.store.select(MapSelectors.selectActiveBallon);
   selectedEntityId: string | undefined = '1';
 
   hirarchy: Cesium.Cartesian3[] = [];
-
-  pos: Cesium.PolygonHierarchy;
 
   //for circle compute
   start = Cesium.JulianDate.fromDate(new Date(2020, 2, 25, 16));
@@ -35,13 +30,6 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
       // terrainProvider: Cesium.createWorldTerrain(),
     });
     this.viewer.scene.mode = Cesium.SceneMode.SCENE2D;
-    this.viewer.entities.collectionChanged.addEventListener(this.onChanged); // test
-    this.viewer.selectedEntityChanged.addEventListener((ballon: Ballon) => {
-      //Listener triggered when choosing entity
-      // console.log(ballon);
-      this.selectedEntityId = this.viewer.selectedEntity?.id;
-      // console.log(this.selectedEntityId);
-    });
 
     //Make sure viewer is at the desired time.
     //Movement settings
@@ -66,55 +54,13 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     //Init camera to israel
     this.setViewToIsrael();
 
-    this.hirarchy.push(
-      new Cesium.Cartesian3(
-        4591277.760414044,
-        2985886.739490979,
-        3257874.9467227855
-      )
-    );
-    this.hirarchy.push(
-      new Cesium.Cartesian3(
-        4484434.171863908,
-        3151307.104244023,
-        3250925.835174008
-      )
-    );
-    this.hirarchy.push(
-      new Cesium.Cartesian3(4647844.315983227, 3109584.7585609765, 3057069)
-    );
-
-    let posTest = new Cesium.Cartesian2(35, 31);
-    let posc3 = new Cesium.Cartesian3(
-      posTest.x,
-      posTest.y,
-      Cesium.HeightReference.CLAMP_TO_GROUND
-    );
-    this.viewer.entities.add({
-      position: posc3,
-      point: {
-        color: Cesium.Color.WHITE,
-        pixelSize: 5,
-        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-      },
-    });
-
-    this.pos = new Cesium.PolygonHierarchy(this.hirarchy);
     this.buildShapes();
     //Focus on selected ballon from the menu
-    //Always check if active ballom, else back to israel
-    this.subsctiptions.push(
-      this.activeBallon$.subscribe((ballon) => {
-        if (ballon) {
-          console.log('select ballon from menu');
-          this.menuBallonClicked(ballon);
-        } else {
-          console.log('back menu');
-
-          this.menuBackClicked();
-        }
-      })
-    );
+    //Always check if active shape, else back to israel
+    this.subsctiptions
+      .push
+      //get sahpes
+      ();
   }
   //Set view on israel
   private setViewToIsrael() {
@@ -137,24 +83,17 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
   }
 
   buildShapes() {
-    this.drawShape(this.pos);
+    // this.drawShape(this.pos);
   }
   //Get data from NgRx ballons array and create entities
   // TODO: should render the list and not rebuild it.
   buildEntities() {
-    this.subsctiptions.push(
-      this.ballons$.subscribe((data) => {
-        // console.log(data);
-        //TODO: rebuild the array in a way that not affect the track entity when it gets updates
-        console.log('getiing data ');
-
-        //check if balloon added/removed
-      })
-    );
+    this.subsctiptions
+      .push
+      //build shapes
+      ();
   }
-  createPoint(
-    worldPosition: Cesium.SampledPositionProperty | Cesium.Cartesian3
-  ) {
+  createPoint(worldPosition: Cesium.Cartesian3) {
     const point = this.viewer.entities.add({
       position: worldPosition,
       point: {
@@ -166,26 +105,12 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     return point;
   }
 
-  // An Test Event listener example of Data Chagned
-  onChanged(
-    collection: Cesium.EntityCollection,
-    added: string | any[],
-    removed: any,
-    changed: any
-  ) {
-    var msg = 'Added ids';
-    for (var i = 0; i < added.length; i++) {
-      msg += '\n' + added[i].id;
-    }
-    // console.log(msg);
-  }
-
   drawShape(positionData: any) {
-    // let shape;
+    let shape;
 
     console.log(positionData);
 
-    this.viewer.entities.add({
+    shape = this.viewer.entities.add({
       polygon: {
         hierarchy: positionData,
         material: new Cesium.ColorMaterialProperty(
@@ -194,71 +119,7 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
       },
     });
 
-    // return shape;
-  }
-  drawShape2D(positionData: any) {
-    // let shape;
-
-    console.log(positionData);
-    Cesium.PolygonHierarchy;
-
-    this.viewer.entities.add({
-      polygon: {
-        hierarchy: positionData,
-        material: new Cesium.ColorMaterialProperty(
-          Cesium.Color.WHITE.withAlpha(0.7)
-        ),
-      },
-    });
-
-    // return shape;
-  }
-
-  //Create entity from given Ballon object with circular directions
-  createEntity(ballon: Ballon) {
-    //Compute a circular steps for entity
-    const position = this.computeCirclularFlight(
-      ballon.point.longitude,
-      ballon.point.latitude,
-      ballon.point.attitude,
-      0.5
-    );
-
-    var polygon = new Cesium.PolygonGraphics(); // test
-    let entity: Cesium.Entity = new Cesium.Entity({
-      position: position,
-      // Cesium.Cartesian3.fromDegrees(
-      //   ballon.position.longitude,
-      //   ballon.position.latitude,
-      //   ballon.position.attitude
-      // ),
-      // properties: position,
-      availability: new Cesium.TimeIntervalCollection([
-        new Cesium.TimeInterval({
-          start: this.start,
-          stop: this.stop,
-        }),
-      ]),
-      orientation: new Cesium.VelocityOrientationProperty(position),
-      name: ballon.name,
-      ellipsoid: {
-        radii: new Cesium.Cartesian3(20000.0, 20000.0, 20000.0),
-        material: Cesium.Color.fromCssColorString(ballon.color).withAlpha(0.5),
-        outline: true,
-        outlineColor: Cesium.Color.BLACK,
-      },
-      description: ballon.description,
-      path: {
-        resolution: 1,
-        material: new Cesium.PolylineGlowMaterialProperty({
-          glowPower: 0.1,
-          color: Cesium.Color.YELLOW,
-        }),
-        width: 10,
-      },
-    });
-    entity.polygon = polygon; // test
-    return entity;
+    return shape;
   }
 
   activeShapePoints: Cesium.Cartesian3[] = [];
@@ -272,63 +133,42 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     handler.setInputAction((event) => {
       const earthPosition = this.viewer.scene.pickPosition(event.position);
       // `earthPosition` will be undefined if our mouse is not over the globe.
-      /**
-       * TODO: get position for 2d map and create the entity
-       *       should use cartesian 3 - with elliposoid get the x,y and create cartesian 3
-       */
-      var mousePosition = new Cesium.Cartesian2(event.clientX, event.clientY);
+
       let ellipsoid = this.viewer.scene.globe.ellipsoid;
-      let cartesian = this.viewer.camera.pickEllipsoid(
+
+      const cartesian = this.viewer.camera.pickEllipsoid(
         event.position,
         ellipsoid
       );
-      console.log(ellipsoid);
+      if (cartesian) {
+        const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        const longitudeString = Cesium.Math.toDegrees(
+          cartographic.longitude
+        ).toFixed(2);
+        const latitudeString = Cesium.Math.toDegrees(
+          cartographic.latitude
+        ).toFixed(2);
 
-      // console.log(cartesian);
-      // const earthPosition2d = this.viewer.scene.pickPosition(cartesian!);
-
-      // console.log(earthPosition);
-
-      const point = Cesium.Cartographic.fromCartesian(cartesian!);
-      console.log(point.longitude * (180 / Cesium.Math.PI));
-      console.log(point.latitude * (180 / Cesium.Math.PI));
-
-      if (Cesium.defined(point)) {
-        console.log('point');
-
-        const point3d: Cesium.Cartesian3 = new Cesium.Cartesian3(
-          point.longitude,
-          point.latitude,
-          point.height
+        console.log(
+          `Lon: ${`   ${longitudeString}`.slice(-7)}\u00B0` +
+            `\nLat: ${`   ${latitudeString}`.slice(-7)}\u00B0`
         );
-        if (this.activeShapePoints.length === 0) {
-          console.log('activeShapePoints == 0 - point');
-          this.floatingPoint = this.createPoint(point3d);
-          this.activeShapePoints.push(point3d);
-          const dynamicPositions = new Cesium.CallbackProperty(() => {
-            return new Cesium.PolygonHierarchy(this.activeShapePoints);
-          }, false);
-          this.activeShape = this.drawShape(dynamicPositions);
-        }
-        this.activeShapePoints.push(point3d);
-        this.createPoint(point3d);
       }
 
-      if (Cesium.defined(earthPosition)) {
-        console.log('earthPosition');
-
+      if (Cesium.defined(cartesian)) {
         if (this.activeShapePoints.length === 0) {
-          console.log('activeShapePoints == 0');
+          console.log('activeShapePoints == 0 - point');
+          this.floatingPoint = this.createPoint(cartesian!);
+          console.log(this.floatingPoint);
 
-          this.floatingPoint = this.createPoint(earthPosition);
-          this.activeShapePoints.push(earthPosition);
+          this.activeShapePoints.push(cartesian!);
           const dynamicPositions = new Cesium.CallbackProperty(() => {
             return new Cesium.PolygonHierarchy(this.activeShapePoints);
           }, false);
           this.activeShape = this.drawShape(dynamicPositions);
         }
-        this.activeShapePoints.push(earthPosition);
-        this.createPoint(earthPosition);
+        this.activeShapePoints.push(cartesian!);
+        this.createPoint(cartesian!);
       }
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
@@ -338,8 +178,13 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
 
     handler.setInputAction((event) => {
       if (Cesium.defined(this.floatingPoint)) {
-        const newPosition = this.viewer.scene.pickPosition(event.endPosition);
-        if (Cesium.defined(newPosition)) {
+        const ellipsoid = this.viewer.scene.globe.ellipsoid;
+        const newPosition = this.viewer.camera.pickEllipsoid(
+          event.endPosition,
+          ellipsoid
+        );
+
+        if (newPosition) {
           this.floatingPoint.position.setValue(newPosition);
           this.activeShapePoints.pop();
           this.activeShapePoints.push(newPosition);
@@ -347,6 +192,7 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
       }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
   }
+
   terminateShape() {
     this.hirarchy = [];
     this.activeShapePoints.pop();
@@ -359,57 +205,6 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     this.floatingPoint = undefined;
     this.activeShape = undefined;
     this.activeShapePoints = [];
-  }
-  scratch3dPosition = new Cesium.Cartesian3();
-  scratch2dPosition = new Cesium.Cartesian2();
-
-  //Handle events - handle onTick event
-  helper = new Cesium.EventHelper();
-
-  async updateLive(entity: Cesium.Entity | undefined) {
-    console.log('inside updateLive');
-    let counter = 0;
-
-    if (entity) {
-      let ballon: Ballon | undefined = this.getBallonFromEntity(entity);
-
-      this.helper.add(this.viewer.clock.onTick, (clock) => {
-        counter++;
-
-        var position3d;
-        var position2d;
-
-        if (counter == 50) {
-          const pickedBallon2 = Object.assign({}, ballon);
-
-          if (entity.position) {
-            position3d = entity.position.getValue(
-              clock.currentTime,
-              this.scratch3dPosition
-            );
-            let position: BallonPosition =
-              this.getDegreasFromCartesian3(position3d);
-
-            let id = pickedBallon2._id;
-            // console.log(position);
-            if (position && id)
-              this.store.dispatch(MapActions.updatePosition({ position, id }));
-          }
-          counter = 0;
-        }
-
-        // Moving entities don't have a position for every possible time, need to check.
-        if (position3d) {
-          position2d = Cesium.SceneTransforms.wgs84ToWindowCoordinates(
-            this.viewer.scene,
-            position3d,
-            this.scratch2dPosition
-          );
-        }
-      });
-    } else {
-      this.helper.removeAll();
-    }
   }
 
   getDegreasFromCartesian3(position3d: Cesium.Cartesian3): BallonPosition {
@@ -434,8 +229,7 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
   trackEntity(entity: Cesium.Entity) {
     if (entity.position) {
       const position3d = entity.position.getValue(
-        this.viewer.clock.currentTime,
-        this.scratch3dPosition
+        this.viewer.clock.currentTime
       );
       let ballonPosition: BallonPosition =
         this.getDegreasFromCartesian3(position3d);
@@ -469,15 +263,8 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
   showBalloonInfoInMenu(entity: any) {
     console.log('showBallonInMenu');
     let ballon: Ballon | undefined;
-    ballon = this.getBallonFromEntity(entity);
-    if (ballon) this.store.dispatch(MapActions.activeBallon({ ballon }));
-  }
 
-  //Get Entity and return Ballon
-  getBallonFromEntity(entity: Cesium.Entity): Ballon | undefined {
-    let ballon: Ballon | undefined;
-    ballon = this.ballons?.find((e) => e.name == entity.name);
-    return ballon;
+    if (ballon) this.store.dispatch(MapActions.activeBallon({ ballon }));
   }
 
   //Get Ballon and return Entity
@@ -494,14 +281,12 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
     if (entity) {
       this.showBalloonInfoInMenu(entity);
       this.trackEntity(entity!);
-      this.updateLive(entity);
     }
   }
 
   menuBackClicked() {
     this.stopTrackEntity();
     this.setViewToIsrael();
-    this.helper.removeAll(); //remove clock event when returning to menu - destroy clock enevt listener
   }
 
   //Use this function to navigate to specefic ballon
@@ -539,77 +324,5 @@ export class Cesium2dDirective implements OnInit, OnDestroy {
    */
   getCanvas(): HTMLCanvasElement {
     return this.viewer.canvas as HTMLCanvasElement;
-  }
-
-  //generate color from string
-  // getColor(colorName: string, alpha: string) {
-  //   Cesium.Color[]
-  //   const color = new Cesium.Color[colorName.toUpperCase()];
-  //   return Cesium.Color.fromAlpha(color, parseFloat(alpha));
-  // }
-  getColor(colorName: string) {
-    var hash = 0;
-    for (var i = 0; i < colorName.length; i++) {
-      hash = colorName.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    var colour = '';
-    for (var i = 0; i < 3; i++) {
-      var value = (hash >> (i * 8)) & 0xff;
-      colour += ('00' + value.toString(16)).substr(-2);
-    }
-    return colour;
-  }
-
-  computeCirclularFlight(
-    lon: number,
-    lat: number,
-    height: number,
-    radius: number
-  ) {
-    const property = new Cesium.SampledPositionProperty();
-    for (let i = 0; i <= 360; i += 45) {
-      const radians = Cesium.Math.toRadians(i);
-      const time = Cesium.JulianDate.addSeconds(
-        this.start,
-        i,
-        new Cesium.JulianDate()
-      );
-      const position = Cesium.Cartesian3.fromDegrees(
-        lon + radius * 1.5 * Math.cos(radians),
-        lat + radius * Math.sin(radians),
-        height
-        // Cesium.Math.nextRandomNumber() * 5000 + 1750
-      );
-
-      property.addSample(time, position);
-
-      //Also create a point for each sample we generate.
-      // this.viewer.entities.add({
-      //   position: position,
-      //   point: {
-      //     pixelSize: 8,
-      //     color: Cesium.Color.TRANSPARENT,
-      //     outlineColor: Cesium.Color.YELLOW,
-      //     outlineWidth: 3,
-      //   },
-      // });
-    }
-    const elipse = new Cesium.CheckerboardMaterialProperty({
-      evenColor: Cesium.Color.WHITE,
-      oddColor: Cesium.Color.BLACK,
-      repeat: new Cesium.Cartesian2(4, 4),
-    });
-    //Add Target dot
-    const position = Cesium.Cartesian3.fromDegrees(lon, lat, height);
-    this.viewer.entities.add({
-      position: position,
-      point: {
-        pixelSize: 3,
-        color: Cesium.Color.TRANSPARENT,
-        outlineColor: Cesium.Color.RED,
-        outlineWidth: 3,
-      },
-    });
-    return property;
   }
 }
